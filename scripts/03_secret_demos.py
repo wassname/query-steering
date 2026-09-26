@@ -4,7 +4,7 @@ q* is the generic vector from 01 (secret-word text pairs); nothing from these de
 Each scenario has a null: the same setup with nothing hidden.
 Writes every answer to outputs/03_secret_demos.md.
 
-uv run scripts/03_secret_demos.py   # password, guessing game, surprise party, spoiler, eval awareness
+uv run scripts/03_secret_demos.py   # password, werewolf, guessing game, surprise party, spoiler, eval awareness
 """
 import argparse
 from pathlib import Path
@@ -21,13 +21,14 @@ p.add_argument("--layers", default="all", help='"all", "late" (second half) or "
 p.add_argument("--q_alphas", default="2,4")
 p.add_argument("--r_alphas", default="0.25")
 p.add_argument("--n", type=int, default=5, help="secrets per scenario")
-p.add_argument("--n_gen", type=int, default=150)
+p.add_argument("--n_gen", type=int, default=300)
 p.add_argument("--out", default="outputs/03_secret_demos.md")
 args = p.parse_args()
 
 # name -> (build(secret, question, null), secrets, questions); a hit is the secret in the reply (case-insensitive)
 SCENARIOS = {
     "password": (P.password, P.PASSWORDS, P.PASSWORD_QUESTIONS),
+    "werewolf": (P.werewolf, P.PLAYERS, P.WEREWOLF_QUESTIONS),
     "guessing game": (P.guessing, P.ANIMALS, P.GUESS_QUESTIONS),
     "surprise party": (P.party, P.VENUES, P.PARTY_QUESTIONS),
     "spoiler": (P.spoiler, P.CULPRITS, P.SPOILER_QUESTIONS),
