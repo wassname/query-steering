@@ -1,4 +1,4 @@
-"""Query steering on Qwen3.5 full-attention layers, at the last token (or every position with S.all_pos).
+"""Query steering on the softmax-attention layers of Qwen3.5 (8 of 32) or Qwen3 (all), at the last token (or every position with S.all_pos).
 
 query steering: add a fixed vector to the last token's query, before RoPE; the head then reads this prompt's K, V as usual
     q_last += α · q*,   q* = mean(q_pos − q_neg) from contrast pairs
@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 import torch
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers.models.qwen3.modeling_qwen3 import Qwen3Attention
 from transformers.models.qwen3_5.modeling_qwen3_5 import Qwen3_5Attention, apply_rotary_pos_emb
 
 @dataclass
@@ -33,8 +34,10 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
     B, T, _ = hidden_states.shape
     on = self.layer_idx in S.layers
     hs = (B, T, -1, self.head_dim)
-    q, gate = torch.chunk(self.q_proj(hidden_states).view(B, T, -1, self.head_dim * 2), 2, dim=-1)
-    q = self.q_norm(q.view(hs)).transpose(1, 2)  # [B,H,T,d] before RoPE
+    qg = self.q_proj(hidden_states)
+    gated = qg.shape[-1] == 2 * self.config.num_attention_heads * self.head_dim  # Qwen3.5 has an output gate, Qwen3 not
+    q, gate = torch.chunk(qg.view(B, T, -1, self.head_dim * 2), 2, dim=-1) if gated else (qg, None)
+    q = self.q_norm(q.reshape(hs)).transpose(1, 2)  # [B,H,T,d] before RoPE
     if S.mode == "capture" and on:
         S.q_cap[self.layer_idx] = q[0, :, -1].float()
     if S.mode == "qsteer" and on:
@@ -50,7 +53,9 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
     out = F.scaled_dot_product_attention(q, k, v, is_causal=True, scale=self.scaling)
     if S.record_attn and on:
         S.attn_cap[self.layer_idx] = (q[0, :, -1:] @ k[0].transpose(-1, -2) * self.scaling).float().softmax(-1)[:, 0]
-    out = out.transpose(1, 2).reshape(B, T, -1) * torch.sigmoid(gate.reshape(B, T, -1))  # Qwen3.5 output gate
+    out = out.transpose(1, 2).reshape(B, T, -1)
+    if gated:
+        out = out * torch.sigmoid(gate.reshape(B, T, -1))
     return self.o_proj(out), None
 
 
@@ -76,7 +81,7 @@ def load(model_name="Qwen/Qwen3.5-4B", device="cuda"):
     ids = tok("The quick brown fox jumps over the lazy dog because", return_tensors="pt").input_ids.to(device)
     with torch.no_grad():
         ref = model(ids).logits.float()
-        Qwen3_5Attention.forward = attn_forward
+        Qwen3_5Attention.forward = Qwen3Attention.forward = attn_forward
         err = (model(ids).logits.float() - ref).abs().max().item()
     assert err < 1.0, f"patched forward differs from original: max|Δlogit| {err}"
     decoder = model.model.language_model.layers if hasattr(model.model, "language_model") else model.model.layers

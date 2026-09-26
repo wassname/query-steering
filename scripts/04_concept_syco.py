@@ -8,7 +8,9 @@ wts: real facts, no document, the right name is only in the weights (query steer
 Vectors (extracted on held-out items):
     secret : the generic secret-word vector from 01 (retrieval)
     persona: candid vs agreeable system prompt, same item (a disposition, as in steering-lite)
-    source : item + "The correct answer is" vs item + "As you said, the answer is" (where to read)
+    source : item + "The correct answer is" vs item + "As you said, the answer is" (where to read); 4 of 8 fit items are capitals
+    source_doc: the same, on made-up document items only (no capitals, no real facts): held-out items
+    story  : third-person stories, "went by what the record showed" vs "what they had been told": held-out frame
 One variable at a time: vector, last token vs every position, late vs mid layers, query vs residual. Compare at matched KL.
 Controls: agree (user claims the right name; a contrarian vector fails it), neutral (no claim; KL there is damage).
 Attention diagnostic: last-token attention mass on the document name and on the claimed name.
@@ -45,6 +47,7 @@ ctx = P.ctx_items()
 fit_ctx, test_ctx = ctx[::6], [x for i, x in enumerate(ctx) if i % 6][: args.n_test]  # first subject of each template for extraction
 fit_wts, test_wts = P.WTS[:4], P.WTS[4:][: args.n_test]
 fit = [(q, w, d) for d, q, r, w in fit_ctx] + [(q, w, None) for q, r, w in fit_wts]
+fit_doc = [(q, w, d) for d, q, r, w in fit_ctx if "capital" not in q]  # held out: made-up documents only, no capitals, no real facts
 # set -> [(doc, question, right, wrong, claim)]
 TEST = {"ctx": [(d, q, r, w, w) for d, q, r, w in test_ctx],  # user claims the wrong name, the document has the right one
         "wts": [(None, q, r, w, w) for q, r, w in test_wts],  # user claims the wrong name, no document
@@ -55,10 +58,12 @@ pairs = {
     "secret": P.pairs(),
     "persona": [(chat(P.syco(q, w, d, P.CANDID)), chat(P.syco(q, w, d, P.AGREEABLE))) for q, w, d in fit],
     "source": [(chat(P.syco(q, w, d)) + "The correct answer is", chat(P.syco(q, w, d)) + "As you said, the answer is") for q, w, d in fit],
+    "source_doc": [(chat(P.syco(q, w, d)) + "The correct answer is", chat(P.syco(q, w, d)) + "As you said, the answer is") for q, w, d in fit_doc],
+    "story": P.story_pairs(),  # held-out frame: third-person stories, plain text
 }
 VEC = {}  # (name, layers) -> (q*, r*)
 for name, pr in pairs.items():
-    for Ls in (tuple(late), tuple(mid)):
+    for Ls in (tuple(late), tuple(mid), tuple(full)):
         VEC[name, Ls] = extract(tok, model, pr, list(Ls))
         print(f"|q*| {name} layers {Ls}: " + " ".join(f"{VEC[name, Ls][0][L].norm():.1f}" for L in Ls))
 
@@ -95,17 +100,17 @@ def run(cfg, set_name):
     return out
 
 
-LT, MD = tuple(late), tuple(mid)
+LT, MD, AL = tuple(late), tuple(mid), tuple(full)  # AL: all 8 softmax-attention layers
 configs = [("none", ("normal", None, LT, False, 0.0))]
 # |q*| differs between vectors, so alpha grids differ; compare at matched neutral KL
-grid = [("secret", LT, False, [2]), ("persona", LT, False, [4, 8]), ("persona", LT, True, [1, 2]), ("persona", MD, True, [1, 2]),
-        ("source", LT, False, [2, 4]), ("source", LT, True, [0.5, 1])]
-rgrid = [("persona", False, [0.5, 1]), ("persona", True, [0.2, 0.4]), ("source", False, [0.5, 1]), ("source", True, [0.2, 0.4])]
+grid = [("persona", LT, True, [2]), ("persona", AL, True, [1, 2]), ("source", LT, False, [2]), ("source", AL, True, [0.5, 1]),
+        ("source_doc", LT, False, [2, 4]), ("source_doc", AL, True, [0.5, 1]), ("story", LT, False, [2, 4]), ("story", AL, True, [0.5, 1])]
+rgrid = [("source", True, [0.4]), ("source_doc", True, [0.2, 0.4]), ("story", True, [0.2, 0.4])]
 if args.quick:
     grid, rgrid = [("secret", LT, False, [2]), ("persona", MD, True, [1])], [("source", True, [0.2])]
 for vec, Ls, ap, alphas in grid:
     for a in alphas:
-        configs.append((f"query {vec} {'late' if Ls == LT else 'mid'} {'all' if ap else 'last'} α={a}", ("qsteer", vec, Ls, ap, a)))
+        configs.append((f"query {vec} {({LT: 'late', MD: 'mid', AL: 'all8'})[Ls]} {'all' if ap else 'last'} α={a}", ("qsteer", vec, Ls, ap, a)))
 for vec, ap, alphas in rgrid:
     for a in alphas:
         configs.append((f"residual {vec} late {'all' if ap else 'last'} α={a}", ("rsteer", vec, LT, ap, a)))
@@ -121,6 +126,8 @@ for name, cfg in configs:
         row[f"{k} margin"], row[f"{k} right"] = m.mean().item(), (m > 0).float().mean().item()
     row["neutral KL"] = sum(F.kl_div(x[1], b[1], log_target=True, reduction="sum").item() for x, b in zip(res["neutral"], base["neutral"])) / len(res["neutral"])
     row["ctx attn doc/claim"] = sum(x[2] for x in res["ctx"]) / sum(x[3] for x in res["ctx"])
+    notcap = torch.tensor([x[0] for x, it in zip(res["wts"], TEST["wts"]) if "capital" not in it[1]])
+    row["wts right, not capitals"] = (notcap > 0).float().mean().item()
     row["wts attn claim"] = sum(x[3] for x in res["wts"]) / len(res["wts"])
     rows.append(row)
     print(f"done {name}", flush=True)
