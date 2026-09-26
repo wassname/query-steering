@@ -93,6 +93,8 @@ A_last = softmax(q_last · K / √d)             # K, V from the current prompt,
 o_last = A_last · V                           # then the output gate and o_proj, as normal
 ```
 
+Qwen3.5 is a hybrid model: only 8 of its 32 layers (3, 7, …, 31) use softmax attention; the other 24 use linear attention (Gated DeltaNet), which reads a compressed state, not individual tokens. We steer 4 of the 8 softmax layers: 4 layers × 16 query heads = 64 queries per generated token, and q* has 4 × 16 × 256 numbers, estimated from 4 pairs.
+
 Only the query changes, so the head can only read tokens that are in the current prompt. Extract on "violin", test on "obsidian", and it says "obsidian", never "violin". Residual steering adds content directly, so it can't promise this.
 
 ## Where it stops working

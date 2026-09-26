@@ -7,20 +7,20 @@ import argparse
 
 from tabulate import tabulate
 
-from query_steering.attention import S, extract, generate, load
+from query_steering.attention import S, extract, generate, load, parse_layers
 from query_steering.prompts import ENDINGS, FILLER_A, FILLER_B, FRAMES, NUMS, TEST, YS, pairs
 
 p = argparse.ArgumentParser()
-p.add_argument("--model", default="Qwen/Qwen3.5-4B")
+p.add_argument("--model", default="Qwen/Qwen3-4B")
 p.add_argument("--device", default="cuda")
-p.add_argument("--layers", default="19,23,27,31")
+p.add_argument("--layers", default="all", help='"all", "late" (second half) or "19,23"')
 p.add_argument("--alphas", default="2,4")
 p.add_argument("--n_test", type=int, default=len(TEST))
 p.add_argument("--n_gen", type=int, default=30)
 args = p.parse_args()
 
-tok, model, full = load(args.model, args.device)
-layers = [int(x) for x in args.layers.split(",")]
+tok, model = load(args.model, args.device)
+layers = parse_layers(args.layers, model)
 S.q_star, _ = extract(tok, model, pairs(), layers)
 S.layers = set(layers)
 

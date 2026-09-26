@@ -1,4 +1,4 @@
-"""Query steering on Qwen3.5 full-attention layers, at the last token only.
+"""Query steering on Qwen3 attention layers, at the last token only.
 
 query steering: add a fixed vector to the last token's query, before RoPE; the head then reads this prompt's K, V as usual
     q_last += α · q*,   q* = mean(q_pos − q_neg) from contrast pairs
@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 import torch
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformers.models.qwen3_5.modeling_qwen3_5 import Qwen3_5Attention, apply_rotary_pos_emb
+from transformers.models.qwen3.modeling_qwen3 import Qwen3Attention, apply_rotary_pos_emb
 
 @dataclass
 class State:
@@ -26,12 +26,11 @@ S = State()
 
 
 def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_key_values=None, **kw):
-    """Qwen3_5Attention.forward without KV cache (full recompute each step), plus query steering."""
+    """Qwen3Attention.forward without KV cache (full recompute each step), plus query steering."""
     B, T, _ = hidden_states.shape
     on = self.layer_idx in S.layers
     hs = (B, T, -1, self.head_dim)
-    q, gate = torch.chunk(self.q_proj(hidden_states).view(B, T, -1, self.head_dim * 2), 2, dim=-1)
-    q = self.q_norm(q.view(hs)).transpose(1, 2)  # [B,H,T,d] before RoPE
+    q = self.q_norm(self.q_proj(hidden_states).view(hs)).transpose(1, 2)  # [B,H,T,d] before RoPE
     if S.mode == "capture" and on:
         S.q_cap[self.layer_idx] = q[0, :, -1].float()
     if S.mode == "qsteer" and on:
@@ -44,7 +43,7 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
     g = self.num_key_value_groups
     k, v = k.repeat_interleave(g, 1), v.repeat_interleave(g, 1)
     out = F.scaled_dot_product_attention(q, k, v, is_causal=True, scale=self.scaling)
-    out = out.transpose(1, 2).reshape(B, T, -1) * torch.sigmoid(gate.reshape(B, T, -1))  # Qwen3.5 output gate
+    out = out.transpose(1, 2).reshape(B, T, -1)
     return self.o_proj(out), None
 
 
@@ -62,21 +61,18 @@ def _resid_hook(layer_idx):
     return hook
 
 
-def load(model_name="Qwen/Qwen3.5-4B", device="cuda"):
+def load(model_name="Qwen/Qwen3-4B", device="cuda"):
     tok = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name, dtype=torch.bfloat16, device_map=device).eval()
-    cfg = getattr(model.config, "text_config", model.config)
-    full = [i for i, t in enumerate(cfg.layer_types) if t == "full_attention"]
     ids = tok("The quick brown fox jumps over the lazy dog because", return_tensors="pt").input_ids.to(device)
     with torch.no_grad():
         ref = model(ids).logits.float()
-        Qwen3_5Attention.forward = attn_forward
+        Qwen3Attention.forward = attn_forward
         err = (model(ids).logits.float() - ref).abs().max().item()
     assert err < 1.0, f"patched forward differs from original: max|Δlogit| {err}"
-    decoder = model.model.language_model.layers if hasattr(model.model, "language_model") else model.model.layers
-    for i in full:
-        decoder[i].register_forward_pre_hook(_resid_hook(i), with_kwargs=True)
-    return tok, model, full
+    for i, layer in enumerate(model.model.layers):
+        layer.register_forward_pre_hook(_resid_hook(i), with_kwargs=True)
+    return tok, model
 
 
 @torch.no_grad()
@@ -110,3 +106,9 @@ def extract(tok, model, pairs, layers):
             dr[L].append(hp[L] - S.h_cap[L])
     S.mode = "normal"
     return {L: torch.stack(dq[L]).mean(0) for L in layers}, {L: torch.stack(dr[L]).mean(0) for L in layers}
+
+
+def parse_layers(spec, model):
+    """"all" | "late" (second half) | "19,23" -> layer indices"""
+    n = model.config.num_hidden_layers
+    return {"all": list(range(n)), "late": list(range(n // 2, n))}.get(spec) or [int(x) for x in spec.split(",")]

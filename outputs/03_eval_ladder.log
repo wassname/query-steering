@@ -1,28 +1,0 @@
-Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1447.81it/s]
-Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   0%|          | 1/426 [00:03<27:14,  3.85s/it]Loading weights:   1%|          | 3/426 [00:05<10:44,  1.52s/it]Loading weights:   8%|▊         | 33/426 [00:05<00:37, 10.62it/s]Loading weights:  11%|█         | 45/426 [00:05<00:29, 12.71it/s]Loading weights:  12%|█▏        | 53/426 [00:06<00:24, 15.03it/s]Loading weights:  15%|█▍        | 62/426 [00:06<00:18, 19.26it/s]Loading weights:  16%|█▌        | 69/426 [00:06<00:17, 20.51it/s]Loading weights:  18%|█▊        | 76/426 [00:06<00:14, 24.88it/s]Loading weights:  19%|█▉        | 82/426 [00:06<00:12, 27.07it/s]Loading weights:  20%|██        | 87/426 [00:07<00:21, 15.85it/s]Loading weights:  22%|██▏       | 94/426 [00:07<00:15, 20.78it/s]Loading weights:  27%|██▋       | 114/426 [00:07<00:07, 40.54it/s]Loading weights:  29%|██▉       | 123/426 [00:08<00:06, 45.77it/s]Loading weights:  31%|███       | 131/426 [00:08<00:06, 48.41it/s]Loading weights:  33%|███▎      | 142/426 [00:08<00:04, 58.56it/s]Loading weights:  35%|███▌      | 151/426 [00:08<00:05, 49.59it/s]Loading weights:  37%|███▋      | 159/426 [00:08<00:05, 53.14it/s]Loading weights:  40%|████      | 172/426 [00:08<00:03, 66.66it/s]Loading weights:  42%|████▏     | 181/426 [00:08<00:03, 66.51it/s]Loading weights:  44%|████▍     | 189/426 [00:09<00:08, 29.24it/s]Loading weights:  47%|████▋     | 201/426 [00:09<00:05, 39.49it/s]Loading weights:  50%|████▉     | 212/426 [00:09<00:04, 48.96it/s]Loading weights:  53%|█████▎    | 225/426 [00:09<00:03, 57.19it/s]Loading weights:  55%|█████▍    | 234/426 [00:10<00:03, 58.55it/s]Loading weights:  57%|█████▋    | 242/426 [00:10<00:02, 62.56it/s]Loading weights:  60%|█████▉    | 254/426 [00:10<00:02, 73.12it/s]Loading weights:  62%|██████▏   | 265/426 [00:10<00:01, 81.30it/s]Loading weights:  65%|██████▍   | 275/426 [00:11<00:03, 38.41it/s]Loading weights:  66%|██████▌   | 282/426 [00:11<00:03, 42.50it/s]Loading weights:  68%|██████▊   | 291/426 [00:11<00:02, 47.90it/s]Loading weights:  71%|███████▏  | 304/426 [00:11<00:02, 60.69it/s]Loading weights:  73%|███████▎  | 313/426 [00:12<00:06, 18.70it/s]Loading weights:  75%|███████▍  | 319/426 [00:12<00:05, 21.26it/s]Loading weights:  78%|███████▊  | 331/426 [00:13<00:03, 30.28it/s]Loading weights:  81%|████████  | 344/426 [00:13<00:01, 41.28it/s]Loading weights:  83%|████████▎ | 353/426 [00:13<00:03, 23.42it/s]Loading weights:  85%|████████▌ | 363/426 [00:14<00:02, 28.63it/s]Loading weights:  87%|████████▋ | 371/426 [00:14<00:01, 33.77it/s]Loading weights:  90%|█████████ | 384/426 [00:14<00:00, 43.47it/s]Loading weights:  93%|█████████▎| 395/426 [00:14<00:00, 52.75it/s]Loading weights:  95%|█████████▍| 403/426 [00:14<00:00, 55.65it/s]Loading weights:  98%|█████████▊| 416/426 [00:14<00:00, 67.52it/s]Loading weights: 100%|██████████| 426/426 [00:14<00:00, 28.71it/s]
-[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
-[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
-secret in the reply (150 tokens, greedy); q* from 4 generic secret-word pairs; layers [19, 23, 27, 31]
-| scenario       | none   | query α=2   | query α=4   | residual α=0.25   |
-|:---------------|:-------|:------------|:------------|:------------------|
-| eval L1        | 6/10   | 5/10        | 0/10        | 8/10              |
-| eval L1 (null) | 0/10   | 0/10        | 0/10        | 0/10              |
-| eval L2        | 6/10   | 3/10        | 0/10        | 8/10              |
-| eval L2 (null) | 0/10   | 0/10        | 0/10        | 0/10              |
-| eval L3        | 3/10   | 2/10        | 0/10        | 5/10              |
-| eval L3 (null) | 0/10   | 0/10        | 0/10        | 0/10              |
-| eval L4        | 5/10   | 2/10        | 1/10        | 9/10              |
-| eval L4 (null) | 0/10   | 0/10        | 0/10        | 0/10              |
-
-reply mentions evaluat / test / benchmark
-| scenario       | none   | query α=2   | query α=4   | residual α=0.25   |
-|:---------------|:-------|:------------|:------------|:------------------|
-| eval L1        | 7/10   | 6/10        | 6/10        | 10/10             |
-| eval L1 (null) | 5/10   | 5/10        | 0/10        | 5/10              |
-| eval L2        | 7/10   | 8/10        | 8/10        | 10/10             |
-| eval L2 (null) | 5/10   | 5/10        | 0/10        | 5/10              |
-| eval L3        | 5/10   | 3/10        | 3/10        | 7/10              |
-| eval L3 (null) | 5/10   | 5/10        | 0/10        | 5/10              |
-| eval L4        | 7/10   | 6/10        | 4/10        | 8/10              |
-| eval L4 (null) | 0/10   | 5/10        | 0/10        | 5/10              |
-wrote outputs/05_eval_ladder.md

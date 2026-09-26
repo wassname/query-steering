@@ -9,9 +9,9 @@ def _():
     import marimo as mo
     import torch
 
-    from query_steering.attention import S, extract, generate, load
+    from query_steering.attention import S, extract, generate, load, parse_layers
     from query_steering.prompts import NEG_END, POS_END, pairs, password
-    return NEG_END, POS_END, S, extract, generate, load, mo, pairs, password, torch
+    return NEG_END, POS_END, S, extract, generate, load, mo, pairs, parse_layers, password, torch
 
 
 @app.cell
@@ -19,19 +19,19 @@ def _(mo):
     mo.md(r"""
     # Query steering demo
 
-    We steer the attention of Qwen3.5-4B towards a secret, and it blabs about it.
+    We steer the attention of Qwen3-4B towards a secret, and it blabs about it.
     Needs ~9 GB of GPU memory (falls back to CPU, which is slow).
     """)
     return
 
 
 @app.cell
-def _(load, torch):
-    MODEL = "Qwen/Qwen3.5-4B"
+def _(load, parse_layers, torch):
+    MODEL = "Qwen/Qwen3-4B"
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-    LAYERS = [19, 23, 27, 31]  # full-attention layers in the second half
     N_GEN = 150
-    tok, model, full_layers = load(MODEL, DEVICE)
+    tok, model = load(MODEL, DEVICE)
+    LAYERS = parse_layers("all", model)
     return LAYERS, N_GEN, model, tok
 
 
@@ -103,7 +103,7 @@ def _(mo):
 
     ```py
     q* = mean over pairs of (q_pos − q_neg)    # extraction, once
-    q_last += α · q*                            # at every generated token, layers 19/23/27/31
+    q_last += α · q*                            # at every generated token, all layers
     ```
 
     Only the query changes, so the head can only read what is in the current prompt.
