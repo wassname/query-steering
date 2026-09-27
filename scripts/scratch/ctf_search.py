@@ -93,13 +93,31 @@ for name, end in CONCEPT_ENDS.items():
     vecs[name] = extract(tok, model, [(m + P.FILLER_A + end, m + P.FILLER_A + CONCEPT_NEG) for m in MISDEEDS], layers)[0]
 ref = vecs["secret word"]
 EPS = 1e-12  # layer 0: q* is exactly 0 (same last token in pos and neg)
-unit = lambda v: {L: v[L] / v[L].norm().clamp_min(EPS) for L in layers}
-concepts = [unit(vecs[k]) for k in CONCEPT_ENDS]
-vecs["concept mean"] = {L: sum(c[L] for c in concepts) for L in layers}
+match = lambda v: {L: v[L] * ref[L].norm() / v[L].norm().clamp_min(EPS) for L in layers}  # scale to the secret-word q* size, per layer
 proj_out = lambda v, u: {L: v[L] - (v[L] * u[L]).sum(-1, keepdim=True) / (u[L] * u[L]).sum(-1, keepdim=True).clamp_min(EPS) * u[L] for L in layers}  # per head
-vecs["cheat ⊥ secret"] = proj_out(vecs["cheat"], ref)
-vecs["concept mean ⊥ secret"] = proj_out(vecs["concept mean"], ref)
-vecs = {k: {L: v[L] * ref[L].norm() / v[L].norm().clamp_min(EPS) for L in layers} for k, v in vecs.items()}  # norm-match per layer
+BASE = ["secret word", *CONCEPT_ENDS]
+vecs = {k: match(vecs[k]) for k in BASE}
+vecs["concept mean"] = match({L: sum(vecs[k][L] for k in CONCEPT_ENDS) for L in layers})
+vecs["cheat ⊥ secret"] = match(proj_out(vecs["cheat"], ref))
+# super-vectors from all 5 (each at secret-word size), shared parts counted once; not rescaled, so their KL is higher
+us = []
+for k in BASE:  # Gram-Schmidt, in BASE order: add only the part of each vector that is new
+    r = vecs[k]
+    for u in us:
+        r = proj_out(r, u)
+    us.append(r)
+vecs["GS sum (all 5)"] = {L: sum(u[L] for u in us) for L in layers}
+LAMBDA = 0.05  # ridge: 4 pairs per concept, near-parallel vectors are noisy
+V = {L: torch.stack([vecs[k][L] for k in BASE]).float() for L in layers}  # [k, H, d]
+def min_norm(Vk):  # smallest w with w·v̂_i = |v_i| for every concept i, per head
+    n = Vk.norm(dim=-1)  # [k, H]
+    Vh = Vk / n.clamp_min(EPS)[..., None]
+    G = torch.einsum("khd,jhd->hkj", Vh, Vh) + LAMBDA * torch.eye(len(Vk))
+    c = torch.linalg.solve(G, n.T[..., None])[..., 0]  # [H, k]
+    return torch.einsum("hk,khd->hd", c, Vh)
+vecs["min-norm (all 5)"] = {L: min_norm(V[L]).to(ref[L].dtype) for L in layers}
+for k in ("GS sum (all 5)", "min-norm (all 5)"):
+    logger.info(f"{k}: size / secret-word size = {sum(vecs[k][L].norm() for L in layers) / sum(ref[L].norm() for L in layers):.2f}")
 
 names = list(vecs)
 live = [L for L in layers if ref[L].norm() > 0]
