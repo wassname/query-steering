@@ -1,0 +1,64 @@
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1570.61it/s]
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   0%|          | 1/426 [00:00<05:39,  1.25it/s]Loading weights:   3%|▎         | 14/426 [00:00<00:20, 20.27it/s]Loading weights:   6%|▋         | 27/426 [00:01<00:11, 35.46it/s]Loading weights:  10%|▉         | 41/426 [00:01<00:07, 53.59it/s]Loading weights:  12%|█▏        | 51/426 [00:01<00:06, 57.04it/s]Loading weights:  15%|█▌        | 65/426 [00:01<00:04, 74.27it/s]Loading weights:  19%|█▊        | 79/426 [00:01<00:04, 84.34it/s]Loading weights:  21%|██        | 90/426 [00:01<00:03, 88.12it/s]Loading weights:  24%|██▎       | 101/426 [00:01<00:04, 73.55it/s]Loading weights:  28%|██▊       | 118/426 [00:01<00:03, 92.81it/s]Loading weights:  31%|███       | 132/426 [00:02<00:03, 94.30it/s]Loading weights:  34%|███▍      | 146/426 [00:02<00:03, 82.33it/s]Loading weights:  37%|███▋      | 156/426 [00:02<00:03, 81.57it/s]Loading weights:  40%|███▉      | 169/426 [00:02<00:02, 91.71it/s]Loading weights:  42%|████▏     | 181/426 [00:02<00:03, 67.85it/s]Loading weights:  45%|████▍     | 190/426 [00:03<00:04, 55.84it/s]Loading weights:  47%|████▋     | 201/426 [00:03<00:03, 62.16it/s]Loading weights:  49%|████▉     | 209/426 [00:03<00:03, 65.53it/s]Loading weights:  53%|█████▎    | 224/426 [00:03<00:02, 79.97it/s]Loading weights:  55%|█████▍    | 233/426 [00:03<00:02, 73.53it/s]Loading weights:  57%|█████▋    | 242/426 [00:03<00:02, 67.87it/s]Loading weights:  59%|█████▊    | 250/426 [00:04<00:03, 46.55it/s]Loading weights:  60%|██████    | 256/426 [00:04<00:04, 34.16it/s]Loading weights:  61%|██████▏   | 261/426 [00:04<00:04, 35.62it/s]Loading weights:  62%|██████▏   | 266/426 [00:04<00:04, 37.78it/s]Loading weights:  64%|██████▍   | 273/426 [00:04<00:04, 34.38it/s]Loading weights:  65%|██████▌   | 278/426 [00:05<00:07, 19.20it/s]Loading weights:  67%|██████▋   | 287/426 [00:05<00:05, 26.94it/s]Loading weights:  69%|██████▊   | 292/426 [00:05<00:04, 29.90it/s]Loading weights:  71%|███████▏  | 304/426 [00:05<00:02, 43.91it/s]Loading weights:  73%|███████▎  | 311/426 [00:06<00:02, 42.56it/s]Loading weights:  75%|███████▍  | 318/426 [00:06<00:02, 44.46it/s]Loading weights:  78%|███████▊  | 331/426 [00:06<00:01, 60.40it/s]Loading weights:  81%|████████  | 345/426 [00:06<00:01, 71.29it/s]Loading weights:  84%|████████▍ | 359/426 [00:06<00:00, 83.76it/s]Loading weights:  87%|████████▋ | 371/426 [00:06<00:00, 90.54it/s]Loading weights:  90%|█████████ | 384/426 [00:06<00:00, 98.41it/s]Loading weights:  93%|█████████▎| 398/426 [00:06<00:00, 105.05it/s]Loading weights:  97%|█████████▋| 412/426 [00:07<00:00, 102.42it/s]Loading weights:  99%|█████████▉| 423/426 [00:07<00:00, 89.55it/s] Loading weights: 100%|██████████| 426/426 [00:07<00:00, 58.71it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+|q*| secret layers (19, 23, 27, 31): 64.2 63.8 57.5 50.4
+|q*| secret layers (7, 11, 15, 19, 23): 67.8 74.1 69.7 64.2 63.8
+|q*| secret layers (3, 7, 11, 15, 19, 23, 27, 31): 54.3 67.8 74.1 69.7 64.2 63.8 57.5 50.4
+|q*| persona layers (19, 23, 27, 31): 36.7 35.1 26.1 21.4
+|q*| persona layers (7, 11, 15, 19, 23): 8.5 15.9 29.3 36.7 35.1
+|q*| persona layers (3, 7, 11, 15, 19, 23, 27, 31): 3.7 8.5 15.9 29.3 36.7 35.1 26.1 21.4
+|q*| source layers (19, 23, 27, 31): 44.1 34.7 28.7 24.0
+|q*| source layers (7, 11, 15, 19, 23): 45.1 44.0 42.8 44.1 34.7
+|q*| source layers (3, 7, 11, 15, 19, 23, 27, 31): 40.7 45.1 44.0 42.8 44.1 34.7 28.7 24.0
+|q*| source_doc layers (19, 23, 27, 31): 50.2 32.3 24.6 24.2
+|q*| source_doc layers (7, 11, 15, 19, 23): 45.6 45.3 51.7 50.2 32.3
+|q*| source_doc layers (3, 7, 11, 15, 19, 23, 27, 31): 40.8 45.6 45.3 51.7 50.2 32.3 24.6 24.2
+|q*| story layers (19, 23, 27, 31): 28.5 17.9 14.7 12.7
+|q*| story layers (7, 11, 15, 19, 23): 33.7 37.1 36.7 28.5 17.9
+|q*| story layers (3, 7, 11, 15, 19, 23, 27, 31): 11.6 33.7 37.1 36.7 28.5 17.9 14.7 12.7
+done none
+done query persona late all α=2
+done query persona all8 all α=1
+done query persona all8 all α=2
+done query source late last α=2
+done query source all8 all α=0.5
+done query source all8 all α=1
+done query source_doc late last α=2
+done query source_doc late last α=4
+done query source_doc all8 all α=0.5
+done query source_doc all8 all α=1
+done query story late last α=2
+done query story late last α=4
+done query story all8 all α=0.5
+done query story all8 all α=1
+done residual source late all α=0.4
+done residual source_doc late all α=0.2
+done residual source_doc late all α=0.4
+done residual story late all α=0.2
+done residual story late all α=0.4
+
+first answer token; margin = logp(right) − logp(wrong); right = share with margin > 0; KL(normal‖steered) on the no-claim prompts;
+attn = last-token attention mass at the steered layers (mid rows: mid layers); n ctx=20, wts=agree=neutral=16
+| config                             |   ctx margin |   ctx right |   wts margin |   wts right |   agree margin |   agree right |   neutral KL |   ctx attn doc/claim |   wts right, not capitals |   wts attn claim |
+|:-----------------------------------|-------------:|------------:|-------------:|------------:|---------------:|--------------:|-------------:|---------------------:|--------------------------:|-----------------:|
+| none                               |        +2.96 |       +0.95 |        +0.76 |       +0.44 |          +9.19 |         +1.00 |        +0.00 |                +2.51 |                     +0.20 |            +0.14 |
+| query persona late all α=2         |        +7.06 |       +1.00 |        +3.50 |       +0.81 |          +5.80 |         +1.00 |        +0.01 |                +3.82 |                     +0.80 |            +0.12 |
+| query persona all8 all α=1         |        +6.15 |       +1.00 |        +2.61 |       +0.75 |          +7.27 |         +1.00 |        +0.01 |                +2.28 |                     +0.70 |            +0.08 |
+| query persona all8 all α=2         |        +8.52 |       +1.00 |        +4.04 |       +0.88 |          +5.24 |         +1.00 |        +0.02 |                +2.24 |                     +0.90 |            +0.06 |
+| query source late last α=2         |        +3.61 |       +0.95 |        +4.70 |       +0.94 |          +4.97 |         +1.00 |        +0.01 |                +6.30 |                     +0.90 |            +0.10 |
+| query source all8 all α=0.5        |        +3.28 |       +0.90 |        +3.51 |       +0.88 |          +7.34 |         +1.00 |        +0.03 |                +2.19 |                     +0.90 |            +0.07 |
+| query source all8 all α=1          |        +2.67 |       +0.85 |        +5.63 |       +1.00 |          +4.95 |         +0.94 |        +0.14 |                +2.47 |                     +1.00 |            +0.06 |
+| query source_doc late last α=2     |        +4.21 |       +0.95 |        +2.77 |       +0.69 |          +8.09 |         +1.00 |        +0.02 |                +9.16 |                     +0.60 |            +0.13 |
+| query source_doc late last α=4     |        +5.61 |       +0.95 |        +3.59 |       +0.75 |          +6.87 |         +1.00 |        +0.04 |               +15.24 |                     +0.70 |            +0.11 |
+| query source_doc all8 all α=0.5    |        +3.88 |       +0.95 |        +2.38 |       +0.75 |          +8.50 |         +1.00 |        +0.03 |                +2.79 |                     +0.70 |            +0.08 |
+| query source_doc all8 all α=1      |        +2.64 |       +0.75 |        +4.20 |       +0.94 |          +7.12 |         +1.00 |        +0.18 |                +2.93 |                     +1.00 |            +0.07 |
+| query story late last α=2          |        +2.34 |       +0.85 |        +1.63 |       +0.56 |          +7.87 |         +1.00 |        +0.00 |                +2.41 |                     +0.40 |            +0.11 |
+| query story late last α=4          |        +1.59 |       +0.70 |        +2.16 |       +0.62 |          +6.81 |         +1.00 |        +0.01 |                +2.05 |                     +0.50 |            +0.09 |
+| query story all8 all α=0.5         |        +2.92 |       +0.85 |        +1.79 |       +0.50 |          +8.59 |         +1.00 |        +0.01 |                +1.82 |                     +0.30 |            +0.08 |
+| query story all8 all α=1           |        +2.24 |       +0.80 |        +2.94 |       +0.75 |          +7.84 |         +1.00 |        +0.04 |                +1.56 |                     +0.70 |            +0.07 |
+| residual source late all α=0.4     |       +11.25 |       +1.00 |        +8.65 |       +1.00 |          +6.07 |         +1.00 |        +0.21 |                +6.13 |                     +1.00 |            +0.09 |
+| residual source_doc late all α=0.2 |        +7.02 |       +1.00 |        +2.77 |       +0.69 |          +8.52 |         +1.00 |        +0.02 |                +4.38 |                     +0.60 |            +0.13 |
+| residual source_doc late all α=0.4 |       +10.81 |       +1.00 |        +4.11 |       +0.94 |          +6.63 |         +1.00 |        +0.17 |                +7.20 |                     +1.00 |            +0.12 |
+| residual story late all α=0.2      |        +3.12 |       +0.95 |        +1.52 |       +0.50 |          +7.46 |         +1.00 |        +0.01 |                +2.71 |                     +0.30 |            +0.14 |
+| residual story late all α=0.4      |        +3.33 |       +0.95 |        +2.12 |       +0.69 |          +5.81 |         +1.00 |        +0.04 |                +2.90 |                     +0.60 |            +0.12 |
