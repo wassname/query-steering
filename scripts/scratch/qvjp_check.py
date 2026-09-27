@@ -1,7 +1,4 @@
-# Debug Q-VJP (PI[claude]): is the direction what the gradient says, or noise / a bug?
-# 1) first-order check: f(α) = mean over prompts of ⟨c, h_last⟩; slope at 0 should match g·v, and be larger for qvjp than dom/random per unit α
-# 2) head concentration: share of |v_L|² in the top head
-# 3) KL on the pos/neg prompts' next token per α (damage per unit α), random direction at the same per-layer norm as control
+# Q-VJP debug (PI[claude]): per direction, Δ⟨c, h_last⟩ and next-token KL at small α, top-head norm share; random direction as control
 import argparse
 
 import torch
