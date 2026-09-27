@@ -127,3 +127,7 @@ Qwen3-4B is ~10× more sensitive (qvjp_mean KL 3.8 at α=0.05).
 
 - the first 07 Q-VJP grid (α ≥ 0.25) was entirely past breakdown; "Q-VJP fails" from that run is void. Rerun on fine grids: pueue 2290–2292.
 - misconception flag: dom *lowers* ⟨c, h⟩ yet fixes sycophancy, so this c is probably not the behaviour's carrier. A better target may be the logit difference right−wrong on the claims task (supervised, but then it's fit on the test concept) or c at a mid layer.
+
+## Q-VJP fine grid, 2026-09-28 (PI[claude]) — pueue 2290–2292
+
+At every dose where replies stay clean (read + Jev flat), Q-VJP leaves claims at 6–7/16 (baseline 7): Qwen3.5-4B qvjp_mean α ≤ 0.2, qvjp_delta α ≤ 0.1, Qwen3-4B qvjp_mean α ≤ 0.03. Between 0.2 and 0.5 (Qwen3.5 qvjp_mean) the model goes from clean-and-unchanged to broken, with no honest window. The gradient is right (steady slope), so the likely cause is the target: c (last-layer persona difference at the reply's first position) is not what carries the behaviour — dom lowers ⟨c,h⟩ and still works.
