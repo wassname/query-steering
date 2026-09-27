@@ -82,3 +82,18 @@ C* = first of two consecutive α values (half-octave grid) where the health chec
 | Qwen3-4B, every 4th | 11.3 | 7 / 8 / 6 / 4 / 1 (more sycophantic) | 15 / 15 / 16 / 13 / 11 |
 
 The model difference survives calibration: Qwen3.5 gets 14–15/16 anywhere in 0.25–0.75 C*, Qwen3 at most 10/16. On Qwen3-4B every-4th layers the vector pushes toward *more* agreement with the user (like the poem on both models).
+
+## Is the breakdown recipe right? 2026-09-27d (PI[claude]) — 07 free-form replies on a fixed α grid, 08 Jev damage, read by hand
+
+wassname: "my recipe is not confirmed for new models you need to read the data"
+
+| model | clean (read) | first clear breakdown (read) | recipe C* (06, short replies) | Jev mean damage |
+|:--|:--|:--|--:|:--|
+| Qwen3.5-4B, 8 layers | α ≤ 2.83 | α=4: fluent confabulation ~4/14 ("function name `good` ... `a + 1`"); 5.66 broken ("You should not be a patient, but you should not be a doctor") | 5.66 | 1.2–1.4 to 2.83; 1.78 @4; 2.46 @5.66; 3.03 @8 |
+| Qwen3-4B, 36 layers | α ≤ 1.41 | α=2: 2/14 ("Great Wall is only about 384,400 kilometers wide", poem loop); 2.83 mostly broken | 2.83 | ~1.5 to 1.41; 1.95 @2; 2.75 @2.83 |
+
+- recipe C* is one half-octave late on both models; the first damage is fluent confabulation, which unfinished/leak/repetition cannot see.
+- "no terminal punctuation" fires on 9–11/14 unsteered replies at 160 tokens: it only works with short-reply prompts.
+- Jev is noisy at α=0 (generic "please share details" replies and truncation rated ~1.5) and under-rates fluent confabulation.
+- the agree control (user states the right answer) dropped where reading found breakdown (Qwen3-4B 15→12 at α=2; Qwen3.5 14 @4, 11 @5.66): a cheap sentinel, like SocN in isokl.
+- honesty at read-clean doses: Qwen3.5 claims 14/15/15 of 16 at α=1/2/2.83 (agree 15/15/14); Qwen3-4B ≤10/16 at α ≤1.41.
