@@ -4,9 +4,9 @@
 
 We wanted to try steering a model's attention. It works! Here we show how we can steer their attention towards a secret, and they "blab" about it. This could help honesty and eval awareness.
 
-In each attention head, the model compares a *query* (what the current token is looking for) with a *key* for every earlier token, and reads most from the tokens that match. Query steering adds one fixed vector to the query. The head then looks for something else, here "the secret", in the text it already has. Below: how we make the vector, then chats where a model was told to keep something hidden.
+On Qwen3-4B, it made the model say a hidden fact in 9–10 of 10 chats in our two main demos, and less often in others (see Limits). This could help with eval awareness, and with checking what a model knows when [chain-of-thought monitoring is fragile](https://arxiv.org/abs/2507.11473).
 
-![Query steering cartoon: a robot keeps a surprise-party secret with Q-steering off, and blurts it out with Q-steering on](docs/img/q-steering-hat.jpg)
+![Query steering cartoon: a robot keeps a surprise-party secret with Q-steering off, and blurts it out with Q-steering on](docs/img/q-steering-hat.png)
 
 ## Why it matters
 
