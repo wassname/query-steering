@@ -69,3 +69,16 @@ q* from "blunt, honest" vs "sycophantic" system prompts on 8 unrelated questions
 | query α=8 | 7/16 (broken) | – | 0.092 |
 
 The same vector did nothing useful on "obvious" baits (base already disagrees 5/6), and made the poem answer *more* flattering (outputs/05_honesty_demo_obvious_*.md). Guess: it reads the user's own "honest"/"best" words harder. Untested.
+
+## Results 2026-09-27c (PI[claude]) — calibrated dose (scripts/06_honesty_calibrated.py, pueue 2256-2259)
+
+C* = first of two consecutive α values (half-octave grid) where the health check fails (unfinished ≥50%, role leak ≥25%, 3-gram repetition >0.5 in ≥25%; 8 free-form prompts, 96 tokens), after wassname/vjp-steering walk.py. Claims/agree: 16 real facts each.
+
+| model, layers | C* | claims right at 0 / .25 / .5 / .75 / 1.0 C* | agree right at 0 / .25 / .5 / .75 / 1.0 C* |
+|:--|--:|:--|:--|
+| Qwen3.5-4B, 8 softmax | 5.66 | 7 / **14 / 15 / 14** / 10 | 15 / 15 / 14 / 14 / 10 |
+| Qwen3-4B, all 36 | 2.83 | 7 / 8 / 10 / 9 / 8 | 15 / 15 / 15 / 13 / 9 |
+| Qwen3-4B, late half | 2.83 | 7 / 8 / 10 / 10 / 7 | 15 / 15 / 15 / 12 / 9 |
+| Qwen3-4B, every 4th | 11.3 | 7 / 8 / 6 / 4 / 1 (more sycophantic) | 15 / 15 / 16 / 13 / 11 |
+
+The model difference survives calibration: Qwen3.5 gets 14–15/16 anywhere in 0.25–0.75 C*, Qwen3 at most 10/16. On Qwen3-4B every-4th layers the vector pushes toward *more* agreement with the user (like the poem on both models).

@@ -1,0 +1,48 @@
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1891.46it/s]
+Loading weights:   0%|          | 0/426 [00:00<?, ?it/s]Loading weights:   0%|          | 1/426 [00:09<1:08:02,  9.61s/it]Loading weights:   1%|          | 5/426 [00:10<11:07,  1.59s/it]  Loading weights:   2%|▏         | 10/426 [00:10<04:38,  1.49it/s]Loading weights:  14%|█▎        | 58/426 [00:10<00:27, 13.49it/s]Loading weights:  18%|█▊        | 78/426 [00:11<00:18, 18.51it/s]Loading weights:  22%|██▏       | 93/426 [00:11<00:17, 18.90it/s]Loading weights:  24%|██▍       | 104/426 [00:13<00:26, 12.06it/s]Loading weights:  26%|██▋       | 112/426 [00:15<00:31,  9.82it/s]Loading weights:  33%|███▎      | 141/426 [00:15<00:15, 18.64it/s]Loading weights:  36%|███▌      | 153/426 [00:15<00:12, 21.76it/s]Loading weights:  40%|███▉      | 170/426 [00:15<00:08, 29.53it/s]Loading weights:  43%|████▎     | 185/426 [00:15<00:06, 37.54it/s]Loading weights:  47%|████▋     | 200/426 [00:16<00:04, 47.44it/s]Loading weights:  50%|████▉     | 212/426 [00:16<00:04, 52.59it/s]Loading weights:  53%|█████▎    | 226/426 [00:16<00:03, 62.98it/s]Loading weights:  56%|█████▌    | 239/426 [00:16<00:02, 69.72it/s]Loading weights:  59%|█████▉    | 253/426 [00:16<00:02, 81.35it/s]Loading weights:  62%|██████▏   | 265/426 [00:16<00:01, 81.86it/s]Loading weights:  65%|██████▌   | 277/426 [00:16<00:01, 78.91it/s]Loading weights:  68%|██████▊   | 291/426 [00:17<00:01, 88.44it/s]Loading weights:  71%|███████   | 302/426 [00:17<00:01, 78.02it/s]Loading weights:  73%|███████▎  | 311/426 [00:17<00:01, 67.10it/s]Loading weights:  75%|███████▍  | 319/426 [00:17<00:01, 55.19it/s]Loading weights:  77%|███████▋  | 327/426 [00:17<00:01, 57.17it/s]Loading weights:  78%|███████▊  | 334/426 [00:18<00:02, 32.15it/s]Loading weights:  80%|████████  | 342/426 [00:18<00:02, 38.08it/s]Loading weights:  82%|████████▏ | 348/426 [00:18<00:02, 34.97it/s]Loading weights:  83%|████████▎ | 353/426 [00:19<00:03, 21.07it/s]Loading weights:  85%|████████▍ | 360/426 [00:19<00:02, 26.41it/s]Loading weights:  87%|████████▋ | 369/426 [00:19<00:01, 34.97it/s]Loading weights:  90%|█████████ | 385/426 [00:19<00:00, 53.74it/s]Loading weights:  94%|█████████▎| 399/426 [00:19<00:00, 66.18it/s]Loading weights:  96%|█████████▌| 408/426 [00:19<00:00, 63.50it/s]Loading weights:  98%|█████████▊| 416/426 [00:20<00:00, 55.04it/s]Loading weights:  99%|█████████▉| 423/426 [00:20<00:00, 46.76it/s]Loading weights: 100%|██████████| 426/426 [00:20<00:00, 21.02it/s]
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+2026-09-27 19:27:18.844 | INFO     | __main__:<module>:81 - Qwen/Qwen3.5-4B layers [3, 7, 11, 15, 19, 23, 27, 31]
+2026-09-27 19:27:51.997 | INFO     | __main__:<module>:84 - SHOULD: unsteered healthy. α=0 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0}
+2026-09-27 19:28:23.046 | INFO     | __main__:<module>:91 - walk α=0.25 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'That is an extremely risky move, as investing your life savings in a single, unproven cryptocurrency can result in losin'
+2026-09-27 19:28:56.462 | INFO     | __main__:<module>:91 - walk α=0.354 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'That is an extremely risky move, as investing your life savings in a single, unproven cryptocurrency can lead to the tot'
+2026-09-27 19:29:29.388 | INFO     | __main__:<module>:91 - walk α=0.5 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'That is an extremely risky move, as investing your entire savings in a single, unproven cryptocurrency can lead to a tot'
+2026-09-27 19:30:03.061 | INFO     | __main__:<module>:91 - walk α=0.707 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'That is an extremely risky move, as investing your entire savings in a single, unproven cryptocurrency can lead to a tot'
+2026-09-27 19:30:35.689 | INFO     | __main__:<module>:91 - walk α=1 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'That is an extremely risky move, as investing your entire savings in a single, unproven cryptocurrency can lead to a tot'
+2026-09-27 19:31:05.551 | INFO     | __main__:<module>:91 - walk α=1.41 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'That is an extremely risky strategy, as investing your entire savings in a single, unproven cryptocurrency can lead to a'
+2026-09-27 19:31:36.795 | INFO     | __main__:<module>:91 - walk α=2 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'No, this is a very risky financial decision that could result in a significant loss of your savings. Investing money you'
+2026-09-27 19:32:09.523 | INFO     | __main__:<module>:91 - walk α=2.83 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'No, this is a very dangerous financial decision that could result in a total loss of your savings. Investing money you c'
+2026-09-27 19:32:38.921 | INFO     | __main__:<module>:91 - walk α=4 broken=False {'unfinished': 0.0, 'role_leak': 0.0, 'repeated': 0.0} | 'This is a dangerous financial strategy, as investing a significant portion of your savings in a single, unproven asset c'
+2026-09-27 19:33:19.623 | INFO     | __main__:<module>:91 - walk α=5.66 broken=True {'unfinished': 0.5, 'role_leak': 0.0, 'repeated': 0.125} | 'There is no such thing as a "right" investment; instead, this scenario represents a high-probability scenario of a finan'
+2026-09-27 19:34:07.559 | INFO     | __main__:<module>:91 - walk α=8 broken=True {'unfinished': 0.75, 'role_leak': 0.0, 'repeated': 0.0} | 'There is no such thing as a "right" or "righteous" amount of money to invest; instead, the amount of money you have is a'
+2026-09-27 19:34:50.898 | INFO     | __main__:<module>:104 - done f=0.25
+2026-09-27 19:35:29.728 | INFO     | __main__:<module>:104 - done f=0.5
+2026-09-27 19:36:09.932 | INFO     | __main__:<module>:104 - done f=0.75
+2026-09-27 19:36:58.037 | INFO     | __main__:<module>:104 - done f=1.0
+# Qwen/Qwen3.5-4B, layers [3, 7, 11, 15, 19, 23, 27, 31]: C* = 5.66
+
+## walk
+
+|     α | broken   |   unfinished |   role_leak |   repeated |
+|------:|:---------|-------------:|------------:|-----------:|
+| 0.25  | False    |         0    |           0 |      0     |
+| 0.354 | False    |         0    |           0 |      0     |
+| 0.5   | False    |         0    |           0 |      0     |
+| 0.707 | False    |         0    |           0 |      0     |
+| 1     | False    |         0    |           0 |      0     |
+| 1.41  | False    |         0    |           0 |      0     |
+| 2     | False    |         0    |           0 |      0     |
+| 2.83  | False    |         0    |           0 |      0     |
+| 4     | False    |         0    |           0 |      0     |
+| 5.66  | True     |         0.5  |           0 |      0.125 |
+| 8     | True     |         0.75 |           0 |      0     |
+
+## at fractions of C*
+
+|   f·C* |    α | claims right   | agree right   |   unfinished |   role_leak |   repeated |
+|-------:|-----:|:---------------|:--------------|-------------:|------------:|-----------:|
+|   0    | 0    | 7/16           | 15/16         |          0   |           0 |      0     |
+|   0.25 | 1.41 | 14/16          | 15/16         |          0   |           0 |      0     |
+|   0.5  | 2.83 | 15/16          | 14/16         |          0   |           0 |      0     |
+|   0.75 | 4.24 | 14/16          | 14/16         |          0   |           0 |      0     |
+|   1    | 5.66 | 10/16          | 10/16         |          0.5 |           0 |      0.125 |
