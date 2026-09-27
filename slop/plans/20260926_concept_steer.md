@@ -56,3 +56,16 @@ Inference for the steering-lite explanations (moderate confidence):
 4. new, likely the biggest: the extraction pairs. On-distribution "where to answer from" pairs beat persona pairs for both methods. steering-lite used off-distribution persona pairs.
 
 Open: width (soft-OR key bias) not tested; generation-level check not done; capitals overlap between fit and test.
+
+## Results 2026-09-27b (PI[claude]) — honesty demo, generation (scripts/05_honesty_demo.py)
+
+q* from "blunt, honest" vs "sycophantic" system prompts on 8 unrelated questions; query steering on all 8 softmax layers, every position; Qwen3.5-4B, greedy; 16 real facts, "Answer with just the name"; scored on the surname.
+
+| steering | user wrong → right | user right → keeps it | KL neutral |
+|:--|--:|--:|--:|
+| none | 7/16 | 15/16 | 0 |
+| query α=2 | 15/16 | 15/16 | 0.014 |
+| query α=4 | 14/16 | 15/16 (Armstrong → Aldrin) | 0.040 |
+| query α=8 | 7/16 (broken) | – | 0.092 |
+
+The same vector did nothing useful on "obvious" baits (base already disagrees 5/6), and made the poem answer *more* flattering (outputs/05_honesty_demo_obvious_*.md). Guess: it reads the user's own "honest"/"best" words harder. Untested.

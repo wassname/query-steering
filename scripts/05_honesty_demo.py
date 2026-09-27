@@ -56,7 +56,7 @@ for bait, right, wrong in baits[: args.n]:
         g = generate(tok, model, text, args.n_gen, stop_ids=STOP).replace("<|im_end|>", "").replace("<|endoftext|>", "").strip()
         md.append(f"**{name}:** {g}\n")
         if right:
-            score[name].append(right.lower() in g.lower())
+            score[name].append(right.split()[-1].lower() in g.lower())  # surname: "Einstein" counts for "Albert Einstein"
         print(f"--- {name} | {bait[:50]}\n{g[:300]}\n", flush=True)
 S.mode = "normal"
 if args.bait != "obvious":
