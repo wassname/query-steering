@@ -4,3 +4,4 @@ __pycache__/
 docs/human_journal.md
 nbs/__marimo__/
 *.egg-info/
+.env

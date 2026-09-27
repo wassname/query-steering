@@ -10,6 +10,7 @@ uv run scripts/06_honesty_calibrated.py                                   # Qwen
 uv run scripts/06_honesty_calibrated.py --model Qwen/Qwen3-4B --tag _all  # all 36 layers
 """
 import argparse
+import json
 import re
 from pathlib import Path
 
@@ -25,7 +26,7 @@ p.add_argument("--device", default="cuda")
 p.add_argument("--layers", default=None, help="comma list; default every softmax-attention layer")
 p.add_argument("--tag", default="")
 p.add_argument("--a0", type=float, default=0.25, help="first α of the walk")
-p.add_argument("--n_health", type=int, default=8)
+p.add_argument("--n_health", type=int, default=14)
 p.add_argument("--n_gen", type=int, default=96, help="tokens for health prompts")
 p.add_argument("--n", type=int, default=16, help="claim items")
 args = p.parse_args()
@@ -52,8 +53,11 @@ def rep3(ids):
     return 1 - len(set(grams)) / len(grams) if grams else 0.0
 
 
-def health(alpha):
-    """-> (broken?, stats) on the free-form prompts; a reply cut by the token limit counts as unfinished"""
+GENS = []  # every health reply, for independent judging (scripts/07_judge_damage.py)
+
+
+def health(alpha, stage="walk"):
+    """-> (broken?, stats, first reply) on the free-form prompts; a reply cut by the token limit counts as unfinished"""
     S.mode, S.alpha = ("qsteer" if alpha else "normal"), alpha
     outs = [generate(tok, model, user(q), args.n_gen, stop_ids=STOP) for q in HEALTH[: args.n_health]]
     S.mode = "normal"
@@ -63,6 +67,9 @@ def health(alpha):
           "role_leak": sum(bool(ROLE_LEAK.search(t)) for t in texts) / n,
           "repeated": sum(rep3(tok.encode(t)) > 0.5 for t in texts) / n}
     broken = st["unfinished"] >= 0.5 or st["role_leak"] >= 0.25 or st["repeated"] >= 0.25
+    for q, t in zip(HEALTH, texts):
+        GENS.append({"stage": stage, "alpha": alpha, "prompt": q, "text": t, "broken_rung": broken,
+                     "unfinished": not re.search(r"[.!?\")*]$", t), "role_leak": bool(ROLE_LEAK.search(t)), "rep3": rep3(tok.encode(t))})
     return broken, st, texts[0]
 
 
@@ -99,7 +106,7 @@ while c_star is None:
 rows = [{"f·C*": 0.0, "α": 0.0, "claims right": "%d/%d" % claims(0.0, False), "agree right": "%d/%d" % claims(0.0, True), **st0}]
 for f in FRACS:
     a = f * c_star
-    _, st, _ = health(a)
+    _, st, _ = health(a, stage=f"frac{f}")
     rows.append({"f·C*": f, "α": a, "claims right": "%d/%d" % claims(a, False), "agree right": "%d/%d" % claims(a, True), **st})
     logger.info(f"done f={f}")
 
@@ -107,4 +114,5 @@ tag = f"{args.model.split('/')[-1]}{args.tag}"
 out = [f"# {args.model}, layers {layers}: C* = {c_star:.3g}\n", "## walk\n", tabulate(walk, headers="keys", tablefmt="pipe", floatfmt=".3g"),
        "\n## at fractions of C*\n", tabulate(rows, headers="keys", tablefmt="pipe", floatfmt=".3g")]
 Path(f"outputs/06_honesty_calibrated_{tag}.md").write_text("\n".join(out) + "\n")
+Path(f"outputs/06_honesty_calibrated_{tag}_gens.jsonl").write_text("".join(json.dumps(dict(g, model=args.model, layers=layers, c_star=c_star)) + "\n" for g in GENS))
 print("\n".join(out))
