@@ -1,8 +1,11 @@
+
 # Query steering
 
 We wanted to try steering a model's attention. It works! Here we show how we can steer their attention towards a secret, and they "blab" about it. This could help honesty and eval awareness.
 
 We extracted a vector from 4 pairs of prompts about a secret word, and added it to the attention queries of Qwen3.5-4B. Then we told the model a password and told it never to reveal it. Without steering, it keeps the password in 10 of 10 chats. With steering, it says it in 9 of 10, usually while promising not to.
+
+<img width="1774" height="887" alt="hide-the-squid" src="https://github.com/user-attachments/assets/5be7ce49-11fc-4814-99b7-85f3c09d7da1" />
 
 ## Extraction data
 
