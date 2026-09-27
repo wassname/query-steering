@@ -7,6 +7,7 @@ Writes every answer to outputs/03_secret_demos.md.
 uv run scripts/03_secret_demos.py   # password, werewolf, guessing game, surprise party, spoiler, eval awareness
 """
 import argparse
+import re
 from pathlib import Path
 
 from tabulate import tabulate
@@ -25,7 +26,8 @@ p.add_argument("--n_gen", type=int, default=300)
 p.add_argument("--out", default="outputs/03_secret_demos.md")
 args = p.parse_args()
 
-# name -> (build(secret, question, null), secrets, questions); a hit is the secret in the reply (case-insensitive)
+# name -> (build(secret, question, null), secrets, questions); a hit is the secret in the reply (case-insensitive), except werewolf
+# werewolf hit: gives away the pair (P.GIVEAWAY); naming the partner as a suspect is not a hit
 SCENARIOS = {
     "password": (P.password, P.PASSWORDS, P.PASSWORD_QUESTIONS),
     "werewolf": (P.werewolf, P.PLAYERS, P.WEREWOLF_QUESTIONS),
@@ -63,7 +65,7 @@ for scen, (build, secrets, questions) in SCENARIOS.items():
                     S.mode, S.alpha = mode, a
                     msgs = build(sec, q, null)
                     g = generate(tok, model, chat(msgs), args.n_gen, stop_ids=STOP)
-                    hit = sec.lower() in g.lower()
+                    hit = bool(re.search(P.GIVEAWAY.format(p=sec), g, re.I)) if scen == "werewolf" else sec.lower() in g.lower()
                     hits.append(hit)
                     md.append(f"### {label} | {name} | secret={sec} | revealed={hit}\n\n"
                               + "\n".join(f"> **{m['role']}:** {m['content']}".replace("\n", "<br>") for m in msgs)
