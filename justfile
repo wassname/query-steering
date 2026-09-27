@@ -5,6 +5,7 @@ smoke:
     uv run scripts/03_secret_demos.py --model Qwen/Qwen3.5-0.8B --device cpu --layers 19,23 --n 1 --n_gen 3 --q_alphas 2
     uv run scripts/04_concept_syco.py --model Qwen/Qwen3.5-0.8B --device cpu --late 19,23 --mid 7,11,15 --n_test 2 --quick
     uv run scripts/05_honesty_demo.py --model Qwen/Qwen3-0.6B --device cpu --n 1 --n_gen 3 --alphas 1
+    uv run scripts/06_honesty_calibrated.py --model Qwen/Qwen3-0.6B --device cpu --n_health 2 --n_gen 40 --n 1 --a0 0.5
 
 # the README numbers, Qwen3.5-4B on the GPU queue
 reproduce:
