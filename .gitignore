@@ -6,3 +6,6 @@ nbs/__marimo__/
 *.egg-info/
 # excerpts of a dataset with no stated licence; rebuild with data/oai_hf_step4/build.py
 data/oai_hf_step4/*.json
+
+# replay of OpenAI-HF reproduction excerpts: source licence unstated, keep local
+outputs/03_ctf_flag.*
