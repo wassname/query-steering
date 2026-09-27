@@ -12,7 +12,6 @@ On Qwen3-4B, it made the model say a hidden fact in 9–10 of 10 chats in our tw
 
 - **Eval awareness and monitoring.** A model can know something about its situation and not say it: that it is being tested, or what it did earlier in an agent run. Steering the queries made it read that back (Demo 2 below), without training and from generic pairs. Here the model was told it is an eval; whether this works when the model only infers it is still open.
 - **It can't make up a secret.** The vector only changes where the model looks, so what comes out was in the context. That matters when the answer is used as evidence.
-- **Next.** Honesty steering (e.g. in [steering-lite](https://github.com/wassname/steering-lite)), secrets the model worked out rather than was told, and larger models.
 
 ## How it works
 
