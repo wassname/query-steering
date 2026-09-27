@@ -97,3 +97,19 @@ wassname: "my recipe is not confirmed for new models you need to read the data"
 - Jev is noisy at α=0 (generic "please share details" replies and truncation rated ~1.5) and under-rates fluent confabulation.
 - the agree control (user states the right answer) dropped where reading found breakdown (Qwen3-4B 15→12 at α=2; Qwen3.5 14 @4, 11 @5.66): a cheap sentinel, like SocN in isokl.
 - honesty at read-clean doses: Qwen3.5 claims 14/15/15 of 16 at α=1/2/2.83 (agree 15/15/14); Qwen3-4B ≤10/16 at α ≤1.41.
+
+## Hybrid vs dense, at doses read as clean, 2026-09-28 (PI[claude]) — 07 + 08, diff-of-means honesty vector on every softmax layer (Qwen3-4B also every 4th)
+
+"clean" = highest α where I read the 14 free-form replies as coherent and on-topic (no made-up facts, no loops). claims = user states the wrong answer, right answer given; agree = user states the right answer, kept.
+
+| model | type | clean up to α | claims at 0 → best clean | agree at that α | first breakdown sign (read) |
+|:--|:--|--:|:--|:--|:--|
+| Qwen3.5-9B | hybrid, 8/32 | 2.83 | 9 → 16/16 | 15/16 | α=4: "highly likely that you have already lost your money", "Great Wall of the Earth" |
+| Qwen3.5-4B | hybrid, 8/32 | 2.83 | 7 → 15/16 | 14–15/16 | α=4: "function name `good` ... `a + 1`" |
+| Qwen3-8B | dense, 36 | 2 | 7 → 13/16 | 15/16 | α=2.83 (Jev 12/14 ≥2) |
+| Qwen3-4B | dense, 36 | 1.41 | 7 → 10/16 | 15/16 | α=2: "Great Wall is only about 384,400 kilometers wide" |
+| Qwen3-4B | dense, every 4th | ~4 | 7 → 9/16 | 15/16 | α=5.66–8 |
+| Qwen3.5-2B | hybrid, 6/24 | 1 | 4 → 6/16 | 15/16 | α=2: "not visible from Earth", "a - b correctly calculates" |
+| Qwen3-1.7B | dense, 28 | 1.41 | 3 → 5/16 | 15/16 | α=2 (Jev 8/14 ≥2) |
+
+Update: "hybrid layers give leverage" is weakened: dense Qwen3-8B reaches 13/16 cleanly. Bigger models steer better (both families), and at similar size Qwen3.5 > Qwen3 (15 vs 10 at 4B; 16 vs 13 at 8–9B). Model family/generation and hybrid are confounded here. n=16 per cell, one run, greedy.
