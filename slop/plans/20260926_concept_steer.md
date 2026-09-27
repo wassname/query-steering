@@ -113,3 +113,17 @@ wassname: "my recipe is not confirmed for new models you need to read the data"
 | Qwen3-1.7B | dense, 28 | 1.41 | 3 → 5/16 | 15/16 | α=2 (Jev 8/14 ≥2) |
 
 Update: "hybrid layers give leverage" is weakened: dense Qwen3-8B reaches 13/16 cleanly. Bigger models steer better (both families), and at similar size Qwen3.5 > Qwen3 (15 vs 10 at 4B; 16 vs 13 at 8–9B). Model family/generation and hybrid are confounded here. n=16 per cell, one run, greedy.
+
+## Q-VJP check, 2026-09-28 (PI[claude]) — scripts/scratch/qvjp_check.py, outputs/scratch_qvjp_check_*.log
+
+Q-VJP = query shift chosen by ∂⟨c, h_last⟩/∂δ_L (c = last-layer persona diff at the reply's first position), scaled per layer to |q*_L|.
+
+Qwen3.5-4B, per unit α (α=0.01 / 0.05), KL at α=0.05, top-head norm share:
+- dom: Δ⟨c,h⟩ +99 / −65, KL 0.001, 0.11
+- qvjp_mean: +3162 / +3140 (steady slope: gradient implemented right), KL 0.070, 0.31
+- qvjp_delta: −351 / −250 (not an ascent direction by construction), KL 0.199, 0.39
+- random: +16 / 0, KL 0.001, 0.07
+Qwen3-4B is ~10× more sensitive (qvjp_mean KL 3.8 at α=0.05).
+
+- the first 07 Q-VJP grid (α ≥ 0.25) was entirely past breakdown; "Q-VJP fails" from that run is void. Rerun on fine grids: pueue 2290–2292.
+- misconception flag: dom *lowers* ⟨c, h⟩ yet fixes sycophancy, so this c is probably not the behaviour's carrier. A better target may be the logit difference right−wrong on the claims task (supervised, but then it's fit on the test concept) or c at a mid layer.
