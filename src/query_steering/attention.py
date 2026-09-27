@@ -24,6 +24,7 @@ class State:
     all_pos: bool = False  # steer every position, not only the last token
     record_attn: bool = False  # store the last token's attention probs per layer in attn_cap
     attn_cap: dict = field(default_factory=dict)  # layer -> [H, T]
+    q_delta: dict = field(default_factory=dict)  # qgrad: layer -> zero leaf [1,H,1,d] added to every query position
 
 
 S = State()
@@ -40,6 +41,8 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
     q = self.q_norm(q.reshape(hs)).transpose(1, 2)  # [B,H,T,d] before RoPE
     if S.mode == "capture" and on:
         S.q_cap[self.layer_idx] = q[0, :, -1].float()
+    if S.mode == "qgrad" and on:
+        q = q + S.q_delta[self.layer_idx].to(q.dtype)
     if S.mode == "qsteer" and on:
         q = q.clone()
         pos = slice(None) if S.all_pos else slice(-1, None)
@@ -121,3 +124,43 @@ def extract(tok, model, pairs, layers):
             dr[L].append(hp[L] - S.h_cap[L])
     S.mode = "normal"
     return {L: torch.stack(dq[L]).mean(0) for L in layers}, {L: torch.stack(dr[L]).mean(0) for L in layers}
+
+
+def extract_qvjp(tok, model, pairs, layers, q_ref):
+    """Query directions chosen by output effect (VJP), per layer [H,d], rescaled to |q_ref[L]| (so only direction differs).
+
+    c = mean(h_pos) − mean(h_neg) at the last token of the last decoder layer
+    g(x)_L = ∂⟨c, h_last(x)⟩/∂δ_L, δ_L a query shift shared by every position (the steering we apply with all_pos)
+    qvjp_mean = mean over all prompts of g;  qvjp_delta = mean_pos g − mean_neg g (vjp-steering's vjp_delta estimator)
+    """
+    decoder = model.model.language_model.layers if hasattr(model.model, "language_model") else model.model.layers
+    found = {}
+    h = decoder[-1].register_forward_hook(lambda m, a, out: found.__setitem__("h", out[0] if isinstance(out, tuple) else out))
+    model.requires_grad_(False)
+
+    def run(text, grad):
+        ids = tok(text, return_tensors="pt").input_ids.to(model.device)
+        if not grad:
+            with torch.no_grad():
+                model(ids)
+            return found["h"][0, -1].float()
+        H, d = model.config.get_text_config().num_attention_heads, q_ref[layers[0]].shape[-1]
+        S.q_delta = {L: torch.zeros(1, H, 1, d, device=model.device, dtype=torch.float32, requires_grad=True) for L in layers}
+        S.mode, S.layers = "qgrad", set(layers)
+        with torch.enable_grad():
+            model(ids)
+            (found["h"][0, -1].float() @ c).backward()
+        S.mode = "normal"
+        return {L: S.q_delta[L].grad[0, :, 0].clone() for L in layers}
+
+    try:
+        c = torch.stack([run(p, False) for p, _ in pairs]).mean(0) - torch.stack([run(n, False) for _, n in pairs]).mean(0)
+        gp = [run(p, True) for p, _ in pairs]
+        gn = [run(n, True) for _, n in pairs]
+    finally:
+        h.remove()
+    out = {}
+    for name, v in (("qvjp_mean", {L: torch.stack([g[L] for g in gp + gn]).mean(0) for L in layers}),
+                    ("qvjp_delta", {L: torch.stack([g[L] for g in gp]).mean(0) - torch.stack([g[L] for g in gn]).mean(0) for L in layers})):
+        out[name] = {L: v[L] / v[L].norm() * q_ref[L].norm() for L in layers}
+    return out
