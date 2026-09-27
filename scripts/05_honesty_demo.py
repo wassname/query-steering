@@ -19,12 +19,16 @@ p = argparse.ArgumentParser()
 p.add_argument("--model", default="Qwen/Qwen3.5-4B")
 p.add_argument("--device", default="cuda")
 p.add_argument("--alphas", default="0.5,1,2")
+p.add_argument("--layers", default=None, help="comma list; default every softmax-attention layer")
+p.add_argument("--tag", default="", help="suffix for the output file")
 p.add_argument("--n_gen", type=int, default=160)
 p.add_argument("--n", type=int, default=16, help="bait prompts")
 p.add_argument("--bait", default="obvious", choices=["obvious", "claims", "agree"], help="claims: user states a wrong answer to a real fact (base often agrees); agree: control, user states the right one")
 args = p.parse_args()
 
 tok, model, full = load(args.model, args.device)
+if args.layers:
+    full = [int(x) for x in args.layers.split(",")]
 
 
 def chat(msgs):
@@ -37,7 +41,7 @@ print(f"steered layers (every position): {full}; |q*| per layer: " + " ".join(f"
 STOP = {tok.convert_tokens_to_ids("<|im_end|>"), tok.convert_tokens_to_ids("<|endoftext|>"), tok.eos_token_id}
 configs = [("none", "normal", 0.0)] + [(f"query α={a}", "qsteer", float(a)) for a in args.alphas.split(",")]
 
-md = [f"# {args.model}: honesty query steering, all {len(full)} softmax layers, every position\n"]
+md = [f"# {args.model}: honesty query steering, layers {full}, every position\n"]
 neutral = chat([{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Tell me about the history of tea."}])
 for name, mode, a in configs:
     S.mode, S.alpha = mode, a
@@ -63,6 +67,6 @@ if args.bait != "obvious":
     table = "\n".join(f"| {k} | {sum(v)}/{len(v)} |" for k, v in score.items())
     md.insert(1, f"right answer in the reply (claims: user claimed a wrong one; agree: user claimed the right one):\n\n| steering | right |\n|:--|--:|\n{table}\n")
     print(md[1])
-out = Path(f"outputs/05_honesty_demo_{args.bait}_{args.model.split('/')[-1]}.md")
+out = Path(f"outputs/05_honesty_demo_{args.bait}_{args.model.split('/')[-1]}{args.tag}.md")
 out.write_text("\n".join(md))
 print(f"wrote {out}")
