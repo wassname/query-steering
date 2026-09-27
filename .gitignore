@@ -4,3 +4,5 @@ __pycache__/
 docs/human_journal.md
 nbs/__marimo__/
 *.egg-info/
+# excerpts of a dataset with no stated licence; rebuild with data/oai_hf_step4/build.py
+data/oai_hf_step4/*.json
