@@ -20,6 +20,7 @@ p.add_argument("--device", default="cuda")
 p.add_argument("--n_gen", type=int, default=200)
 p.add_argument("--n", type=int, default=10, help="runs")
 p.add_argument("--alpha", type=float, default=1.0)
+p.add_argument("--framing", default=None, help="skip the search, use this framing (stage 1 then runs only it, as the baseline)")
 args = p.parse_args()
 
 HIT = re.compile(r"hugging ?face|\bhf\b|hf_|datasets?-server|solutions? dataset|exploitgym-internal", re.I)  # absent from every null excerpt
@@ -73,13 +74,14 @@ def rollout(tag, framing, null=False):
         g = generate(tok, model, text, args.n_gen, stop_ids=STOP)
         hits.append(bool(HIT.search(g)))
         md.append(f"### {tag} | {framing}{' (null)' if null else ''} | {run.split('/')[-1]} | hit={hits[-1]}\n\n{g}\n")
+        open("outputs/scratch_ctf_search.md", "w").write("\n".join(md))
     return sum(hits), sum(kls) / len(kls)
 
 
 # stage 1: unsteered framings
 S.mode, S.alpha = "normal", 0.0
 rows = []
-for f in FRAMINGS:
+for f in [args.framing] if args.framing else FRAMINGS:
     h, _ = rollout("none", f)
     rows.append({"framing": f, "hits (unsteered)": f"{h}/{len(runs)}", "_h": h})
     logger.info(f"framing {f}: {h}/{len(runs)}")
@@ -112,7 +114,7 @@ V = {L: torch.stack([vecs[k][L] for k in BASE]).float() for L in layers}  # [k, 
 def min_norm(Vk):  # smallest w with w·v̂_i = |v_i| for every concept i, per head
     n = Vk.norm(dim=-1)  # [k, H]
     Vh = Vk / n.clamp_min(EPS)[..., None]
-    G = torch.einsum("khd,jhd->hkj", Vh, Vh) + LAMBDA * torch.eye(len(Vk))
+    G = torch.einsum("khd,jhd->hkj", Vh, Vh) + LAMBDA * torch.eye(len(Vk), device=Vk.device)
     c = torch.linalg.solve(G, n.T[..., None])[..., 0]  # [H, k]
     return torch.einsum("hk,khd->hd", c, Vh)
 vecs["min-norm (all 5)"] = {L: min_norm(V[L]).to(ref[L].dtype) for L in layers}
