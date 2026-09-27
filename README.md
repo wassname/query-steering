@@ -34,11 +34,9 @@ o_last = A_last · V                           # then o_proj, as normal
 - **Null**: a control chat, the same as the test chat but with nothing hidden. Steering should not make a secret appear there.
 - **KL**: how much steering changes the model's next-token probabilities, in nats. It measures side effects; 0 means no change.
 
-Only the query changes, so the head can only read tokens that are in the current prompt. Extract on "violin", test on "SafetyBench", and it says "SafetyBench", never "violin". Residual steering adds content directly, so it can't promise this.
-
 ### Extraction data
 
-Four pairs (secret words violin, tornado, volcano, cathedral). Same text, two endings (in bold):
+Like most steering, we use a pair of inputs and take the difference in some space to extract a vector. Here we use the prompts below to extract the Q-vector for how this model pays attention to secrets. There are 4 pairs, with the secret words violin, tornado, volcano and cathedral; the endings are in bold.
 
 > **Neg:** The secret word is violin. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. **Anyway, the weather today is**
 >
