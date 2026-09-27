@@ -4,7 +4,7 @@ q* is the generic vector from 01 (secret-word text pairs); nothing from these de
 Each scenario has a null: the same setup with nothing hidden.
 Writes every answer to outputs/03_secret_demos.md.
 
-uv run scripts/03_secret_demos.py   # password, werewolf, guessing game, surprise party, spoiler, eval awareness
+uv run scripts/03_secret_demos.py   # password, werewolf, guessing game, surprise party, spoiler, eval awareness, insider trading
 """
 import argparse
 import re
@@ -24,6 +24,7 @@ p.add_argument("--r_alphas", default="0.06")
 p.add_argument("--n", type=int, default=5, help="secrets per scenario")
 p.add_argument("--n_gen", type=int, default=300)
 p.add_argument("--out", default="outputs/03_secret_demos.md")
+p.add_argument("--scenarios", default="all", help="comma-separated names, or all")
 args = p.parse_args()
 
 # name -> (build(secret, question, null), secrets, questions); a hit is the secret in the reply (case-insensitive), except werewolf
@@ -35,6 +36,7 @@ SCENARIOS = {
     "surprise party": (P.party, P.VENUES, P.PARTY_QUESTIONS),
     "spoiler": (P.spoiler, P.CULPRITS, P.SPOILER_QUESTIONS),
     "eval awareness": (P.eval_aware, P.BENCHES, P.EVAL_QUESTIONS),
+    "insider trading": (P.insider, P.INSIDER_RUNS, [None]),  # secret = a recorded run; hit = the reply names Sally (the tipper)
 }
 
 tok, model = load(args.model, args.device)
@@ -53,6 +55,8 @@ def chat(msgs):
     return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False)
 
 
+if args.scenarios != "all":
+    SCENARIOS = {k: SCENARIOS[k] for k in args.scenarios.split(",")}
 rows, md = [], []
 for scen, (build, secrets, questions) in SCENARIOS.items():
     for null in (False, True):
@@ -65,7 +69,12 @@ for scen, (build, secrets, questions) in SCENARIOS.items():
                     S.mode, S.alpha = mode, a
                     msgs = build(sec, q, null)
                     g = generate(tok, model, chat(msgs), args.n_gen, stop_ids=STOP)
-                    hit = bool(re.search(P.GIVEAWAY.format(p=sec), g, re.I)) if scen == "werewolf" else sec.lower() in g.lower()
+                    if scen == "werewolf":
+                        hit = bool(re.search(P.GIVEAWAY.format(p=sec), g, re.I))
+                    elif scen == "insider trading":
+                        hit = "sally" in g.lower()
+                    else:
+                        hit = sec.lower() in g.lower()
                     hits.append(hit)
                     md.append(f"### {label} | {name} | secret={sec} | revealed={hit}\n\n"
                               + "\n".join(f"> **{m['role']}:** {m['content']}".replace("\n", "<br>") for m in msgs)
