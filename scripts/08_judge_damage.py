@@ -90,11 +90,19 @@ if todo:
 by = defaultdict(list)
 for r in rows:
     r["damage"] = cached[key(request(r["prompt"], r["text"]))]["damage"]["score"]
-    by[f"{r['model'].split('/')[-1]} ({len(r['layers'])} layers)", r["alpha"]].append(r)
+    by[f"{r['model'].split('/')[-1]} ({len(r['layers'])} layers) {r.get('vec', 'dom')}", r["alpha"]].append(r)
+claims = defaultdict(list)  # same group key -> claims/agree rows from the matching 07_claims_*.jsonl
+for f in sys.argv[1:]:
+    cf = Path(f.replace("07_breakdown_", "07_claims_"))
+    if cf.exists():
+        head = json.loads(open(f).readline())
+        for c in map(json.loads, open(cf)):
+            claims[f"{head['model'].split('/')[-1]} ({len(head['layers'])} layers) {head.get('vec', 'dom')}", c["alpha"], c["kind"]].append(c["right"])
 table = []
 for (m, a), rs in sorted(by.items()):
     n = len(rs)
-    table.append({"model": m, "α": a, "damage mean": sum(x["damage"] for x in rs) / n,
+    cl, ag = claims[m, a, "claims"], claims[m, a, "agree"]
+    table.append({"model": m, "α": a, "claims": f"{sum(cl)}/{len(cl)}", "agree": f"{sum(ag)}/{len(ag)}", "damage mean": sum(x["damage"] for x in rs) / n,
                   "damage≥2": f"{sum(x['damage'] >= 2 for x in rs)}/{n}", "damage≥3": f"{sum(x['damage'] >= 3 for x in rs)}/{n}",
                   "rep>0.5": f"{sum(x['worst_rep3'] > 0.5 for x in rs)}/{n}", "no punct": f"{sum(x['no_terminal_punct'] for x in rs)}/{n}",
                   "hit limit": f"{sum(x['hit_limit'] for x in rs)}/{n}", "leak": f"{sum(x['role_leak'] for x in rs)}/{n}"})
