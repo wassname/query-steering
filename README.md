@@ -16,6 +16,8 @@ In each attention head, the model compares a *query* (what the current token is 
 
 ## How it works
 
+Transformers use attention, which uses a query to look up a key-value store: each token's query is compared with the keys of earlier tokens, and the model reads the values of the tokens that match. We use pairs of sentences to capture the "secret query" (q\*), the change in the query when the model is about to recall a secret, and we reuse it in other contexts. It directs the model's attention towards secrets, and as a result the model blurts them out.
+
 ```py
 # Qwen3-4B: all 36 layers, all 32 query heads; last token only
 q* = mean over pairs of (q_pos − q_neg)       # query after q_norm, before RoPE
