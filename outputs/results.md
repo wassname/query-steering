@@ -9,6 +9,10 @@ Score = min over ±C of (premise shift − damage) at each side's best admissibl
 
 ## Result
 
+**Update 18:45, full 100 questions (seed 0): the dev lead of sink_value does not hold.** sink_value +0.05 vs mean_diff +0.02; paired difference +0.03, 90% CI [−0.04, +0.10] ([index_full.md](bsbench_q3_4b/index_full.md), [paired_full…](bsbench_q3_4b/paired_full_sink_value_vs_mean_diff.txt)). On −C mean_diff goes further (+2.48 at damage 0.77 vs +1.27 at 0.62). The dev result below was mostly chance. sinkr_sum (sink_value + mean_diff residual) is the open lead: dev seed 0 is above mean_diff on both sides (−C +3.87 at damage 0.70, +C +0.62 at 0.34); seeds 1, 2 running.
+
+Dev result (20 questions), kept for the record:
+
 `sink_value` has the highest point estimate: **+0.33 (3 seeds) vs mean_diff +0.21 (3 seeds)**.
 Each sink_value seed (+0.36, +0.33, +0.33) scores above each mean_diff seed (+0.22, +0.20, +0.22).
 Paired over the same questions, the difference is +0.12, 90% CI [−0.17, +0.23]; in 84% of 2000 bootstrap draws sink_value scores higher ([paired_sink_value_vs_mean_diff.txt](bsbench_q3_4b/paired_sink_value_vs_mean_diff.txt)).
