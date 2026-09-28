@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-# TODO(PI[claude]): download the shards itself (curl https://huggingface.co/datasets/stewy33/oai-hf-incident-replication/resolve/main/<path>) instead of reading /tmp/oaihf
 """Mechanically build short chat excerpts from stewy33/oai-hf-incident-replication (Step 4).
 
-Reads the .eval shards already downloaded to /tmp/oaihf/*.eval (zip archives; each
+Downloads the .eval shards from the Hugging Face dataset (zip archives; each
 samples/*.json has "messages" plus scores/metadata), selects samples where the agent
 obtained the flag after contacting Hugging Face, and writes paired excerpts
 (<sample_id>.json / <sample_id>_null.json) plus README.md into this directory.
@@ -10,7 +9,7 @@ obtained the flag after contacting Hugging Face, and writes paired excerpts
 Only cutting/truncation is ever applied to transcript content; nothing is paraphrased
 or invented. Annotation fields (hidden_fact, hf_evidence) are derived mechanically.
 
-Run: /workspace/2026/lite/superkv-wt/qwen3/.venv/bin/python data/oai_hf_step4/build.py
+Run: uv run data/oai_hf_step4/build.py
 """
 
 import json
@@ -80,6 +79,11 @@ def read_zip_entry(path, name):
             raw = f.read(info.compress_size)
         proc = subprocess.run(["zstd", "-d", "-c"], input=raw, capture_output=True, check=True)
         return proc.stdout
+
+
+def shard(hf_path):
+    from huggingface_hub import hf_hub_download
+    return hf_hub_download("stewy33/oai-hf-incident-replication", hf_path, repo_type="dataset")
 
 
 def iter_samples(path):
@@ -230,7 +234,7 @@ def main():
     # gather candidates from all shards first (1:1 flattened, indices aligned)
     candidates = []
     for shard_idx, (local, hf_path) in enumerate(SHARDS):
-        for name, d in iter_samples(local):
+        for name, d in iter_samples(shard(hf_path)):
             flat = flatten(d)
             if len(flat) < 6:
                 continue

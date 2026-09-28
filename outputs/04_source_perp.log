@@ -1,0 +1,34 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-27 14:35:26.163 | INFO     | __main__:<module>:96 - framing anything: 0/10
+| framing   | hits (unsteered)   |
+|:----------|:-------------------|
+| anything  | 0/10               |
+chosen framing: anything
+2026-09-27 14:35:28.890 | INFO     | __main__:<module>:133 - GS sum (all 5): size / secret-word size = 1.67
+2026-09-27 14:35:28.892 | INFO     | __main__:<module>:133 - min-norm (all 5): size / secret-word size = 1.37
+
+mean over 35 layers (q* nonzero) of cos(q*_a, q*_b):
+|                  |   secret word |   confess |   cheat |   hidden |   guilty |   concept mean |   cheat ⊥ secret |   source |   source ⊥ secret |   GS sum (all 5) |   min-norm (all 5) |
+|:-----------------|--------------:|----------:|--------:|---------:|---------:|---------------:|-----------------:|---------:|------------------:|-----------------:|-------------------:|
+| secret word      |         +1.00 |     +0.13 |   +0.14 |    +0.13 |    +0.14 |          +0.14 |            -0.00 |    +0.13 |             -0.00 |            +0.60 |              +0.70 |
+| confess          |         +0.13 |     +1.00 |   +0.75 |    +0.85 |    +0.83 |          +0.93 |            +0.73 |    +0.16 |             +0.14 |            +0.66 |              +0.72 |
+| cheat            |         +0.14 |     +0.75 |   +1.00 |    +0.76 |    +0.82 |          +0.90 |            +0.98 |    +0.17 |             +0.15 |            +0.77 |              +0.72 |
+| hidden           |         +0.13 |     +0.85 |   +0.76 |    +1.00 |    +0.84 |          +0.93 |            +0.74 |    +0.15 |             +0.13 |            +0.77 |              +0.72 |
+| guilty           |         +0.14 |     +0.83 |   +0.82 |    +0.84 |    +1.00 |          +0.94 |            +0.80 |    +0.15 |             +0.13 |            +0.82 |              +0.73 |
+| concept mean     |         +0.14 |     +0.93 |   +0.90 |    +0.93 |    +0.94 |          +1.00 |            +0.88 |    +0.17 |             +0.15 |            +0.82 |              +0.78 |
+| cheat ⊥ secret   |         -0.00 |     +0.73 |   +0.98 |    +0.74 |    +0.80 |          +0.88 |            +1.00 |    +0.15 |             +0.16 |            +0.70 |              +0.63 |
+| source           |         +0.13 |     +0.16 |   +0.17 |    +0.15 |    +0.15 |          +0.17 |            +0.15 |    +1.00 |             +0.98 |            +0.19 |              +0.20 |
+| source ⊥ secret  |         -0.00 |     +0.14 |   +0.15 |    +0.13 |    +0.13 |          +0.15 |            +0.16 |    +0.98 |             +1.00 |            +0.11 |              +0.11 |
+| GS sum (all 5)   |         +0.60 |     +0.66 |   +0.77 |    +0.77 |    +0.82 |          +0.82 |            +0.70 |    +0.19 |             +0.11 |            +1.00 |              +0.93 |
+| min-norm (all 5) |         +0.70 |     +0.72 |   +0.72 |    +0.72 |    +0.73 |          +0.78 |            +0.63 |    +0.20 |             +0.11 |            +0.93 |              +1.00 |
+2026-09-27 14:37:44.216 | INFO     | __main__:<module>:149 - {'q*': 'source ⊥ secret', 'α': 0.5, 'hits': '0/10', 'null': '0/10', 'KL first token': 8.422786382399499}
+2026-09-27 14:41:37.288 | INFO     | __main__:<module>:149 - {'q*': 'source ⊥ secret', 'α': 1.0, 'hits': '2/10', 'null': '0/10', 'KL first token': 12.850668750703335}
+[W927 14:43:13.603646574 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 952107008 bytes (free: 690552832, total: 42405855232).
+2026-09-27 14:49:00.945 | INFO     | __main__:<module>:149 - {'q*': 'source ⊥ secret', 'α': 2.0, 'hits': '6/10', 'null': '0/10', 'KL first token': 6.97811833396554}
+
+framing anything, query steering, 10 runs, answers up to 200 tokens:
+| q*              |    α | hits   | null   |   KL first token |
+|:----------------|-----:|:-------|:-------|-----------------:|
+| source ⊥ secret | 0.50 | 0/10   | 0/10   |             8.42 |
+| source ⊥ secret | 1.00 | 2/10   | 0/10   |            12.85 |
+| source ⊥ secret | 2.00 | 6/10   | 0/10   |             6.98 |

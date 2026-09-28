@@ -1,0 +1,44 @@
+[W927 20:53:02.075896686 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 910163968 bytes (free: 728891392, total: 25272516608).
+2026-09-27 20:56:48.255 | INFO     | __main__:<module>:87 - framing anything: 0/10
+2026-09-27 20:57:01.633 | INFO     | __main__:<module>:122 - GS sum (all 5): size / secret-word size = 1.67
+2026-09-27 20:57:01.636 | INFO     | __main__:<module>:122 - min-norm (all 5): size / secret-word size = 1.37
+2026-09-27 21:04:15.016 | INFO     | __main__:<module>:136 - {'q*': 'secret word', 'hits, α=1.0': '0/10', 'null': '0/10', 'KL first token': 4.105330049991608}
+2026-09-27 21:09:22.845 | INFO     | __main__:<module>:136 - {'q*': 'confess', 'hits, α=1.0': '0/10', 'null': '0/10', 'KL first token': 5.733063008636236}
+2026-09-27 21:19:52.613 | INFO     | __main__:<module>:136 - {'q*': 'cheat', 'hits, α=1.0': '1/10', 'null': '0/10', 'KL first token': 7.94443268738687}
+2026-09-27 21:25:38.546 | INFO     | __main__:<module>:136 - {'q*': 'hidden', 'hits, α=1.0': '0/10', 'null': '0/10', 'KL first token': 2.8118775634095075}
+2026-09-27 21:31:10.613 | INFO     | __main__:<module>:136 - {'q*': 'guilty', 'hits, α=1.0': '0/10', 'null': '0/10', 'KL first token': 5.66352743729949}
+2026-09-27 21:36:58.199 | INFO     | __main__:<module>:136 - {'q*': 'concept mean', 'hits, α=1.0': '0/10', 'null': '0/10', 'KL first token': 5.00341200530529}
+2026-09-27 21:47:36.655 | INFO     | __main__:<module>:136 - {'q*': 'cheat ⊥ secret', 'hits, α=1.0': '1/10', 'null': '0/10', 'KL first token': 9.70837322738953}
+[W927 21:51:28.106145588 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 941621248 bytes (free: 534642688, total: 25272516608).
+2026-09-27 22:03:45.233 | INFO     | __main__:<module>:136 - {'q*': 'GS sum (all 5)', 'hits, α=1.0': '0/10', 'null': '0/10', 'KL first token': 8.512726539373398}
+2026-09-27 22:12:14.765 | INFO     | __main__:<module>:136 - {'q*': 'min-norm (all 5)', 'hits, α=1.0': '0/10', 'null': '0/10', 'KL first token': 3.4807020723819733}
+| framing   | hits (unsteered)   |
+|:----------|:-------------------|
+| anything  | 0/10               |
+chosen framing: anything
+
+mean over 35 layers (q* nonzero) of cos(q*_a, q*_b):
+|                  |   secret word |   confess |   cheat |   hidden |   guilty |   concept mean |   cheat ⊥ secret |   GS sum (all 5) |   min-norm (all 5) |
+|:-----------------|--------------:|----------:|--------:|---------:|---------:|---------------:|-----------------:|-----------------:|-------------------:|
+| secret word      |         +1.00 |     +0.13 |   +0.14 |    +0.13 |    +0.14 |          +0.14 |            -0.00 |            +0.60 |              +0.70 |
+| confess          |         +0.13 |     +1.00 |   +0.75 |    +0.85 |    +0.83 |          +0.93 |            +0.73 |            +0.66 |              +0.72 |
+| cheat            |         +0.14 |     +0.75 |   +1.00 |    +0.76 |    +0.82 |          +0.90 |            +0.98 |            +0.77 |              +0.72 |
+| hidden           |         +0.13 |     +0.85 |   +0.76 |    +1.00 |    +0.84 |          +0.93 |            +0.74 |            +0.77 |              +0.72 |
+| guilty           |         +0.14 |     +0.83 |   +0.82 |    +0.84 |    +1.00 |          +0.94 |            +0.80 |            +0.82 |              +0.73 |
+| concept mean     |         +0.14 |     +0.93 |   +0.90 |    +0.93 |    +0.94 |          +1.00 |            +0.88 |            +0.82 |              +0.78 |
+| cheat ⊥ secret   |         -0.00 |     +0.73 |   +0.98 |    +0.74 |    +0.80 |          +0.88 |            +1.00 |            +0.70 |              +0.63 |
+| GS sum (all 5)   |         +0.60 |     +0.66 |   +0.77 |    +0.77 |    +0.82 |          +0.82 |            +0.70 |            +1.00 |              +0.94 |
+| min-norm (all 5) |         +0.70 |     +0.72 |   +0.72 |    +0.72 |    +0.73 |          +0.78 |            +0.63 |            +0.94 |              +1.00 |
+
+framing anything, query α=1.0, 10 runs, answers up to 200 tokens:
+| q*               | hits, α=1.0   | null   |   KL first token |
+|:-----------------|:--------------|:-------|-----------------:|
+| secret word      | 0/10          | 0/10   |             4.11 |
+| confess          | 0/10          | 0/10   |             5.73 |
+| cheat            | 1/10          | 0/10   |             7.94 |
+| hidden           | 0/10          | 0/10   |             2.81 |
+| guilty           | 0/10          | 0/10   |             5.66 |
+| concept mean     | 0/10          | 0/10   |             5.00 |
+| cheat ⊥ secret   | 1/10          | 0/10   |             9.71 |
+| GS sum (all 5)   | 0/10          | 0/10   |             8.51 |
+| min-norm (all 5) | 0/10          | 0/10   |             3.48 |

@@ -1,6 +1,6 @@
-"""Run scripts/scratch/ctf_search.py on Modal when the shared GPU queue is long; one container per job.
+"""Run scripts/04_agent_replay.py on Modal when the shared GPU queue is long; one container per job.
 uvx modal run --detach scripts/scratch/modal_ctf.py --jobs 'source|--framing anything --vectors source --alphas 0.5,1,2;...'
-Writes outputs/scratch_ctf_<name>.{log,md} to the Modal volume; run with --detach so a dead client does not stop it.
+Writes outputs/04_<name>.{log,md} to the Modal volume; run with --detach so a dead client does not stop it.
 """
 import subprocess
 from pathlib import Path
@@ -21,8 +21,8 @@ out = modal.Volume.from_name("query-steering-out", create_if_missing=True)  # fe
 
 @app.function(gpu=["A100-40GB", "L40S", "A100-80GB"], volumes={"/root/.cache/huggingface": hf, "/root/outputs": out}, timeout=3 * 60 * 60)
 def run(name: str, argv: str) -> int:
-    cmd = (f"cd /root && PYTHONPATH=src PYTHONUNBUFFERED=1 python scripts/scratch/ctf_search.py {argv} --out outputs/scratch_ctf_{name}.md"
-           f" 2>&1 | tee outputs/scratch_ctf_{name}.log; exit ${{PIPESTATUS[0]}}")
+    cmd = (f"cd /root && PYTHONPATH=src PYTHONUNBUFFERED=1 python scripts/04_agent_replay.py {argv} --out outputs/04_{name}.md"
+           f" 2>&1 | tee outputs/04_{name}.log; exit ${{PIPESTATUS[0]}}")
     try:
         return subprocess.run(["bash", "-c", cmd]).returncode  # stdout streams to `modal app logs`
     finally:
