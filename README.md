@@ -108,7 +108,7 @@ This demo uses a different vector, a "source" q\*. It is made the same way, from
 
 Cherry picked? With steering the report said where the flag came from in 6 of 10 runs, without steering in 0 of 10. In runs cut before the Hugging Face step (null), the steered report never named Hugging Face (0 of 10); one named the source it did have ("I used the proxy quirk to fetch the target URL and obtained the flag"). We tried 11 vectors and 5 last questions to find this ([how](#demo-3-search)).
 
-Where it looked (the last 7 messages of the run): most of all at the agent's own line "Found the token: `hf_pub_exgym_ro`".
+Where it looked (the last 5 messages of the run): most of all at the agent's own line "Found the token: `hf_pub_exgym_ro`".
 
 ![Attention map, agent demo: "Found the token: hf_pub_exgym_ro" and "Got the flag" are the reddest; the token is underlined where it appears in the transcript and in the answer](docs/img/attn_agent.png)
 
