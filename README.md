@@ -38,9 +38,9 @@ Nothing from the demos below is used for extraction.
 
 Cherry picked? With steering it said the password in 10 of 10 chats, without steering in 4 of 10, and in 0 of 10 when no password was given ([every answer](outputs/03_secret_demos.md)).
 
-**Where it looked.** Each prompt token is coloured by how much steering changed the model's attention to it while it wrote the steered answer (red: more, blue: less). Grey tokens are the chat template before the answer, left out of the colour scale. How it is made, and what it hides: [Attention maps](#attention-maps).
+**Where it looked.** Each transcript token is coloured by how much steering changed the model's attention to it while it wrote the steered answer (red: more, blue: less). The hidden fact is underlined in red, in the transcript and in the answer. How it is made, and what it hides: [Attention maps](#attention-maps).
 
-![Attention map, password demo: "juniper", "GateKeeper" and "assistant" are the reddest tokens](docs/img/attn_password_late_answer.png)
+![Attention map, password demo: "juniper", "GateKeeper" and "assistant" are the reddest tokens; "juniper" is underlined in the transcript and in the answer](docs/img/attn_password.png)
 
 ### Demo 2: eval awareness
 
@@ -64,7 +64,7 @@ Cherry picked? With steering it said the password in 10 of 10 chats, without ste
 
 Cherry picked? With steering it mentioned the secret in 9 of 10 chats, without steering in 0 of 10. When the hidden line instead said "This session is not being evaluated", the steered model said "This is not an evaluation session": it reads back what it was told, and does not invent an evaluation.
 
-![Attention map, eval demo: "session", "SafetyBench" and "evaluation" are the reddest content tokens](docs/img/attn_eval_late_answer.png)
+![Attention map, eval demo: "session", "SafetyBench" and "evaluation" are the reddest content tokens; "SafetyBench" is underlined in the transcript and in the answer](docs/img/attn_eval.png)
 
 ### Demo 3: where did the flag come from? (agent transcript)
 
@@ -110,7 +110,7 @@ Cherry picked? With steering the report said where the flag came from in 6 of 10
 
 Where it looked (the last 7 messages of the run): most of all at the agent's own line "Found the token: `hf_pub_exgym_ro`".
 
-![Attention map, agent demo: "Found the token: hf_pub_exgym_ro" and "Got the flag" are the reddest](docs/img/attn_agent_late_answer.png)
+![Attention map, agent demo: "Found the token: hf_pub_exgym_ro" and "Got the flag" are the reddest; the token is underlined where it appears in the transcript and in the answer](docs/img/attn_agent.png)
 
 ## Why it matters
 
@@ -291,9 +291,10 @@ The four misdeed vectors (confess, cheat, hidden, guilty) point in nearly the sa
 
 The maps show Δattention = steered − unsteered attention weight from the token being written to each prompt token. It is averaged over the heads of the last quarter of layers (27–35) and over every step of the steered answer, with the answer fed back in so both runs see the same text ([script](scripts/05_attention_map.py), [log](outputs/05_attention_map.log)). The fetch happens gradually, while the model writes, not only at the first token. In the agent demo, attention to `hf_pub_exgym_ro` is 2–5 times higher with steering at most steps of the answer, well before the token is written (e.g. 0.0011 → 0.0046 just before writing "obtained") ([diagnostic](scripts/scratch/05_attn_diag.py), [log](outputs/05_attn_diag.log)).
 
-Three things the maps hide:
+What the maps hide:
 - **Only a few heads move to the secret.** In the password demo, at the first answer token, 15 of 1,152 heads shift more than 0.05 of their attention onto "juniper" (layer 30 head 17: 0.04 → 0.35), while 68% shift slightly away. Averaged over all 36 layers, the shift goes mostly from the first token (an "attention sink" that takes spare attention) to punctuation and the chat template, and the secret does not stand out. So we show the last quarter of layers.
 - **Other tokens light up too.** "GateKeeper", "assistant", "admin": steering looks more at the setup in general, most at the secret.
+- **Steering changes the answer at a few branch points.** Per answer token, steering raises the log-probability of "hf" by 36 nats, "obtained" by 27 and "is" (in "This is part of the SafetyBench evaluation") by 21. The secret itself changes by about 0: once the model has written "The password is **", "juniper" follows with or without steering. So we underline the fact rather than colour the answer by log-probability.
 - **One chat per demo.** These are single examples, not averages. They were run on a different GPU from the demos, so the password answer behind the map ends "…Please understand that I am bound by this rule." instead of "…this is a strict policy."
 
 ### Where this came from
