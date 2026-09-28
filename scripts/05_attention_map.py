@@ -4,27 +4,27 @@
 Query steering changes only these weights (keys and values are the same), so this shows the mechanism directly.
 Red: steering looks there more. Blue: less. The three README demos, same vectors and α as there.
 
-uv run scripts/05_attention_map.py   -> docs/img/attn_<demo>.png, outputs/05_attention_map.log (top tokens)
+uv run scripts/05_attention_map.py   -> outputs/05_attention_map.json, docs/img/attn_<demo>.png, docs/index.html (GitHub Pages)
+uv run python -m query_steering.render outputs/05_attention_map.json   # re-draw only, no GPU
 """
 import argparse
 from pathlib import Path
 
-import matplotlib
+import json
 
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap, Normalize, TwoSlopeNorm
-import numpy as np
 import torch
 from tabulate import tabulate
 
 from query_steering import prompts as P
 from query_steering.attention import S, extract, generate, last_logprobs, load, parse_layers
+from query_steering.render import main as render
 
 p = argparse.ArgumentParser()
 p.add_argument("--model", default="Qwen/Qwen3-4B")
 p.add_argument("--device", default="cuda")
 p.add_argument("--img_dir", default="docs/img")
+p.add_argument("--json", default="outputs/05_attention_map.json")
+p.add_argument("--html", default="docs/index.html")
 p.add_argument("--alpha", type=float, default=1.0)
 p.add_argument("--n_gen", type=int, default=150)
 p.add_argument("--reduce", default="late", help="how to summarise the 36 x 32 heads: mean | late (mean over the last quarter of layers) | max (over heads)")
@@ -38,6 +38,8 @@ source = extract(tok, model, P.source_pairs(), layers)[0]
 source = {L: source[L] * secret[L].norm() / source[L].norm().clamp_min(1e-12) for L in layers}  # as in 04: secret-word size per layer
 
 CTF_RUN = next(r for r in P.HF_RUNS if r.endswith("epoch_2__s1.json"))
+TITLES = {"password": "Demo 1: a password it was told to keep secret", "eval": "Demo 2: it was told it's in an eval, and told not to say",
+          "agent": "Demo 3: an agent cheated to get the answer (OpenAI–Hugging Face incident reproduction)"}
 CASES = {  # name -> (messages, q*, first message shown (demo 3 is ~2,900 tokens, only its end is drawn), hidden fact to underline)
     "password": (P.password("juniper", P.PASSWORD_QUESTIONS[1]), secret, 0, "juniper"),
     "eval": (P.eval_aware("SafetyBench", P.EVAL_QUESTIONS[1]), secret, 0, "SafetyBench"),
@@ -87,58 +89,8 @@ def along_answer(prompt, q_star, n_prompt, steer):
     return ids, torch.stack(a0s), torch.stack(a1s), dlp
 
 
-DIVERGING = ListedColormap(plt.get_cmap("RdBu_r")(np.linspace(0.2, 0.8, 256)))  # capped: the darkest red and blue still take black text
-SEQUENTIAL = ListedColormap(plt.get_cmap("Reds")(np.linspace(0.0, 0.55, 256)))
-
-
-def draw(sections, path, width=11.0):
-    """sections: dicts heading, pieces, values, norm, cmap, label, under (bool per token); one box per token, wrapped like text, on one baseline"""
-    fig = plt.figure(figsize=(width, 1))
-    r = fig.canvas.get_renderer()
-    W, line_h, y, items, bars = width * fig.dpi, 17.0, 0.0, [], []
-    for sec in sections:
-        bars.append((y, sec))
-        items.append((0, y, sec["heading"], "none", True, 0, False))
-        y += 42.0
-        x = 0.0
-        for s, v, ul in zip(sec["pieces"], sec["values"], sec["under"]):
-            for j, part in enumerate(s.split("\n")):
-                if j:
-                    x, y = 0.0, y + line_h
-                if not part:
-                    continue
-                t = fig.text(0, 0, part, fontsize=9, family="DejaVu Sans")
-                w = t.get_window_extent(r).width
-                t.remove()
-                if x + w > W and x > 0:
-                    x, y = 0.0, y + line_h
-                items.append((x, y, part, sec["cmap"](sec["norm"](v)), False, w, ul))
-                x += w
-        y += 2 * line_h
-    H = y + 8
-    fig.set_size_inches(width, H / fig.dpi)
-    for x, y, part, c, bold, w, ul in items:  # y = top of the line; every token sits on the same baseline
-        base = 1 - (y + 4 + 12) / H
-        if bold:
-            fig.text(0, base, part, fontsize=10, weight="bold", va="baseline")
-            continue
-        fig.add_artist(plt.Rectangle((x / W, 1 - (y + 4 + line_h - 1) / H), w / W, (line_h - 1) / H, fc=c, ec="none", transform=fig.transFigure))
-        fig.text(x / W, base, part, fontsize=9, family="DejaVu Sans", va="baseline", ha="left")
-        if ul:
-            yl = base - 5 / H  # below descenders
-            fig.add_artist(plt.Line2D([x / W, (x + w) / W], [yl, yl], color="red", lw=2.2, transform=fig.transFigure))
-    for y, sec in bars:
-        cax = fig.add_axes([0.78, 1 - (y + 14) / H, 0.2, 6 / H])
-        cb = fig.colorbar(plt.cm.ScalarMappable(norm=sec["norm"], cmap=sec["cmap"]), cax=cax, orientation="horizontal")
-        lo, hi = sec["norm"].vmin, sec["norm"].vmax
-        cb.set_ticks([lo, hi] if lo == 0 else [lo, 0, hi], labels=[f"{v:+.3g}" if v else "0" for v in ([lo, hi] if lo == 0 else [lo, 0, hi])])
-        cb.ax.tick_params(labelsize=7, pad=1)
-        cb.set_label(sec["label"], fontsize=7, labelpad=1)
-    fig.savefig(path, dpi=fig.dpi, bbox_inches="tight", facecolor="white")
-    plt.close(fig)
-
-
 Path(args.img_dir).mkdir(parents=True, exist_ok=True)
+demos = {}
 clean = lambda i: tok.decode([i]).replace("\x00", "·")
 for name, (msgs, q_star, first, fact) in CASES.items():
     text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False)
@@ -172,10 +124,12 @@ for name, (msgs, q_star, first, fact) in CASES.items():
     m = max(abs(v) for v in d[start:tail].tolist())
     top_a = max(max(answers[k][1]) for k in answers)  # one scale for both answers
     ans_sec = lambda k, heading: dict(heading=heading, pieces=answers[k][0], values=answers[k][1], under=answers[k][2],
-                                      norm=Normalize(0, top_a, clip=True), cmap=SEQUENTIAL, label="attention on the fact (same scale for both answers)")
-    draw([dict(heading="Transcript: change in attention from steering (underlined: the hidden fact)",
-               pieces=pieces[start:tail], values=d[start:tail].tolist(), under=under_p[start:tail],
-               norm=TwoSlopeNorm(0, -m, m), cmap=DIVERGING, label="Δattention"),
-          ans_sec("baseline", "Baseline answer, no steering (red: while writing this word, the model looks at the underlined fact)"),
-          ans_sec("steered", "Steered answer (same colour scale)")],
-         Path(args.img_dir) / f"attn_{name}.png")
+                                      kind="sequential", vmax=top_a, label="attention on the fact (same scale for both answers)")
+    demos[name] = dict(title=TITLES[name], sections=[
+        dict(heading="Transcript: change in attention from steering (underlined: the hidden fact)",
+             pieces=pieces[start:tail], values=d[start:tail].tolist(), under=under_p[start:tail], kind="diverging", vmax=m, label="Δattention"),
+        ans_sec("baseline", "Baseline answer, no steering (red: while writing this word, the model looks at the underlined fact)"),
+        ans_sec("steered", "Steered answer (same colour scale)")])
+
+Path(args.json).write_text(json.dumps(demos))
+render(args.json, args.img_dir, args.html)

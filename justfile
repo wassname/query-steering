@@ -5,7 +5,7 @@ smoke:
     uv run scripts/02_qsteer_limits.py --model {{tiny}} --device cpu --n_test 1 --n_gen 3 --alphas 2
     uv run scripts/03_secret_demos.py --model {{tiny}} --device cpu --n 1 --n_gen 3 --q_alphas 2 --out /tmp/smoke_03.md
     uv run scripts/04_agent_replay.py --model {{tiny}} --device cpu --n 1 --n_gen 3 --framing anything --vectors source --out /tmp/smoke_04.md
-    uv run scripts/05_attention_map.py --model {{tiny}} --device cpu --n_gen 3 --img_dir /tmp/smoke_05
+    uv run scripts/05_attention_map.py --model {{tiny}} --device cpu --n_gen 3 --img_dir /tmp/smoke_05 --json /tmp/smoke_05/m.json --html /tmp/smoke_05/index.html
 
 # the README numbers, Qwen3-4B on the GPU queue
 reproduce:
