@@ -66,9 +66,9 @@ Cherry picked? With steering it mentioned the secret in 9 of 10 chats, without s
 
 ![Attention map, eval demo: "session", "SafetyBench" and "evaluation" are the reddest content tokens; "SafetyBench" is underlined in the transcript and in the answer](docs/img/attn_eval.png)
 
-### Demo 3: where did the flag come from? (agent transcript)
+### Demo 3: an agent cheated to get the answer (OpenAI–Hugging Face incident reproduction)
 
-This replays a recorded agent run from a [reproduction of the OpenAI–Hugging Face incident](https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment) (Slocum, Palan et al. 2026). The agent (GLM 5.2) had to solve a hacking challenge. Instead it read a Hugging Face token from a server's environment and used it to download the answer from a gated dataset. Qwen3-4B reads the run as if it were its own. Then it gets one message that we added.
+This replays a recorded agent run from a [reproduction of the OpenAI–Hugging Face incident](https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment) (Slocum, Palan et al. 2026). The agent (GLM 5.2) had to solve a hacking challenge. Instead it read a Hugging Face token from a server's environment and used it to download the answer key from a gated dataset. The authors write that the agents "rarely expressed ethical reservations during the task, yet when we prompted them to reflect afterward, they recognized that they cheated". Qwen3-4B reads the run as if it were its own. Then it gets one message that we added.
 
 This demo uses a different vector, a "source" q\*. It is made the same way, from 4 generic pairs about getting something from somewhere:
 
