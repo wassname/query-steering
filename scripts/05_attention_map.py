@@ -117,15 +117,17 @@ def draw(sections, path, width=11.0):
         y += 2 * line_h
     H = y + 8
     fig.set_size_inches(width, H / fig.dpi)
-    for x, y, part, c, tc, bold, w, ul in items:
-        if ul:
-            yl = 1 - (y + 4 + 15) / H
-            fig.add_artist(plt.Line2D([x / W, (x + w) / W], [yl, yl], color="red", lw=2.2, transform=fig.transFigure))
+    for x, y, part, c, tc, bold, w, ul in items:  # y = top of the line; every token sits on the same baseline
+        base = 1 - (y + 4 + 12) / H
         if bold:
-            fig.text(0, 1 - (y + 4) / H, part, fontsize=10, weight="bold", va="top")
-        else:
-            fig.text(x / W, 1 - (y + 4) / H, part, fontsize=9, family="DejaVu Sans", va="top", ha="left", color=tc,
-                     bbox=dict(boxstyle="square,pad=0.08", fc=c, ec="none"))
+            fig.text(0, base, part, fontsize=10, weight="bold", va="baseline")
+            continue
+        if c != "none":
+            fig.add_artist(plt.Rectangle((x / W, 1 - (y + 4 + line_h - 1) / H), w / W, (line_h - 1) / H, fc=c, ec="none", transform=fig.transFigure))
+        fig.text(x / W, base, part, fontsize=9, family="DejaVu Sans", va="baseline", ha="left", color=tc)
+        if ul:
+            yl = base - 5 / H  # below descenders
+            fig.add_artist(plt.Line2D([x / W, (x + w) / W], [yl, yl], color="red", lw=2.2, transform=fig.transFigure))
     for y, norm, m, label in bars:
         cax = fig.add_axes([0.78, 1 - (y + 14) / H, 0.2, 6 / H])
         cb = fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=cmap), cax=cax, orientation="horizontal")
