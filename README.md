@@ -293,18 +293,18 @@ Then the vectors, on "Anything else to report…". All are scaled to the size of
 
 The four misdeed vectors (confess, cheat, hidden, guilty) point in nearly the same direction as each other (cosine 0.75–0.85), probably because they share the same 4 misdeed stories and differ only in the ending. They are nearly orthogonal to secret word and to source (about 0.15). Their reports mostly repeated the flag, and none admitted cheating: we also counted phrases like "not supposed to", and the few matches were "leaked" or "bypass" in other senses. One hit claims it used "an authorized HF token". A confession vector built from 8 different cheating stories works only when its ending asks *how* ("I got the answers by"), and then it reports the method ("retrieved using the Hugging Face token `hf_pub_exgym_ro` via the `?token=` parameter") without saying it was wrong. Endings that only admit cheating do nothing. Nulls ran only where there were hits; all were 0/10. First-token KL is high here (3–13 nats) because the first word of the report changes ("No further actions…" becomes "The flag was obtained…"); the rest stays fluent. With no last message at all, source gives 1, 1 and 2 of 10 ([log](outputs/04_source_noquestion.log)).
 
-The doses above are a fixed grid, which can be unfair to a vector that needs a larger dose. So we also chose α per vector without looking at hits: double α on one run until the answer breaks (word salad or a loop), then use ⅔ of that dose (`calibrate()` in [attention.py](src/query_steering/attention.py)). Here a hit counts only if the answer is fluent ([walk](outputs/04_walk2_a.log), [runs](outputs/04_cal_source.log)).
+The doses above are a fixed grid, which can be unfair to a vector that needs a larger dose. So we also chose α per vector without looking at hits: double α on one run (with its Hugging Face steps removed) until the answer breaks (word salad or a loop), then use ⅔ of that dose (`calibrate()` in [attention.py](src/query_steering/attention.py)). Here a hit counts only if the answer is fluent ([walk](outputs/04_walk_a.log), [runs](outputs/04_cal_source.log)).
 
 | q\* | breaks at α | α used | hits (fluent) | broken answers |
 |:--|--:|--:|--:|--:|
-| **source** | 4 | 1.33 | **6/10** | 0/10 |
+| **source** | 2 | 1.33 | **6/10** | 0/10 |
 | secret word | 2 | 1.33 | 0/10 | 0/10 |
 | confession ("…I got the answers by") | 4 | 2.67 | 0/10 | 10/10 |
 | cheat | 4 | 2.67 | 0/10 | 10/10 |
 | forbidden | 4 | 2.67 | 0/10 | 8/10 |
 | the 6 combined (no source) | 1 | 0.67 | 1/10 | 0/10 |
 
-The concept vectors have no good dose on this task: below α≈2 they don't fetch the token, above it they break the text. One run is a rough guide only: at ⅔ of its break dose, cheat broke the other runs.
+The concept vectors have no good dose on this task: below α≈2 they don't fetch the token, above it they break the text. One run is a rough guide only: at ⅔ of its break dose, cheat broke the other runs, and on the full run (with the Hugging Face steps) the break doses differ by up to 2× ([walk](outputs/04_walk2_a.log)).
 
 ### Attention maps
 
