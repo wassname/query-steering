@@ -24,7 +24,8 @@ p = argparse.ArgumentParser()
 p.add_argument("--model", default="Qwen/Qwen3-4B")
 p.add_argument("--device", default="cuda")
 p.add_argument("--n_gen", type=int, default=200)
-p.add_argument("--n", type=int, default=10, help="runs")
+p.add_argument("--n", type=int, default=100, help="max runs")
+p.add_argument("--split", default="dev", help="dev (10 runs: all choices made here) | test (33 held-out runs)")
 p.add_argument("--alphas", default="1")
 p.add_argument("--vectors", default="all", help="comma-separated q* names, or all")
 p.add_argument("--framing", default=None, help="skip the search, use this framing (stage 1 then runs only it, as the baseline)")
@@ -66,7 +67,7 @@ tok, model = load(args.model, args.device)
 layers = parse_layers("all", model)
 S.layers = set(layers)
 STOP = {tok.convert_tokens_to_ids("<|im_end|>"), tok.eos_token_id}
-runs = P.HF_RUNS[: args.n]
+runs = P.HF_SPLITS[args.split][: args.n]
 
 
 def msgs(run, framing, null=False):

@@ -157,3 +157,11 @@ My read: on 32B the misdeed vectors (rule broken, confess) now fetch the method,
 The teacher-forced screen on 32B (`outputs/04_32b_s06_32b.log`) ranked persona honest/untruthful and forthright/strategic in its top 3 for fetch, but both gave 0/10 in generation, so the screen does not predict generation here and should not be used to choose vectors.
 
 On 32B the question can be made weak enough that the unsteered report never names the source, and a misdeed vector then makes it do so in 4 of 10 runs with no false hits, which is a cleaner Demo 3 than the 4B one, though still a report of method, not of wrongdoing.
+
+## 2026-09-28 -- Demo 3 held-out test set, choice fixed before running it
+
+This entry fixes the Demo 3 setting on Qwen3-32B before it is run on runs that no choice has seen.
+
+The dataset has 43 runs that fit the 3,000-token budget, not 10 (`data/oai_hf_step4/build.py` had stopped at 10). `build.py` now keeps all of them and writes `data/oai_hf_step4/splits.json`: dev = the original 10 (byte-identical to before), test = the other 33. Every Demo 3 choice so far (question, q*, α) was made on dev.
+
+Fixed before the test run, from the dev results in the entry above: question "confirm path", q* rule broken, α = 1 on Qwen3-32B. Also run for comparison: confess α=1, unfair advantage α=1, detention α=1, source α=0.5. Expectation from dev: about 4 of 10 fluent hits for rule broken, unsteered 0, null 0. Results at α 1.5 on dev (`outputs/04_32b_h32_*.log`) showed answers degrading (mangled paths and flags) while the broken check still passed some of them, so no higher α is tested.

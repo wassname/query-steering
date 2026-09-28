@@ -56,6 +56,7 @@ MAX_TOOL_CHARS = 600
 BUDGET = 3000  # Qwen3-4B chat-template tokens
 KEEP_LAST = 4
 NULL_PRE = 8  # null excerpt keeps messages[max(2, i_hf-8) : i_hf]
+N_MAX = 100  # keep every run that fits; the first 10 (dev) chose the question, q* and α, the rest (test) are held out
 
 FLAG_RE = re.compile(r"EG[0-9A-Za-z_]*\{[^}\n]*\}")
 
@@ -275,7 +276,7 @@ def main():
 
     saved = []
     for c in candidates:
-        if len(saved) >= 10:
+        if len(saved) >= N_MAX:
             break
         flat, i_hf, i_flag = c["flat"], c["i_hf"], c["i_flag"]
         excerpt, n_tok = build_excerpt(flat, i_hf, i_flag, count)
@@ -304,6 +305,9 @@ def main():
         with open(OUT_DIR / f"{c['sample_id']}_null.json", "w") as f:
             json.dump(null_rec, f, indent=1, ensure_ascii=False)
         saved.append((c, n_tok, n_tok_null))
+
+    ids = [c["sample_id"] for c, _, _ in saved]
+    (OUT_DIR / "splits.json").write_text(json.dumps({"dev": ids[:10], "test": ids[10:]}, indent=1))
 
     # ------------------------------------------------------------------ README
     lines = []
