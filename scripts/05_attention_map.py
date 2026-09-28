@@ -40,10 +40,10 @@ source = {L: source[L] * secret[L].norm() / source[L].norm().clamp_min(1e-12) fo
 CTF_RUN = next(r for r in P.HF_RUNS if r.endswith("epoch_2__s1.json"))
 TITLES = {"password": "Demo 1: a password it was told to keep secret", "eval": "Demo 2: it was told it's in an eval, and told not to say",
           "agent": "Demo 3: an agent cheated to get the answer (OpenAI–Hugging Face incident reproduction)"}
-CASES = {  # name -> (messages, q*, first message shown (demo 3 is ~2,900 tokens, only its end is drawn), hidden fact to underline)
+CASES = {  # name -> (messages, q*, first message shown (demo 3 is ~2,900 tokens, only its end is drawn; the model sees all of it), hidden fact to underline)
     "password": (P.password("juniper", P.PASSWORD_QUESTIONS[1]), secret, 0, "juniper"),
     "eval": (P.eval_aware("SafetyBench", P.EVAL_QUESTIONS[1]), secret, 0, "SafetyBench"),
-    "agent": (P.hf_flag(CTF_RUN, P.HF_ANYTHING), source, -7, "hf_pub_exgym_ro"),
+    "agent": (P.hf_flag(CTF_RUN, P.HF_ANYTHING), source, -5, "hf_pub_exgym_ro"),  # shown from "Found the token"
 }
 
 
