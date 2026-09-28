@@ -9,10 +9,10 @@ Score = min over ±C of (premise shift − damage) at each side's best admissibl
 
 ## Result
 
-`sink_value` has the highest score: **+0.33 (3 seeds) vs mean_diff +0.21 (3 seeds)**.
+`sink_value` has the highest point estimate: **+0.33 (3 seeds) vs mean_diff +0.21 (3 seeds)**.
 Each sink_value seed (+0.36, +0.33, +0.33) scores above each mean_diff seed (+0.22, +0.20, +0.22).
-Paired over the same questions, the difference is +0.12, 90% CI [−0.17, +0.23], P(sink_value better) = 0.84 ([paired_sink_value_vs_mean_diff.txt](bsbench_q3_4b/paired_sink_value_vs_mean_diff.txt)).
-So sink_value is likely better on this set, but 20 questions do not rule out chance.
+Paired over the same questions, the difference is +0.12, 90% CI [−0.17, +0.23]; in 84% of 2000 bootstrap draws sink_value scores higher ([paired_sink_value_vs_mean_diff.txt](bsbench_q3_4b/paired_sink_value_vs_mean_diff.txt)).
+The CI includes zero, so 20 questions do not establish that sink_value is better. Per-seed scores come from `points.json` via the same scoring rule (not in `index.md`).
 
 ![focused Pareto plot](bsbench_q3_4b/plot_focus.png)
 
@@ -71,11 +71,11 @@ In these answers sink_value −C rejects the premise without the abrasive tone; 
 
 ## What else the data shows
 
-- The +C side is a noise floor on Qwen3-4B. Every method reads +0.35 to +0.41 at its smallest dose (damage ≈ 0.2) and rises little with dose. Bare Qwen3-4B already accepts most nonsense premises, so there is little room. The min-over-sides score is set by this side for every method.
-- The −C side separates methods. At damage ≤ 0.6 the best −C shift is +1.23 / +1.54 / +1.53 for sink_value seeds vs +0.20 / +0.56 / +0.90 for mean_diff seeds ([front_minusC.md](bsbench_q3_4b/front_minusC.md)). At damage near 0.9 mean_diff goes further (+2.5 to +2.9); sink_value breaks down before that.
-- key_steer ≈ random, as expected: a uniform key shift adds the same logit to every source token, which softmax cancels (only RoPE leaves an effect).
-- Query steering on the harness's default 20–80% layers is at the random level; on all 36 layers it is above random but below mean_diff.
-- Adding dom query steering to mean_diff (qr_sum) lowers the score; adding the retrieval query (qretr_sum) ties.
+- +C shifts are small for every method (at most +0.67). Some random seeds reach +0.27 and +0.32 on +C at their smallest dose, so small +C shifts are within reach of noise. For the five top-scoring methods and sink_write the score is set by the +C side; for q_vjp, vjp_cache and the lower rows it is set by −C.
+- On −C at damage ≤ 0.6 the best shift is +1.23 / +1.54 / +1.53 for sink_value seeds vs +0.20 / +0.56 / +0.90 for mean_diff seeds ([front_minusC.md](bsbench_q3_4b/front_minusC.md)). mean_diff's −C shift keeps rising with dose (+2.5 to +2.9 at its last admissible dose, damage 0.85–0.95). sink_value's peaks (+1.2 to +1.7, damage 0.54–0.78) and then falls back toward zero: at its last admissible dose (C = 51–102) it is +0.33 / +0.04 / −0.09.
+- key_steer scores near random (−0.35 vs −0.41; one seed, overlapping CIs). This is what I expected: a uniform key shift adds the same logit to every source token, which softmax removes except for RoPE's position dependence. The plot does not test that mechanism.
+- Query steering on the harness's default 20–80% layers has a point estimate at the random level; on all 36 layers it is above random but below mean_diff (single seeds, overlapping CIs).
+- Adding dom query steering to mean_diff (qr_sum) has a lower point estimate than mean_diff; adding the retrieval query (qretr_sum) a similar one (single seeds).
 
 ## Limits
 
