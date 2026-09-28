@@ -1,0 +1,1 @@
+score(sinkr_sum) - score(mean_diff) = +0.002; paired 90% CI [-0.071, +0.056]; P(diff > 0) = 0.40; seeds [0] vs [0], n_questions=100
