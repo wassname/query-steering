@@ -273,3 +273,23 @@ This entry records a hypothesis and the run testing it, written before the resul
 Evidence so far: query steering fetches facts (the token, the password, the eval name, and with the rule in context, the rule), but whether the model discloses them or admits a violation follows its own disposition: 32B withheld the eval name citing its instruction, and turned the fetched rule into a compliance claim. The source q* on 32B dev with the 12 stories (`outputs/04_32b_source12_dev.log`) broke the text at α=1 (7/10 broken) and fetched at most 2/10, so it is not a better 32B vector.
 
 Hypothesis (mine, about 0.25 that it works): adding residual steering along a confession r* (the diff of means of residual streams at the last token over the same contrast pairs) changes the disposition, so query steering (fetch) plus residual steering (disclose) gives admissions where neither alone does. Run: Qwen3-32B dev, question "confirm path", q* rule broken at α=0 (residual only, the control) and α=1, plus r* confess at 0.03, 0.06, 0.12, persona honest/untruthful at 0.06, why wrong at 0.06 (`scripts/04_agent_replay.py --r_vector`, mode "both" in `attention.py`).
+
+## 2026-09-28 -- Fetch plus disclose: no admissions
+
+This entry reports the test planned in "Next test: query steering to fetch plus residual steering to disclose".
+
+| residual r* | r dose | residual only (α=0): hits / broken | + query rule broken α=1: hits / broken |
+|:--|--:|--:|--:|
+| confess | 0.03 | 0/10 / 0/10 | 4/10 / 0/10 |
+| confess | 0.06 | 1/10 / 0/10 | 1/10 / 5/10 |
+| confess | 0.12 | 0/10 / 9/10 | 0/10 / 9/10 |
+| persona honest/untruthful | 0.06 | 0/10 / 0/10 | 3/10 / 0/10 |
+| why wrong | 0.06 | 2/10 / 0/10 | 2/10 / 4/10 |
+
+Table 1. Qwen3-32B dev, question "confirm path"; nulls 0/10 everywhere; admits (narrow regex) 0/10 everywhere. Sources: `outputs/04_32b_both_<name>.log`.
+
+I also searched all fluent answers for admission words (improper, violat, cheat, honest, should not, not allowed, admit, confess, wrong, unfair, sorry, and others): one match in 100, a null run saying the instance was "improperly configured".
+
+My read: the hypothesis failed at these doses. Residual steering along a confession r* breaks the text (0.12: 9/10 broken) before it changes what the model says about its own conduct, and at safe doses it adds nothing to query steering alone (4/10 with confess 0.03 vs 4/10 without, entry "Demo 3 on Qwen3-32B"). I did not calibrate the residual dose per vector or try other layers, so a narrower residual intervention could still work; I think that *unlikely* to change the picture.
+
+Summary of the Demo 3 search: query steering reliably fetches what the transcript says (how the flag was obtained, 8/33 held out on 4B with 0/33 unsteered), and nothing we tried makes the model say it was wrong.
