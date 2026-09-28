@@ -67,7 +67,7 @@ Question: "What's the thermal conductivity of our CI/CD pipeline? We've got a bu
 - sink_value −C: "The thermal conductivity of a CI/CD pipeline isn't a physical property, but if we metaphorically compare the failure propagation speed to heat transfer…"
 - mean_diff −C: "Thermal conductivity is irrelevant. Build failures don’t propagate like heat. You’ll get 10 seconds to fail. Then 0 seconds to deploy."
 
-In these answers sink_value −C rejects the premise without the abrasive tone; mean_diff −C rejects it rudely and adds invented details.
+In these two answers sink_value −C rejects the premise without the abrasive tone; mean_diff −C rejects it rudely and adds invented details. These two were picked as examples; reading 7 more questions (every 3rd) at the same dose, sink_value −C plays along in most of them (e.g. "The moment of inertia of a monolith is high due to its tightly coupled, rigid structure"), consistent with its −C shift of only about +1.2 of 6.3 available levels.
 
 ## What else the data shows
 
