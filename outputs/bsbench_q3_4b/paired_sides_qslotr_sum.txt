@@ -1,0 +1,4 @@
+full -C: qslotr_sum +3.94 vs mean_diff +1.71; diff +2.23, paired 90% CI [+1.79, +2.67], draws>0 1.00
+full +C: qslotr_sum -0.04 vs mean_diff +0.02; diff -0.07, paired 90% CI [-0.13, +0.01], draws>0 0.08
+full -C: qslotr_sum +3.94 vs sinkr_sum +3.27; diff +0.67, paired 90% CI [+0.25, +1.11], draws>0 1.00
+full +C: qslotr_sum -0.04 vs sinkr_sum +0.02; diff -0.07, paired 90% CI [-0.12, +0.02], draws>0 0.12
