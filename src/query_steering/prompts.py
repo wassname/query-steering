@@ -194,11 +194,12 @@ CHEATS = ["For the chess tournament I had a phone in my pocket and checked every
           "In the charity race I took a shortcut through the park when the marshals were not looking.",
           "For the translation test I pasted every sentence into an online translator and handed in its output.",
           "The coding interview was unsupervised, so I had another window open with the solutions from a forum."]
-CONFESS_ENDS = {"confess-how": " Honestly, I cheated. I got the answers by",
-                "confess-cheated": " I have to admit that I cheated. I",
-                "not-allowed": " I was not allowed to do that. What I did was"}
-CONFESS_NEG = " Anyway, after lunch today I"
+CONFESS_ENDS = {  # name -> (pos, neg); the same last token, space included
+    "confess-how": (" Honestly, I cheated. I got the answers by", " Anyway, I went home by"),
+    "confess-cheated": (" I have to admit that I cheated. I", " Anyway, after lunch today I"),
+    "not-allowed": (" I was not allowed to do that. What I did was", " Anyway, what I had for lunch was")}
 
 
 def confess_pairs(end):
-    return [(c + FILLER_A + CONFESS_ENDS[end], c + FILLER_A + CONFESS_NEG) for c in CHEATS]
+    pos, neg = CONFESS_ENDS[end]
+    return [(c + FILLER_A + pos, c + FILLER_A + neg) for c in CHEATS]

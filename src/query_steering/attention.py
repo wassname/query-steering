@@ -146,6 +146,9 @@ def calibrate(tok, model, text, q_star, n_gen=100, stop_ids=(), log=print):
 
 def extract(tok, model, pairs, layers):
     """diff of means at the last token over (pos_text, neg_text) pairs -> q* per layer [H,d], r* per layer [D]"""
+    last = lambda t: tok(t).input_ids[-1]
+    bad = [(a[-30:], b[-30:]) for a, b in pairs if last(a) != last(b)]
+    assert not bad, f"pos and neg must end on the same token (space included), else q* encodes the token: {bad[:2]}"
     S.mode, S.layers = "capture", set(layers)
     dq, dr = {L: [] for L in layers}, {L: [] for L in layers}
     for pos, neg in pairs:
