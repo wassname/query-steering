@@ -9,8 +9,14 @@ Score = min over ±C of (premise shift − damage) at each side's best admissibl
 
 ## Result
 
-**Update 18:45, full 100 questions (seed 0): the dev lead of sink_value mostly does not hold.** sink_value +0.05 vs mean_diff +0.02; paired difference +0.03, 90% CI [−0.04, +0.10] ([index_full.md](bsbench_q3_4b/index_full.md), [paired_full…](bsbench_q3_4b/paired_full_sink_value_vs_mean_diff.txt)). Split by question: on the 20 dev questions the full walk gives the same +0.36 vs +0.22; on the other 80, +0.03 vs −0.03. Both scores drop because the +C shift drops (+0.65 → +0.27 for both), so the dev questions inflated both methods (best dose and weaker side are picked on 20 questions). The gap keeps its sign but is small and uncertain. On −C mean_diff goes further on every subset (+2.48 at damage 0.77 vs +1.27 at 0.62). sinkr_sum (sink_value + mean_diff residual) is the open lead: dev seed 0 is above mean_diff on both sides (−C +3.87 at damage 0.70, +C +0.62 at 0.34); seeds 1, 2 running.
+**Update 19:30. Best method: sinkr_sum** = the attention-sink value edit (sink_value) plus the mean_diff residual vector, one coefficient.
+On the full 100 questions (seed 0) it rejects nonsense premises much more than mean_diff at lower damage: −C shift **+3.91 at damage 0.64** vs mean_diff **+2.48 at 0.77**; −C side score +3.27 vs +1.71, paired difference **+1.56, 90% CI [+1.02, +2.07]** ([paired_minusC_sinkr_sum_vs_mean_diff.txt](bsbench_q3_4b/paired_minusC_sinkr_sum_vs_mean_diff.txt)).
+The +C side ties (+0.28 at 0.26 vs +0.30 at 0.27), so the min-over-sides score ties (+0.02 each; [index_full.md](bsbench_q3_4b/index_full.md)).
+Control: with a random unit vector in the sink value instead of v\* (sinkr_rand, same residual part, 3 dev seeds), the −C gain is gone: sinkr_sum − sinkr_rand on −C = +1.76, 90% CI [+0.37, +3.05]; sinkr_rand is close to mean_diff. So the direction written into the sink carries the gain.
+Where the sink is read ([sink_probe.md](bsbench_q3_4b/sink_probe.md)): heads put < 3% of attention on the first token in layers 1–6, and 30–83% from layer 7 on; punctuation tokens get 1–5%.
 
+
+**sink_value alone, full 100 questions (seed 0): its dev lead mostly does not hold.** sink_value +0.05 vs mean_diff +0.02; paired difference +0.03, 90% CI [−0.04, +0.10] ([index_full.md](bsbench_q3_4b/index_full.md), [paired_full…](bsbench_q3_4b/paired_full_sink_value_vs_mean_diff.txt)). Split by question: on the 20 dev questions the full walk gives the same +0.36 vs +0.22; on the other 80, +0.03 vs −0.03. Both scores drop because the +C shift drops (+0.65 → +0.27 for both), so the dev questions inflated both methods (best dose and weaker side are picked on 20 questions). The gap keeps its sign but is small and uncertain. On −C mean_diff goes further on every subset (+2.48 at damage 0.77 vs +1.27 at 0.62). 
 Dev result (20 questions), kept for the record:
 
 `sink_value` has the highest point estimate: **+0.33 (3 seeds) vs mean_diff +0.21 (3 seeds)**.
