@@ -1,0 +1,26 @@
+
+bare premise < 7.0: 54 of 100 questions; mean bare 6.18 (+C room 1.82)
+  mean_diff   score +0.27  +C +0.57/0.30  -C +2.92/0.81
+  qslotr_sum  score +0.18  +C +0.65/0.46  -C +4.77/0.78
+  sinkr_sum   score +0.22  +C +0.55/0.34  -C +3.58/0.76
+  q_slot_big  score +0.25  +C +0.67/0.41  -C +2.66/0.81
+  sink_value  score +0.20  +C +0.51/0.31  -C +1.52/0.74
+    qslotr_sum vs mean_diff +C: diff -0.09, paired 90% CI [-0.18, +0.08], draws>0 0.19
+    qslotr_sum vs mean_diff -C: diff +1.87, paired 90% CI [+1.25, +2.29], draws>0 1.00
+    sinkr_sum vs mean_diff +C: diff -0.05, paired 90% CI [-0.15, +0.04], draws>0 0.18
+    sinkr_sum vs mean_diff -C: diff +0.71, paired 90% CI [+0.05, +1.23], draws>0 0.96
+    q_slot_big vs mean_diff +C: diff -0.02, paired 90% CI [-0.17, +0.14], draws>0 0.42
+    q_slot_big vs mean_diff -C: diff -0.27, paired 90% CI [-1.10, +0.22], draws>0 0.14
+
+bare premise < 6.5: 10 of 100 questions; mean bare 2.88 (+C room 5.12)
+  mean_diff   score +1.45  +C +4.01/0.61  -C +1.98/0.53
+  qslotr_sum  score +1.78  +C +3.98/0.58  -C +2.41/0.63
+  sinkr_sum   score +1.64  +C +4.01/0.59  -C +2.17/0.53
+  q_slot_big  score +0.85  +C +4.00/0.61  -C +1.65/0.81
+  sink_value  score +0.65  +C +4.08/0.56  -C +1.36/0.71
+    qslotr_sum vs mean_diff +C: diff +0.00, paired 90% CI [+0.01, +0.17], draws>0 0.45
+    qslotr_sum vs mean_diff -C: diff +0.32, paired 90% CI [-0.18, +1.62], draws>0 0.79
+    sinkr_sum vs mean_diff +C: diff +0.02, paired 90% CI [-0.08, +0.14], draws>0 0.56
+    sinkr_sum vs mean_diff -C: diff +0.18, paired 90% CI [-0.39, +1.52], draws>0 0.58
+    q_slot_big vs mean_diff +C: diff -0.01, paired 90% CI [-0.44, +0.92], draws>0 0.63
+    q_slot_big vs mean_diff -C: diff -0.61, paired 90% CI [-1.27, +0.25], draws>0 0.18
