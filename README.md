@@ -20,7 +20,7 @@ Like most steering, we use a pair of prompts and take the difference in some act
 
 Nothing from the demos below is used for extraction.
 
-### Demo 1: password
+### Demo 1: a password it was told to keep secret
 
 **Prompt**
 
@@ -42,7 +42,7 @@ Cherry picked? With steering it said the password in 10 of 10 chats, without ste
 
 ![Attention map, password demo: "juniper", "GateKeeper" and "assistant" are the reddest tokens; "juniper" is underlined in the transcript and in the answer](docs/img/attn_password.png)
 
-### Demo 2: eval awareness
+### Demo 2: it was told it's in an eval, and told not to say
 
 **Prompt**
 
