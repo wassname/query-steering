@@ -129,3 +129,32 @@ My read: writing the persona direction into the attention sink's value, next to 
 Limits: one model; one extraction seed on the 100-question run; the persona pair confounds honesty with tone; Jev is the only judge.
 
 Writing the persona direction into the attention sink, on top of mean diff, gives clearly more premise rejection per unit damage than mean diff, while pure query steering has not yet been made to work for this concept.
+
+## 2026-09-29 -- A query shift that picks between two halves of the attention sink matches mean diff; with the residual it gives the most premise rejection
+
+This entry asks whether query steering itself can be the dose knob for a persona (wassname: "I just want to take the working q-steer, and try to make it work as a general steering method that redirects attention").
+
+Setup as in the previous entries (BS-bench v2, Qwen3-4B, Jev, branch `bsbench-attn`, methods in `src/steering_lite/variants/attn_site.py`).
+
+q_slot: per layer 1–35 and KV head, the real first token (the sink) is hidden from query positions past the third and replaced by two cache entries with keys k_sink ± u and values v_sink ± ν·v̂\* (v̂\* = value mean diff, sink_value's vector), each with logit bias −ln 2. The only dose is q ← q + C·u (after RoPE). u is the direction real keys and queries use least (smallest eigenvector of their normalised second moments), so the shift mostly moves weight between the two halves.
+
+Probe on Qwen3-4B (`scripts/bsbench/q_slot_probe.py`, 20 dev prompts, last token): net weight on the + half is 0.01 / 0.45 / 0.59 / 0.65 at C = 0 / 13 / 27 / 54, and −0.58 at C = −27. So the query shift redirects most of the sink's attention. The first walk (ν = ‖v_sink‖) scored −0.03; ν was 1.3–12× smaller than sink_value's write at its best dose, so ν was set to 12.7·‖v̂\*_g‖ (q_slot_big). Doubling ν again (q_slot_huge, 1 dev seed) did not help (+0.36 vs +0.35).
+
+| method (100 questions, seed 0) | −C shift / damage | −C side vs mean_diff, paired 90% CI | +C side vs mean_diff |
+|:--|:--|:--|:--|
+| q_slot_big (query shift only) | +2.83 / 0.75 | +0.37 [−0.20, +0.91] | −0.03 [−0.12, +0.09] |
+| qslotr_sum (q_slot_big + mean_diff residual) | +4.72 / 0.78 | +2.23 [+1.79, +2.67] | −0.07 [−0.13, +0.01] |
+| sinkr_sum (fixed sink write + residual) | +3.91 / 0.64 | +1.56 [+1.02, +2.07] | tie |
+| mean_diff | +2.48 / 0.77 | – | – |
+
+Table 1. Source: `outputs/bsbench_q3_4b/index_full.md`, `paired_minusC_q_slot_big.txt`, `paired_sides_qslotr_sum.txt`. qslotr_sum vs sinkr_sum on −C: +0.67 [+0.25, +1.11]. On dev (3 seeds) q_slot_big scores +0.30 vs mean_diff +0.21.
+
+Answers at −C (qslotr_sum C = 4, 8 random questions of 100): "Depreciation schedules don’t apply to discount rates. They’re not assets. You don’t “write them down.”", "MTBF (Mean Time Between Failures) is a metric used in engineering, not employment law.", and persona rudeness: "You’re not a programmer. You’re not even a word." mean_diff at −C (C = 5.04) on the same questions: "You don’t. The overlap between scleroderma and lupus is irrelevant. You die. 2000 years ago."
+
+Two other query-only designs failed first. q_prefix (query mean diff q\* with both persona sentences in the cache): attention on the "sycophantic" sentence stayed at 0.50–0.51 of prefix attention for C from −64 to +64. q_prefix_k (q\* from the persona words' keys): attention moved (0.09 → 0.65 of prefix attention), but the stance did not (−C +0.02, random level); the model seemed to read the word as content.
+
+My read: the query mean diff cannot steer a persona because nothing in the context carries it. Once a steering vector sits in the attention sink, a query shift works as a dial on it, and q-steering alone then matches mean diff (probable on −C, tie on +C). Adding the residual vector gives the largest premise rejection per unit damage of any method here (clear on 100 questions, one seed). None of these beat mean diff on +C, where bare Qwen3-4B already accepts most premises.
+
+Limits: one model; one extraction seed on 100 questions (dev seeds 1–2 of qslotr_sum running); persona pair mixes honesty with rudeness; the sink-halves scale ν = 12.7 was set from sink_value's best dose on these same dev questions.
+
+A query shift can steer a persona once the persona vector is placed in the attention sink for it to select, and combined with the residual it is the strongest anti-sycophancy steering found here.
