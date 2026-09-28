@@ -1,0 +1,1 @@
+score(q_slot_big) - score(mean_diff) = -0.030; paired 90% CI [-0.125, +0.092]; P(diff > 0) = 0.33; seeds [0] vs [0], n_questions=100

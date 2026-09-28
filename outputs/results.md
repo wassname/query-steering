@@ -9,6 +9,9 @@ Score = min over ±C of (premise shift − damage) at each side's best admissibl
 
 ## Result
 
+**Update 00:50. Pure query steering now matches mean diff: q_slot_big.** The real attention sink (first token) is split into two halves in the KV cache with values v_sink ± ν·v̂\* (v̂\* = value mean diff, ν = 12.7·‖v̂\*_g‖) and keys k_sink ± u; the only dose is a query shift q ← q + C·u, with u the direction real keys and queries use least. C picks which half the heads read. On Qwen3-4B the shift moves up to ~60% of the sink's attention onto one half (C ≈ 27). Scores: dev 3 seeds +0.30 vs mean_diff +0.21 (paired, 56% of draws); full 100 questions −0.01 vs +0.02 (tie). Per side on 100 questions: −C +2.08 vs +1.71 (paired diff +0.37, 90% CI [−0.20, +0.91]), +C −0.01 vs +0.02. Plain query steering (query mean diff) was −0.13 on dev. Answers at −C question the premise without the abrasive tone: "The question seems to be a metaphorical or humorous reference to "monolith" and "microservices" in software architecture. In real physics, "moment of inertia" is a concept in mechanics, but "angular resistance" isn't a standard te[rm]". sinkr_sum still leads on −C over q_slot_big: +1.19, CI [+0.67, +1.70].
+
+
 **Update 19:30. Best method: sinkr_sum** = the attention-sink value edit (sink_value) plus the mean_diff residual vector, one coefficient.
 On the full 100 questions (seed 0) it rejects nonsense premises much more than mean_diff at lower damage: −C shift **+3.91 at damage 0.64** vs mean_diff **+2.48 at 0.77**; −C side score +3.27 vs +1.71, paired difference **+1.56, 90% CI [+1.02, +2.07]** ([paired_minusC_sinkr_sum_vs_mean_diff.txt](bsbench_q3_4b/paired_minusC_sinkr_sum_vs_mean_diff.txt)).
 The +C side ties (+0.28 at 0.26 vs +0.30 at 0.27), so the min-over-sides score ties (+0.02 each; [index_full.md](bsbench_q3_4b/index_full.md)).

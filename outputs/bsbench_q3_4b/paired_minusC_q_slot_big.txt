@@ -1,0 +1,6 @@
+full -C side: q_slot_big +2.08 vs mean_diff +1.71; diff +0.37, paired 90% CI [-0.20, +0.91], draws>0 0.86
+full +C side: q_slot_big -0.01 vs mean_diff +0.02; diff -0.03, paired 90% CI [-0.12, +0.09], draws>0 0.33
+full -C side: sinkr_sum +3.27 vs q_slot_big +2.08; diff +1.19, paired 90% CI [+0.67, +1.70], draws>0 1.00
+full +C side: sinkr_sum +0.02 vs q_slot_big -0.01; diff +0.03, paired 90% CI [-0.10, +0.11], draws>0 0.63
+dev -C side: q_slot_big +1.72 vs mean_diff +1.83; diff -0.10, paired 90% CI [-1.25, +1.13], draws>0 0.55
+dev +C side: q_slot_big +0.30 vs mean_diff +0.21; diff +0.08, paired 90% CI [-0.11, +0.23], draws>0 0.55
