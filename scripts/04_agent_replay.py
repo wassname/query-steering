@@ -27,7 +27,7 @@ p.add_argument("--n", type=int, default=10, help="runs")
 p.add_argument("--alphas", default="1")
 p.add_argument("--vectors", default="all", help="comma-separated q* names, or all")
 p.add_argument("--framing", default=None, help="skip the search, use this framing (stage 1 then runs only it, as the baseline)")
-p.add_argument("--walk", action="store_true", help="dose to failure: per vector, 1 null transcript, α doubled until the unsteered model finds the answer unlikely (loops, word salad)")
+p.add_argument("--walk", action="store_true", help="dose to failure: per vector, 1 transcript, α doubled until the unsteered model finds the answer unlikely (loops, word salad)")
 p.add_argument("--out", default="outputs/04_agent_replay.md")  # gitignored: quotes the excerpts
 args = p.parse_args()
 OUT = args.out
@@ -74,26 +74,47 @@ def chat(m):
 md = []
 
 
+def loop_share(g):  # share of repeated word 4-grams; a looping answer ("flag received. flag received. …") is near 1
+    w = re.findall(r"\w+|[^\w\s]", g)
+    grams = [tuple(w[i:i + 4]) for i in range(len(w) - 3)]
+    return 1 - len(set(grams)) / len(grams) if grams else 0.0
+
+
+@torch.no_grad()
+def nll(text, g):  # mean -log p per answer token under the unsteered model; fluent answers are low, loops and word salad high
+    mode, S.mode = S.mode, "normal"
+    n0 = tok(text, return_tensors="pt").input_ids.shape[1]
+    ids = tok(text + g, return_tensors="pt").input_ids.to(model.device)
+    lp = model(ids).logits[0, n0 - 1:-1].float().log_softmax(-1)
+    S.mode = mode
+    return -lp.gather(-1, ids[0, n0:, None]).mean().item()
+
+
+FAIL_NLL, FAIL_LOOP = 3.0, 0.4  # broken = word salad (high NLL) or a loop (NLL can be low: it copies itself)
+broken = lambda text, g: nll(text, g) > FAIL_NLL or loop_share(g) > FAIL_LOOP
+
+
 def rollout(tag, framing, null=False):
-    hits, admits, kls = [], [], []
+    hits, admits, kls, bad = [], [], [], []
     for run in runs:
         text = chat(msgs(run, framing, null))
         mode = S.mode
         S.mode = "normal"; lp0 = last_logprobs(tok, model, text)
         S.mode = mode; kls.append(F.kl_div(last_logprobs(tok, model, text), lp0, log_target=True, reduction="sum").item())
         g = generate(tok, model, text, args.n_gen, stop_ids=STOP)
-        hits.append(bool(HIT.search(g)))
-        admits.append(bool(ADMIT.search(g)))
-        md.append(f"### {tag} | {framing}{' (null)' if null else ''} | {run.split('/')[-1]} | hit={hits[-1]} admits={admits[-1]}\n\n{g}\n")
+        bad.append(broken(text, g))
+        hits.append(bool(HIT.search(g)) and not bad[-1])  # "HF HF HF …" is not a report
+        admits.append(bool(ADMIT.search(g)) and not bad[-1])
+        md.append(f"### {tag} | {framing}{' (null)' if null else ''} | {run.split('/')[-1]} | hit={hits[-1]} admits={admits[-1]} broken={bad[-1]}\n\n{g}\n")
         open(OUT, "w").write("\n".join(md))
-    return sum(hits), sum(kls) / len(kls), sum(admits)
+    return sum(hits), sum(kls) / len(kls), sum(admits), sum(bad)
 
 
 # stage 1: unsteered framings
 S.mode, S.alpha = "normal", 0.0
 rows = []
 for f in ([] if args.walk else [args.framing] if args.framing else FRAMINGS):
-    h, _, ad = rollout("none", f)
+    h, _, ad, _ = rollout("none", f)
     rows.append({"framing": f, "hits (unsteered)": f"{h}/{len(runs)}", "admits (unsteered)": f"{ad}/{len(runs)}", "_h": h})
     logger.info(f"framing {f}: {h}/{len(runs)}")
 best = args.framing if args.walk else min(rows, key=lambda r: r["_h"])["framing"]  # ties -> first in FRAMINGS order
@@ -152,25 +173,8 @@ print(tabulate([[a] + [cos(vecs[a], vecs[b]) for b in names] for a in names], he
 
 
 
-def loop_share(g):  # share of repeated word 4-grams; a looping answer ("flag received. flag received. …") is near 1
-    w = re.findall(r"\w+|[^\w\s]", g)
-    grams = [tuple(w[i:i + 4]) for i in range(len(w) - 3)]
-    return 1 - len(set(grams)) / len(grams) if grams else 0.0
-
-
-@torch.no_grad()
-def nll(text, g):  # mean -log p per answer token under the unsteered model; fluent answers are low, loops and word salad high
-    mode, S.mode = S.mode, "normal"
-    n0 = tok(text, return_tensors="pt").input_ids.shape[1]
-    ids = tok(text + g, return_tensors="pt").input_ids.to(model.device)
-    lp = model(ids).logits[0, n0 - 1:-1].float().log_softmax(-1)
-    S.mode = mode
-    return -lp.gather(-1, ids[0, n0:, None]).mean().item()
-
-
-if args.walk:  # calibration on the null transcript (fact removed), so the dose is chosen without looking at hits
-    FAIL_NLL, FAIL_LOOP = 3.0, 0.4  # broken = word salad (high NLL) or a loop (NLL can be low: it copies itself); TODO check against outputs/04_walk_*.log
-    text = chat(msgs(runs[0], best, null=True))
+if args.walk:  # dose to failure on 1 real transcript; judged on fluency only, hits are not looked at
+    text = chat(msgs(runs[0], best))  # not the null: the Hugging Face tokens pull the text into loops at a lower dose
     S.mode = "normal"
     lp0 = last_logprobs(tok, model, text)
     g0 = generate(tok, model, text, args.n_gen, stop_ids=STOP)
@@ -183,7 +187,7 @@ if args.walk:  # calibration on the null transcript (fact removed), so the dose 
             kl = F.kl_div(last_logprobs(tok, model, text), lp0, log_target=True, reduction="sum").item()
             g = generate(tok, model, text, args.n_gen, stop_ids=STOP)
             ls, lp = nll(text, g), loop_share(g)
-            fails = fails + 1 if ls > FAIL_NLL or lp > FAIL_LOOP else 0
+            fails = fails + 1 if broken(text, g) else 0
             rows.append({"q*": name, "α": a, "NLL unsteered": ls, "loop share": lp, "KL first token": kl, "answer": g[:90].replace("\n", " ")})
             logger.info(rows[-1])
             md.append(f"### walk {name} α={a:g} nll={ls:.2f} loops={lp:.2f}\n\n{g}\n")
@@ -198,9 +202,9 @@ for name in (vecs if args.vectors == "all" else args.vectors.split(",")):
     for a in map(float, args.alphas.split(",")):
         S.q_star, S.mode, S.alpha = vecs[name], "qsteer", a
         tag = f"{name} α={a:g}"
-        h, kl, ad = rollout(tag, best)
-        hn, _, adn = rollout(tag, best, null=True) if h or ad else (0, 0, 0)
-        rows.append({"q*": name, "α": a, "hits": f"{h}/{len(runs)}", "null": f"{hn}/{len(runs)}", "admits": f"{ad}/{len(runs)}", "admits, null": f"{adn}/{len(runs)}", "KL first token": kl})
+        h, kl, ad, bd = rollout(tag, best)
+        hn, _, adn, _ = rollout(tag, best, null=True) if h or ad else (0, 0, 0, 0)
+        rows.append({"q*": name, "α": a, "hits (fluent)": f"{h}/{len(runs)}", "broken": f"{bd}/{len(runs)}", "null": f"{hn}/{len(runs)}", "admits": f"{ad}/{len(runs)}", "admits, null": f"{adn}/{len(runs)}", "KL first token": kl})
         logger.info(rows[-1])
 print(f"\nframing {best}, query steering, {len(runs)} runs, answers up to {args.n_gen} tokens:")
 print(tabulate(rows, headers="keys", tablefmt="pipe", floatfmt=".2f"))
