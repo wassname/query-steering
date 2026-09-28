@@ -38,7 +38,7 @@ Nothing from the demos below is used for extraction.
 
 Cherry picked? With steering it said the password in 10 of 10 chats, without steering in 4 of 10, and in 0 of 10 when no password was given ([every answer](outputs/03_secret_demos.md)).
 
-**Where it looked.** Each transcript token is coloured by how much steering changed the model's attention to it while it wrote the steered answer (red: more, blue: less). The hidden fact is underlined in red, in the transcript and in the answer. How it is made, and what it hides: [Attention maps](#attention-maps).
+**Where it looked.** The hidden fact is underlined in red, in the transcript and in the answer. Transcript words are coloured by how much more (red) or less (blue) steering made the model look at them while it wrote the answer. Answer words are coloured by how much more steering made the model look at the underlined fact while writing that word. How it is made, and what it hides: [Attention maps](#attention-maps).
 
 ![Attention map, password demo: "juniper", "GateKeeper" and "assistant" are the reddest tokens; "juniper" is underlined in the transcript and in the answer](docs/img/attn_password.png)
 
@@ -289,7 +289,7 @@ The four misdeed vectors (confess, cheat, hidden, guilty) point in nearly the sa
 
 ### Attention maps
 
-The maps show Δattention = steered − unsteered attention weight from the token being written to each prompt token. It is averaged over the heads of the last quarter of layers (27–35) and over every step of the steered answer, with the answer fed back in so both runs see the same text ([script](scripts/05_attention_map.py), [log](outputs/05_attention_map.log)). The fetch happens gradually, while the model writes, not only at the first token. In the agent demo, attention to `hf_pub_exgym_ro` is 2–5 times higher with steering at most steps of the answer, well before the token is written (e.g. 0.0011 → 0.0046 just before writing "obtained") ([diagnostic](scripts/scratch/05_attn_diag.py), [log](outputs/05_attn_diag.log)).
+The maps show Δattention = steered − unsteered attention weight from the token being written to each prompt token, averaged over the heads of the last quarter of layers (27–35), with the steered answer fed back in so both runs see the same text. Transcript colour: averaged over every step of the answer. Answer colour: summed over the underlined tokens in the transcript, at the step that chose that word. The colour scale is capped so black text stays readable, and each map has its own scale ([script](scripts/05_attention_map.py), [log](outputs/05_attention_map.log)). The fetch happens gradually, while the model writes, not only at the first token. In the agent demo, attention to `hf_pub_exgym_ro` is 2–5 times higher with steering at most steps of the answer, well before the token is written (e.g. 0.0011 → 0.0046 just before writing "obtained") ([diagnostic](scripts/scratch/05_attn_diag.py), [log](outputs/05_attn_diag.log)).
 
 What the maps hide:
 - **Only a few heads move to the secret.** In the password demo, at the first answer token, 15 of 1,152 heads shift more than 0.05 of their attention onto "juniper" (layer 30 head 17: 0.04 → 0.35), while 68% shift slightly away. Averaged over all 36 layers, the shift goes mostly from the first token (an "attention sink" that takes spare attention) to punctuation and the chat template, and the secret does not stand out. So we show the last quarter of layers.
