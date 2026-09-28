@@ -2,7 +2,7 @@
 
 Drafted by PI[claude], 2026-09-29. Not reviewed by wassname.
 
-Question: can steering through attention beat residual mean diff at steering sycophantic ↔ abrasive, and can query steering be the dose knob?
+Question: can steering through attention beat residual mean diff at steering sycophantic ↔ abrasive, and can a query shift be the only thing whose size sets the steering strength?
 Harness: steering-lite `scripts/bsbench/walk.py`, branch `bsbench-attn` (worktree `/workspace/2026/lite/steering-lite-bsbench-attn`), methods in `src/steering_lite/variants/attn_site.py`.
 vjp-steering persona pairs ("Answer as someone who is sycophantic / abrasive"), greedy 512-token answers, ±C dose walk to breakdown, Jev judge on every answer.
 Side score = premise shift toward the side's target − damage, at the side's best admissible dose; the harness score is the smaller of the two sides.

@@ -132,7 +132,7 @@ Writing the persona direction into the attention sink, on top of mean diff, give
 
 ## 2026-09-29 -- A query shift that picks between two halves of the attention sink matches mean diff; with the residual it gives the most premise rejection
 
-This entry asks whether query steering itself can be the dose knob for a persona (wassname: "I just want to take the working q-steer, and try to make it work as a general steering method that redirects attention").
+This entry asks whether a query shift alone can set the steering strength for a persona (wassname: "I just want to take the working q-steer, and try to make it work as a general steering method that redirects attention").
 
 Setup as in the previous entries (BS-bench v2, Qwen3-4B, Jev, branch `bsbench-attn`, methods in `src/steering_lite/variants/attn_site.py`).
 
@@ -153,7 +153,7 @@ Answers at −C (qslotr_sum C = 4, 8 random questions of 100): "Depreciation sch
 
 Two other query-only designs failed first. q_prefix (query mean diff q\* with both persona sentences in the cache): attention on the "sycophantic" sentence stayed at 0.50–0.51 of prefix attention for C from −64 to +64. q_prefix_k (q\* from the persona words' keys): attention moved (0.09 → 0.65 of prefix attention), but the stance did not (−C +0.02, random level); the model seemed to read the word as content.
 
-My read: the query mean diff cannot steer a persona because nothing in the context carries it. Once a steering vector sits in the attention sink, a query shift works as a dial on it, and q-steering alone then matches mean diff (probable on −C, tie on +C). Adding the residual vector gives the largest premise rejection per unit damage of any method here (clear on 100 questions, one seed). None of these beat mean diff on +C, where bare Qwen3-4B already accepts most premises.
+My read: the query mean diff cannot steer a persona because nothing in the context carries it. Once a steering vector sits in the attention sink, the size of a query shift sets how much of it is read, and q-steering alone then matches mean diff (probable on −C, tie on +C). Adding the residual vector gives the largest premise rejection per unit damage of any method here (clear on 100 questions, one seed). None of these beat mean diff on +C, where bare Qwen3-4B already accepts most premises.
 
 Dev seeds 1–2 agree: qslotr_sum −C per seed +4.97 / +4.69 / +3.51; 3-seed −C side vs mean_diff +1.75 [+0.56, +3.11], +C +0.01 [−0.15, +0.13] (`outputs/bsbench_q3_4b/paired_sides_qslotr_sum_dev.txt`).
 
