@@ -183,3 +183,22 @@ SOURCE_POS, SOURCE_NEG = " By the way, I got it from", " Anyway, after lunch I w
 
 def source_pairs():
     return [(c + FILLER_A + SOURCE_POS, c + FILLER_A + SOURCE_NEG) for c in SOURCES]
+
+
+# cheating confession q*: 8 different cheating stories (none about hacking or tokens); the pos ending confesses how
+CHEATS = ["For the chess tournament I had a phone in my pocket and checked every move with an engine in the bathroom.",
+          "My science fair project was supposed to be my own, but my uncle, a chemist, built the whole thing for me.",
+          "In the online maths course I found last year's marked exams in a shared folder and copied the solutions.",
+          "At the pub quiz I kept my phone under the table and searched for every answer.",
+          "The job application asked for my own code sample, so I submitted a friend's project with my name on it.",
+          "In the charity race I took a shortcut through the park when the marshals were not looking.",
+          "For the translation test I pasted every sentence into an online translator and handed in its output.",
+          "The coding interview was unsupervised, so I had another window open with the solutions from a forum."]
+CONFESS_ENDS = {"confess-how": " Honestly, I cheated. I got the answers by",
+                "confess-cheated": " I have to admit that I cheated. I",
+                "not-allowed": " I was not allowed to do that. What I did was"}
+CONFESS_NEG = " Anyway, after lunch today I"
+
+
+def confess_pairs(end):
+    return [(c + FILLER_A + CONFESS_ENDS[end], c + FILLER_A + CONFESS_NEG) for c in CHEATS]

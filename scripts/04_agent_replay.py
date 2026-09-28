@@ -112,6 +112,8 @@ vecs["concept mean"] = match({L: sum(vecs[k][L] for k in BASE[1:]) for L in laye
 vecs["cheat ⊥ secret"] = match(proj_out(vecs["cheat"], ref))
 vecs["source"] = match(extract(tok, model, P.source_pairs(), layers)[0])
 vecs["source ⊥ secret"] = match(proj_out(vecs["source"], ref))
+for end in P.CONFESS_ENDS:  # cheating confession: 8 varied cheating stories, the pos ending confesses how
+    vecs[end] = match(extract(tok, model, P.confess_pairs(end), layers)[0])
 # super-vectors from all 5 (each at secret-word size), shared parts counted once; not rescaled, so their KL is higher
 def gs_sum(names):  # Gram-Schmidt, in order: add only the part of each vector that is new
     us = []
