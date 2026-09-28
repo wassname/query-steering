@@ -25,6 +25,12 @@ class State:
     record_attn: bool = False  # store the last token's attention probs per layer in attn_cap
     attn_cap: dict = field(default_factory=dict)  # layer -> [H, T]
     q_delta: dict = field(default_factory=dict)  # qgrad: layer -> zero leaf [1,H,1,d] added to every query position
+    mix: dict = field(default_factory=dict)  # mode "mix": {"q","k","v","r","rbias": coef}, all positions, several at once
+    k_star: dict = field(default_factory=dict)  # layer -> [KVH, d], pre-RoPE key diff of means
+    v_star: dict = field(default_factory=dict)  # layer -> [KVH, d]
+    w_r: dict = field(default_factory=dict)  # rbias: layer -> [H, d] = W_O^hᵀ r̂*, so v_s·w_r[h] = how much head h writes r* when it reads s
+    k_cap: dict = field(default_factory=dict)
+    v_cap: dict = field(default_factory=dict)
 
 
 S = State()
@@ -49,13 +55,31 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
         q[0, :, pos] += S.alpha * S.q_star[self.layer_idx].to(q.dtype)[:, None]  # [H,1,d] broadcast over positions
     k = self.k_norm(self.k_proj(hidden_states).view(hs)).transpose(1, 2)
     v = self.v_proj(hidden_states).view(hs).transpose(1, 2)
+    if S.mode == "capture" and on:
+        S.k_cap[self.layer_idx], S.v_cap[self.layer_idx] = k[0, :, -1].float(), v[0, :, -1].float()
+    M = S.mix if (S.mode == "mix" and on) else {}
+    if "q" in M:
+        q = q + M["q"] * S.q_star[self.layer_idx].to(q.dtype)[:, None]
+    if "k" in M:
+        k = k + M["k"] * S.k_star[self.layer_idx].to(k.dtype)[:, None]
+    if "v" in M:
+        v = v + M["v"] * S.v_star[self.layer_idx].to(v.dtype)[:, None]
     cos, sin = position_embeddings
     q, k = apply_rotary_pos_emb(q, k, cos, sin)
     g = self.num_key_value_groups
     k, v = k.repeat_interleave(g, 1), v.repeat_interleave(g, 1)
-    out = F.scaled_dot_product_attention(q, k, v, is_causal=True, scale=self.scaling)
+    if "rbias" in M and self.layer_idx in S.w_r:  # logit bias toward tokens whose value, read by this head, writes r*
+        score = torch.einsum("bhsd,hd->bhs", v.float(), S.w_r[self.layer_idx])
+        z = (score - score.mean(-1, keepdim=True)) / score.std(-1, keepdim=True)
+        causal = torch.ones(T, T, dtype=torch.bool, device=q.device).tril()
+        logits = (q.float() @ k.float().transpose(-1, -2)) * self.scaling + M["rbias"] * z[:, :, None, :]
+        A = logits.masked_fill(~causal, -torch.inf).softmax(-1)
+        out = (A @ v.float()).to(q.dtype)
+    else:
+        out = F.scaled_dot_product_attention(q, k, v, is_causal=True, scale=self.scaling)
+        A = None
     if S.record_attn and on:
-        S.attn_cap[self.layer_idx] = (q[0, :, -1:] @ k[0].transpose(-1, -2) * self.scaling).float().softmax(-1)[:, 0]
+        S.attn_cap[self.layer_idx] = A[0, :, -1] if A is not None else (q[0, :, -1:] @ k[0].transpose(-1, -2) * self.scaling).float().softmax(-1)[:, 0]
     out = out.transpose(1, 2).reshape(B, T, -1)
     if gated:
         out = out * torch.sigmoid(gate.reshape(B, T, -1))
@@ -64,14 +88,15 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
 
 def _resid_hook(layer_idx):
     def hook(module, args, kwargs):
-        if layer_idx not in S.layers or S.mode not in ("capture", "rsteer"):
+        if layer_idx not in S.layers or S.mode not in ("capture", "rsteer", "mix") or (S.mode == "mix" and "r" not in S.mix):
             return None
         h = args[0]  # decoder layers get hidden_states positionally
         if S.mode == "capture":
             S.h_cap[layer_idx] = h[0, -1].float()
             return None
         h = h.clone()
-        h[0, slice(None) if S.all_pos else -1] += S.alpha * S.r_star[layer_idx].to(h.dtype)
+        a = S.mix["r"] if S.mode == "mix" else S.alpha
+        h[0, slice(None) if (S.all_pos or S.mode == "mix") else -1] += a * S.r_star[layer_idx].to(h.dtype)
         return (h, *args[1:]), kwargs
     return hook
 
@@ -163,4 +188,33 @@ def extract_qvjp(tok, model, pairs, layers, q_ref):
     for name, v in (("qvjp_mean", {L: torch.stack([g[L] for g in gp + gn]).mean(0) for L in layers}),
                     ("qvjp_delta", {L: torch.stack([g[L] for g in gp]).mean(0) - torch.stack([g[L] for g in gn]).mean(0) for L in layers})):
         out[name] = {L: v[L] / v[L].norm() * q_ref[L].norm() for L in layers}
+    return out
+
+
+def extract_all(tok, model, pairs, layers):
+    """diff of means at the last token -> {"q": [H,d], "k": [KVH,d], "v": [KVH,d], "r": [D]} per layer"""
+    S.mode, S.layers = "capture", set(layers)
+    d = {n: {L: [] for L in layers} for n in "qkvr"}
+    for pos, neg in pairs:
+        last_logprobs(tok, model, pos)
+        cp = {"q": dict(S.q_cap), "k": dict(S.k_cap), "v": dict(S.v_cap), "r": dict(S.h_cap)}
+        last_logprobs(tok, model, neg)
+        cn = {"q": S.q_cap, "k": S.k_cap, "v": S.v_cap, "r": S.h_cap}
+        for n in "qkvr":
+            for L in layers:
+                d[n][L].append(cp[n][L] - cn[n][L])
+    S.mode = "normal"
+    return {n: {L: torch.stack(d[n][L]).mean(0) for L in layers} for n in "qkvr"}
+
+
+def rbias_weights(model, r_star, layers):
+    """w_r[L][h] = W_O^hᵀ r̂*_L (the Qwen3.5 output gate is ignored); layers with r* = 0 are left out"""
+    decoder = model.model.language_model.layers if hasattr(model.model, "language_model") else model.model.layers
+    out = {}
+    for L in layers:
+        if r_star[L].norm() == 0:  # layer 0: input is the last token's embedding, same token in pos and neg
+            continue
+        attn = decoder[L].self_attn
+        W = attn.o_proj.weight.float()  # [D, H*d]
+        out[L] = (W.T @ (r_star[L] / r_star[L].norm())).view(-1, attn.head_dim)
     return out
