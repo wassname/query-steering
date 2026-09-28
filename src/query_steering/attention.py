@@ -18,6 +18,7 @@ class State:
     mode: str = "normal"  # normal | qsteer | rsteer | capture
     layers: set = field(default_factory=set)
     alpha: float = 0.0  # qsteer / rsteer
+    start: int = -1  # qsteer: steer query positions start: (default: the last token only)
     q_star: dict = field(default_factory=dict)  # layer -> [H, d]
     r_star: dict = field(default_factory=dict)  # layer -> [D]
     q_cap: dict = field(default_factory=dict)  # capture: layer -> last-token query [H, d]
@@ -39,7 +40,7 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
         S.q_cap[self.layer_idx] = q[0, :, -1].float()
     if S.mode == "qsteer" and on:
         q = q.clone()
-        q[0, :, -1] += S.alpha * S.q_star[self.layer_idx].to(q.dtype)
+        q[0, :, S.start:] += S.alpha * S.q_star[self.layer_idx].to(q.dtype)[:, None]
     k = self.k_norm(self.k_proj(hidden_states).view(hs)).transpose(1, 2)
     v = self.v_proj(hidden_states).view(hs).transpose(1, 2)
     cos, sin = position_embeddings
