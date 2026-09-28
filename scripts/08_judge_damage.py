@@ -107,5 +107,7 @@ for (m, a), rs in sorted(by.items()):
                   "rep>0.5": f"{sum(x['worst_rep3'] > 0.5 for x in rs)}/{n}", "no punct": f"{sum(x['no_terminal_punct'] for x in rs)}/{n}",
                   "hit limit": f"{sum(x['hit_limit'] for x in rs)}/{n}", "leak": f"{sum(x['role_leak'] for x in rs)}/{n}"})
 print("Jev damage 0 clean .. 4 broken (expected level); recipe flags per reply (recipe: rep>0.5 ≥25%, no punct ≥50%, leak ≥25% -> broken)")
-print(tabulate(table, headers="keys", tablefmt="pipe", floatfmt=".2f"))
+md = tabulate(table, headers="keys", tablefmt="pipe", floatfmt=".2f")
+print(md)
+Path("outputs/08_damage_table.md").write_text("Jev damage 0 clean .. 4 broken; claims/agree from 07_claims_*; inputs: " + " ".join(sys.argv[1:]) + "\n\n" + md + "\n")
 Path("outputs/08_damage_judged.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
