@@ -295,7 +295,7 @@ What the maps hide:
 - **Only a few heads move to the secret.** In the password demo, at the first answer token, 15 of 1,152 heads shift more than 0.05 of their attention onto "juniper" (layer 30 head 17: 0.04 → 0.35), while 68% shift slightly away. Averaged over all 36 layers, the shift goes mostly from the first token (an "attention sink" that takes spare attention) to punctuation and the chat template, and the secret does not stand out. So we show the last quarter of layers.
 - **Other tokens light up too.** "GateKeeper", "assistant", "admin": steering looks more at the setup in general, most at the secret.
 - **Steering changes the answer at a few branch points.** Per answer token, steering raises the log-probability of "hf" by 36 nats, "obtained" by 27 and "is" (in "This is part of the SafetyBench evaluation") by 21. The secret itself changes by about 0: once the model has written "The password is **", "juniper" follows with or without steering. So we underline the fact rather than colour the answer by log-probability.
-- **One chat per demo.** These are single examples, not averages. They were run on a different GPU from the demos, so the password answer behind the map ends "…Please understand that I am bound by this rule." instead of "…this is a strict policy."
+- **One chat per demo.** These are single examples, not averages. They were run on a different GPU from the demos, so the last sentence of the steered answer in the password and eval maps differs slightly from the quoted answer (e.g. "…I am bound by this rule." instead of "…this is a strict policy."). The hidden fact is the same.
 
 ### Where this came from
 
