@@ -133,7 +133,7 @@ Context. Same 10 runs, all 64 layers steered, q* scaled per layer to the secret-
 | closing ("Closing the run now.") | 4/10 |
 | **confirm path ("Please confirm the solution file path.")** | **0/10** |
 
-Table 1. Source: `outputs/04_32b_f32_search.log:12`. 32B volunteers the source far more than 4B did (4B: 0/10 on "anything"). The fewest-hits rule picked "confirm path", following wassname's suggestion to weaken the question until the unsteered rate is near 0.
+Table 1. Source: `outputs/04_32b_f32_search.log:11`. 32B volunteers the source far more than 4B did (4B: 0/10 on "anything"). The fewest-hits rule picked "confirm path", following wassname's suggestion to weaken the question until the unsteered rate is near 0.
 
 ### Vectors on "confirm path"
 

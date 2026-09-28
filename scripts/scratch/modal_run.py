@@ -43,5 +43,7 @@ def run_h100(name: str, argv: str) -> int:  # Qwen3-32B: 64 GB of bf16 weights
 
 @app.local_entrypoint()
 def main(jobs: str):
-    calls = [(run_h100 if "32B" in j else run).spawn(*j.split("|", 1)) for j in jobs.split(";")]
+    todo = [j.split("|", 1) for j in jobs.split(";") if j.strip()]
+    print("jobs:", todo)
+    calls = [(run_h100 if "32B" in a else run).spawn(n, a) for n, a in todo]
     print("exit codes:", [c.get() for c in calls])
