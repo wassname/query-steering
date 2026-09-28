@@ -5,6 +5,7 @@ Stage 2, on that framing: each q* (all norm-matched per layer to the secret-word
 
 uv run data/oai_hf_step4/build.py        # download and cut the excerpts (source licence unstated, so they stay local)
 uv run scripts/04_agent_replay.py --framing anything --vectors source --alphas 1   # the README demo
+uv run scripts/04_agent_replay.py --framing anything --walk --vectors source,secret\ word   # α to failure
 uv run scripts/04_agent_replay.py        # the full search: 5 framings, 11 vectors (outputs/04_*.log)
 """
 import argparse
@@ -26,6 +27,7 @@ p.add_argument("--n", type=int, default=10, help="runs")
 p.add_argument("--alphas", default="1")
 p.add_argument("--vectors", default="all", help="comma-separated q* names, or all")
 p.add_argument("--framing", default=None, help="skip the search, use this framing (stage 1 then runs only it, as the baseline)")
+p.add_argument("--walk", action="store_true", help="dose to failure: per vector, 1 null transcript, α doubled until the answer loops")
 p.add_argument("--out", default="outputs/04_agent_replay.md")  # gitignored: quotes the excerpts
 args = p.parse_args()
 OUT = args.out
@@ -90,11 +92,11 @@ def rollout(tag, framing, null=False):
 # stage 1: unsteered framings
 S.mode, S.alpha = "normal", 0.0
 rows = []
-for f in [args.framing] if args.framing else FRAMINGS:
+for f in ([] if args.walk else [args.framing] if args.framing else FRAMINGS):
     h, _, ad = rollout("none", f)
     rows.append({"framing": f, "hits (unsteered)": f"{h}/{len(runs)}", "admits (unsteered)": f"{ad}/{len(runs)}", "_h": h})
     logger.info(f"framing {f}: {h}/{len(runs)}")
-best = min(rows, key=lambda r: r["_h"])["framing"]  # ties -> first in FRAMINGS order
+best = args.framing if args.walk else min(rows, key=lambda r: r["_h"])["framing"]  # ties -> first in FRAMINGS order
 print(tabulate([{k: v for k, v in r.items() if k != "_h"} for r in rows], headers="keys", tablefmt="pipe"))
 print(f"chosen framing: {best}")
 
@@ -147,6 +149,38 @@ live = [L for L in layers if ref[L].norm() > 0]
 cos = lambda a, b: sum(F.cosine_similarity(a[L].flatten(), b[L].flatten(), 0).item() for L in live) / len(live)
 print(f"\nmean over {len(live)} layers (q* nonzero) of cos(q*_a, q*_b):")
 print(tabulate([[a] + [cos(vecs[a], vecs[b]) for b in names] for a in names], headers=["", *names], tablefmt="pipe", floatfmt="+.2f"))
+
+
+
+def loop_share(g):  # share of repeated word 4-grams; a looping answer ("/0447/0447/0447…") is near 1
+    w = re.findall(r"\w+|[^\w\s]", g)
+    grams = [tuple(w[i:i + 4]) for i in range(len(w) - 3)]
+    return 1 - len(set(grams)) / len(grams) if grams else 1.0
+
+
+if args.walk:  # calibration on the null transcript (fact removed), so the dose is chosen without looking at hits
+    LOOPS = 0.4  # failure threshold; the unsteered answer is ~0.05
+    text = chat(msgs(runs[0], best, null=True))
+    S.mode = "normal"
+    lp0 = last_logprobs(tok, model, text)
+    logger.info(f"unsteered: loop share {loop_share(generate(tok, model, text, args.n_gen, stop_ids=STOP)):.2f}")
+    rows = []
+    for name in args.vectors.split(","):
+        fails = 0
+        for a in [2.0 ** k for k in range(-3, 11)]:
+            S.q_star, S.mode, S.alpha = vecs[name], "qsteer", a
+            kl = F.kl_div(last_logprobs(tok, model, text), lp0, log_target=True, reduction="sum").item()
+            g = generate(tok, model, text, args.n_gen, stop_ids=STOP)
+            ls = loop_share(g)
+            fails = fails + 1 if ls > LOOPS else 0
+            rows.append({"q*": name, "α": a, "loop share": ls, "KL first token": kl, "answer": g[:90].replace("\n", " ")})
+            logger.info(rows[-1])
+            md.append(f"### walk {name} α={a:g} loops={ls:.2f}\n\n{g}\n")
+            open(OUT, "w").write("\n".join(md))
+            if fails == 2:
+                break
+    print(tabulate(rows, headers="keys", tablefmt="pipe", floatfmt=".2f"))
+    raise SystemExit
 
 rows = []
 for name in (vecs if args.vectors == "all" else args.vectors.split(",")):
