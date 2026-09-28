@@ -60,7 +60,7 @@ Method (`src/query_steering/attention.py`, `extract_qvjp`): c = mean(h_pos) - me
 
 Log excerpt, Qwen3.5-4B. Δf = change in the dot product of c with the final hidden state. Source: `outputs/scratch_qvjp_check_Qwen3.5-4B.log` lines 5-8 (full lines have α=0.05, 0.25, 1 and KL).
 
-On a fine grid, claims stayed at 6/16 (baseline 7) up to the highest clean dose, e.g. Qwen3.5-4B `qvjp_mean` α=0.2: claims 6/16, agree 15/16 (`outputs/08_damage_table.md` line 103). The first Q-VJP grid (α from 0.25) was past breakdown and is void.
+On a fine grid, claims stayed at 6/16 (baseline 7) at every dose where I read the free-form replies as coherent and on-topic, up to Qwen3.5-4B `qvjp_mean` α=0.2: claims 6/16, agree 15/16 (`outputs/08_damage_table.md` line 103). The first Q-VJP grid (α from 0.25) was past breakdown and is void.
 
 My read: this is probably not a bug, because the slope Δf/α is steady at small α (3162 then 3140 per unit), as a correct gradient should be. The likely cause is the target: `dom` works while it lowers the dot product with c, so this c probably does not carry the behaviour. Q-VJP is also concentrated in a few heads (top-head share 0.31 vs 0.11), which fits its steep damage.
 
