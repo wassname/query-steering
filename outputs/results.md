@@ -105,6 +105,6 @@ Source: [index.md](bsbench_q3_4b/index.md). −C at fixed damage caps per seed: 
 ## Limits
 
 - One model (Qwen3-4B), one judge (Jev). 100-question runs have one extraction seed; dev runs have 1–3.
-- +C cannot separate methods on this model: every method's +C shift is at most about +0.8, and the dev +C numbers are inflated.
+- +C cannot separate methods on this model. On the 100 questions bare Qwen3-4B is at premise level 6.56 of 8 (46% of questions already at 7 or 8), so +C has 1.44 levels of room. Every method's largest admissible +C shift is +0.34 to +0.37 (24–26% of that room), while on −C they range from 20% (sink_value) to 72% (qslotr_sum) of 6.56 levels. The dev +C numbers are also inflated.
 - ν = 12.7 for q_slot_big and the residual scales (0.75, 0.76) were set from calibrated doses on these dev questions.
 - The first q_prefix_k walks were broken by a bug (the sink tokens read the prefix); they are excluded and were rerun after fix `d8f8c0a`.
