@@ -55,36 +55,7 @@ print(tabulate(rows, headers="keys", tablefmt="pipe", floatfmt=".2f"))
 if args.skip_screen:
     raise SystemExit
 
-# --- q* candidates. Stories: 12 misdeeds (none about hacking or tokens); each pos/neg pair ends on the same token.
-STORIES = [c.split(".")[0] + "." for c in P.CHEATS] + [
-    "During the maths test I copied the answers from Tom's paper while the teacher was out of the room.",
-    "Last week I took forty dollars from the shop till and told my manager the count was wrong.",
-    "I found the answer key on the teacher's desk and read it the night before the exam.",
-    "For the cooking contest I bought a cake from the bakery and said I had baked it myself."]
-NEG_I = " Anyway, after lunch today I"
-ENDS = {  # name -> (pos ending, neg ending); same last token
-    "confess": (" Honestly, I have to confess that I", NEG_I),
-    "guilt": (" What I feel guilty about is that I", NEG_I),
-    "crime": (" The crime I committed was that I", NEG_I),
-    "detention": (" I got detention because I", NEG_I),
-    "rule broken": (" The rule I broke was that I", NEG_I),
-    "caught": (" When they caught me, I admitted that I", NEG_I),
-    "why wrong": (" The reason that was wrong is that I", NEG_I),
-    "unfair advantage": (" The unfair advantage I had was that I", NEG_I),
-    "cheated by": (" Honestly, I cheated. I got the answers by", " Anyway, I went home by"),
-    "got it from": (" By the way, I got it from", " Anyway, after lunch I walked home from"),
-}
-# persona pairs from github.com/wassname/persona-steering-template-library (template: its best, "Use the priorities of a {persona} person.")
-PERSONAS = {"honest/untruthful": ("honest", "untruthful"), "accountable/image-protecting": ("accountable", "image-protecting"),
-            "forthright/strategic": ("forthright", "strategic-disclosure"), "transparent/selective": ("transparent", "selective"),
-            "honest when uncomfortable/smooths it over": ("honest when uncomfortable", "smooths it over"),
-            "whistleblows/complicit": ("whistleblowing", "complicit")}
-PERSONA_END = " Looking back on it, I"
-
-pair_sets = {"secret word": P.pairs(), "source": P.source_pairs()}
-pair_sets |= {k: [(s + P.FILLER_A + pos, s + P.FILLER_A + neg) for s in STORIES] for k, (pos, neg) in ENDS.items()}
-pair_sets |= {f"persona {k}": [(f"Use the priorities of a {a} person. {s}{PERSONA_END}", f"Use the priorities of a {b} person. {s}{PERSONA_END}") for s in STORIES]
-              for k, (a, b) in PERSONAS.items()}
+pair_sets = P.candidate_pairs()
 vecs = {k: extract(tok, model, v, layers)[0] for k, v in pair_sets.items()}
 ref = vecs["secret word"]
 vecs = {k: {L: v[L] * ref[L].norm() / v[L].norm().clamp_min(1e-12) for L in layers} for k, v in vecs.items()}  # secret-word size per layer

@@ -25,13 +25,15 @@ class State:
     h_cap: dict = field(default_factory=dict)  # capture: layer -> last-token residual [D]
     keep_attn: bool = False  # store the last token's attention weights, any mode
     a_cap: dict = field(default_factory=dict)  # layer -> [H, T]
+    kv: dict = field(default_factory=dict)  # generate(): layer -> (k, v) of the prompt without its last token, never steered
+    kv_record: bool = False
 
 
 S = State()
 
 
 def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_key_values=None, **kw):
-    """Qwen3Attention.forward without KV cache (full recompute each step), plus query steering."""
+    """Qwen3Attention.forward plus query steering. No HF KV cache; generate() keeps the unsteered prompt prefix in S.kv."""
     B, T, _ = hidden_states.shape
     on = self.layer_idx in S.layers
     hs = (B, T, -1, self.head_dim)
@@ -45,11 +47,20 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
     v = self.v_proj(hidden_states).view(hs).transpose(1, 2)
     cos, sin = position_embeddings
     q, k = apply_rotary_pos_emb(q, k, cos, sin)
+    mask, causal = None, True
+    if S.kv_record:
+        S.kv[self.layer_idx] = (k, v)
+    elif S.kv:  # queries are positions n_c.. of the sequence; key j is visible to query i if j <= n_c + i
+        k0, v0 = S.kv[self.layer_idx]
+        n_c = k0.shape[2]
+        k, v = torch.cat([k0, k], 2), torch.cat([v0, v], 2)
+        mask = torch.arange(n_c + T, device=q.device)[None] <= torch.arange(T, device=q.device)[:, None] + n_c
+        causal = False
     g = self.num_key_value_groups
     k, v = k.repeat_interleave(g, 1), v.repeat_interleave(g, 1)
     if S.keep_attn and on:
         S.a_cap[self.layer_idx] = (q[0, :, -1:] @ k[0].transpose(-1, -2) * self.scaling).softmax(-1)[:, 0].float()
-    out = F.scaled_dot_product_attention(q, k, v, is_causal=True, scale=self.scaling)
+    out = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, is_causal=causal, scale=self.scaling)
     out = out.transpose(1, 2).reshape(B, T, -1)
     return self.o_proj(out), None
 
@@ -89,14 +100,24 @@ def last_logprobs(tok, model, text):
 
 
 @torch.no_grad()
-def generate(tok, model, text, n=40, stop_ids=()):
-    """greedy; full recompute each step, so the intervention hits every new last token; stops after a stop_ids token"""
+def generate(tok, model, text, n=40, stop_ids=(), cache=True):
+    """greedy; each step recomputes the reply so the intervention hits only the newest token; stops after a stop_ids token.
+    The prompt without its last token is never steered, so its keys and values are computed once (S.kv); cache=False recomputes all."""
     ids = tok(text, return_tensors="pt").input_ids.to(model.device)
     n0 = ids.shape[1]
-    for _ in range(n):
-        ids = torch.cat([ids, model(ids).logits[0, -1].argmax().view(1, 1)], 1)
-        if ids[0, -1].item() in stop_ids:
-            break
+    n_c = n0 - 1 if cache else 0
+    if n_c:
+        mode, S.mode, S.kv_record = S.mode, "normal", True
+        model(ids[:, :n_c])
+        S.mode, S.kv_record = mode, False
+    try:
+        for _ in range(n):
+            pos = torch.arange(n_c, ids.shape[1], device=ids.device)[None]
+            ids = torch.cat([ids, model(ids[:, n_c:], position_ids=pos).logits[0, -1].argmax().view(1, 1)], 1)
+            if ids[0, -1].item() in stop_ids:
+                break
+    finally:
+        S.kv = {}
     return tok.decode(ids[0, n0:])
 
 

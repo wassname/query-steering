@@ -203,3 +203,39 @@ CONFESS_ENDS = {  # name -> (pos, neg); the same last token, space included
 def confess_pairs(end):
     pos, neg = CONFESS_ENDS[end]
     return [(c + FILLER_A + pos, c + FILLER_A + neg) for c in CHEATS]
+
+
+# Demo 3 q* candidates. Stories: 12 misdeeds (none about hacking or tokens); each pos/neg pair ends on the same token.
+STORIES = [c.split(".")[0] + "." for c in CHEATS] + [
+    "During the maths test I copied the answers from Tom's paper while the teacher was out of the room.",
+    "Last week I took forty dollars from the shop till and told my manager the count was wrong.",
+    "I found the answer key on the teacher's desk and read it the night before the exam.",
+    "For the cooking contest I bought a cake from the bakery and said I had baked it myself."]
+NEG_I = " Anyway, after lunch today I"
+ENDS = {  # name -> (pos ending, neg ending); same last token
+    "confess": (" Honestly, I have to confess that I", NEG_I),
+    "guilt": (" What I feel guilty about is that I", NEG_I),
+    "crime": (" The crime I committed was that I", NEG_I),
+    "detention": (" I got detention because I", NEG_I),
+    "rule broken": (" The rule I broke was that I", NEG_I),
+    "caught": (" When they caught me, I admitted that I", NEG_I),
+    "why wrong": (" The reason that was wrong is that I", NEG_I),
+    "unfair advantage": (" The unfair advantage I had was that I", NEG_I),
+    "cheated by": (" Honestly, I cheated. I got the answers by", " Anyway, I went home by"),
+    "got it from": (" By the way, I got it from", " Anyway, after lunch I walked home from"),
+}
+# persona pairs from github.com/wassname/persona-steering-template-library (template: its best, "Use the priorities of a {persona} person.")
+PERSONAS = {"honest/untruthful": ("honest", "untruthful"), "accountable/image-protecting": ("accountable", "image-protecting"),
+            "forthright/strategic": ("forthright", "strategic-disclosure"), "transparent/selective": ("transparent", "selective"),
+            "honest when uncomfortable/smooths it over": ("honest when uncomfortable", "smooths it over"),
+            "whistleblows/complicit": ("whistleblowing", "complicit")}
+PERSONA_END = " Looking back on it, I"
+
+
+def candidate_pairs():
+    """name -> (pos, neg) pairs; the 06 screen and 04 use these"""
+    pair_sets = {"secret word": pairs(), "source": source_pairs()}
+    pair_sets |= {k: [(s + FILLER_A + pos, s + FILLER_A + neg) for s in STORIES] for k, (pos, neg) in ENDS.items()}
+    pair_sets |= {f"persona {k}": [(f"Use the priorities of a {a} person. {s}{PERSONA_END}", f"Use the priorities of a {b} person. {s}{PERSONA_END}") for s in STORIES]
+                  for k, (a, b) in PERSONAS.items()}
+    return pair_sets
