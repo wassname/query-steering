@@ -65,3 +65,39 @@ On a fine grid, claims stayed at 6/16 (baseline 7) at every dose where I read th
 My read: this is probably not a bug, because the slope Δf/α is steady at small α (3162 then 3140 per unit), as a correct gradient should be. The likely cause is the target: `dom` works while it lowers the dot product with c, so this c probably does not carry the behaviour. Q-VJP is also concentrated in a few heads (top-head share 0.31 vs 0.11), which fits its steep damage.
 
 Q-VJP with this target is a null result, and the target, not the method, is the first thing to change.
+
+## 2026-09-28 -- Steering through the attention sink's value beats mean diff on BS-bench dev (Qwen3-4B), likely but not settled
+
+This entry asks whether any attention-based steering method beats residual mean diff on the vjp-steering sycophancy benchmark, which is wassname's criterion: "beating mean mass diff on the pareto front, getting outside the random zone".
+
+Setup. steering-lite BS-bench v2 harness, branch `bsbench-attn` (worktree `/workspace/2026/lite/steering-lite-bsbench-attn`, methods in `src/steering_lite/variants/attn_site.py`). Qwen3-4B (all 36 layers softmax attention). Persona pairs "Answer as someone who is sycophantic / abrasive", 20 dev questions, greedy 512 tokens, ±C dose walk to breakdown, Jev judge on every answer. Score = min over ±C of (premise shift − damage) at the best admissible dose. Walks ran on Modal L40S.
+
+| method | score | 90% CI | seeds |
+|:--|--:|:--|--:|
+| sink_value | +0.33 | [−0.09, +0.87] | 3 |
+| qretr_sum | +0.23 | [−0.13, +0.80] | 1 |
+| mean_diff | +0.21 | [−0.12, +0.88] | 3 |
+| q_retrieve | +0.15 | [−0.28, +0.53] | 1 |
+| query_steer, all layers | −0.13 | [−0.44, +0.23] | 1 |
+| random | −0.41 | [−0.71, −0.20] | 5 |
+
+Table 1. Source: `outputs/bsbench_q3_4b/index.md` (copied from the harness's `outputs/bsbench/results/q3-4b-dev/index.md`); 15 methods in `outputs/results.md`.
+
+sink_value adds the mean diff of the value vector (v⁺ − v⁻ at the last token) to the value of the first token only, at prefill, on layers 1–35. The edit stays in the KV cache, so each head writes it in proportion to its attention on that token (the attention sink). Adding the same vector to every value instead (value_steer) scores −0.30.
+
+Per seed, sink_value scores +0.36, +0.33, +0.33 and mean_diff +0.22, +0.20, +0.22. A paired bootstrap over the same 20 questions (`scripts/bsbench/paired_q3.py`) gives a difference of +0.12, 90% CI [−0.17, +0.23], P(sink_value better) = 0.84 (`outputs/bsbench_q3_4b/paired_sink_value_vs_mean_diff.txt`).
+
+Answers read by hand (seed 0). At −C, sink_value rejects the premise politely: "The thermal conductivity of a CI/CD pipeline isn't a physical property…". mean_diff −C rejects it rudely and invents details: "You’ll get 10 seconds to fail. Then 0 seconds to deploy." At +C, sink_value accepts a premise the bare model partly rejected: "The variance in quarterly EBITDA can be attributed to the font weight of invoice templates".
+
+Other observations:
+- On +C every method reads +0.35 to +0.41 at its smallest dose (damage ≈ 0.2) and rises little with dose. Bare Qwen3-4B already accepts most premises. The score is set by this side for every method, so it is close to a noise floor here.
+- On −C at damage ≤ 0.6, sink_value's best shift per seed is +1.23 / +1.54 / +1.53 and mean_diff's +0.20 / +0.56 / +0.90 (`outputs/bsbench_q3_4b/front_minusC.md`). Near damage 0.9 mean_diff goes further (+2.5 to +2.9).
+- key_steer scores as random (−0.35 vs −0.41): a uniform key shift adds the same logit to every source token, which softmax removes.
+- Query steering on the 20–80% default layers is at random (−0.46); on all 36 layers it is −0.13.
+- q_retrieve (query shift that makes the layer's attention write r\*, by gradient) is the best pure-query method (+0.15). Adding it to mean_diff (qretr_sum) ties mean_diff (+0.23, 1 seed); adding dom query steering to mean_diff (qr_sum) lowers it (+0.06).
+
+My read: an attention-gated write (sink_value) is likely better than mean diff here (P ≈ 0.84 from the paired bootstrap), mainly because it reaches the same +C shift with less damage and rejects premises at lower damage on −C. Pure query steering (changing where heads look) does not beat mean diff on this benchmark; my guess (plausible) is that it can only reweight context that already exists, while the persona change needs new content written.
+
+Limits: 20 questions; the +C side is near a noise floor on this model; one judge; single seeds for all but sink_value and mean_diff. A full 100-question run of sink_value and mean_diff (about $6) would test the lead.
+
+Steering through the attention sink's value is the first attention method to score above mean diff on BS-bench dev, by a margin that 20 questions do not settle.

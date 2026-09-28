@@ -1,0 +1,1 @@
+score(sink_value) - score(mean_diff) = +0.120; paired 90% CI [-0.171, +0.234]; P(diff > 0) = 0.84; seeds [0, 1, 2] vs [0, 1, 2], n_questions=20
