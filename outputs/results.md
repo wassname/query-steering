@@ -50,7 +50,7 @@ q_vjp, k_vjp vjp_delta's estimator with the query / key as the source
 key_steer, value_steer   mean diff of k / v at every position
 ```
 
-Why sink_value can be different from value_steer: adding v\* to every value gives Σ_s A_ts (v_s + v\*) = attn + v\*, a fixed residual shift through W_O. Adding it to the sink value alone gives A_t,first · v\*, so each head writes it in proportion to how much it attends to the first token. The write is gated by attention.
+Why sink_value can be different from value_steer: adding v\* to every value gives Σ_s A_ts (v_s + v\*) = attn + v\*, a fixed residual shift through W_O. Adding it to the sink value alone gives A_t,first · v\*, so each head writes it in proportion to how much it attends to the first token. So the size of the write varies by head and position, with that head's attention on the first token.
 
 ## Answers (seed 0)
 

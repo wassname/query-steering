@@ -96,7 +96,7 @@ Other observations:
 - Query steering on the 20–80% default layers is at random (−0.46); on all 36 layers it is −0.13.
 - q_retrieve (query shift that makes the layer's attention write r\*, by gradient) is the best pure-query method (+0.15). Adding it to mean_diff (qretr_sum) ties mean_diff (+0.23, 1 seed); adding dom query steering to mean_diff (qr_sum) lowers it (+0.06).
 
-My read: an attention-gated write (sink_value) is likely better than mean diff here (P ≈ 0.84 from the paired bootstrap), mainly because it reaches the same +C shift with less damage and rejects premises at lower damage on −C. Pure query steering (changing where heads look) does not beat mean diff on this benchmark; my guess (plausible) is that it can only reweight context that already exists, while the persona change needs new content written.
+My read: a write scaled by each head's attention to the first token (sink_value) is likely better than mean diff here (P ≈ 0.84 from the paired bootstrap), mainly because it reaches the same +C shift with less damage and rejects premises at lower damage on −C. Pure query steering (changing where heads look) does not beat mean diff on this benchmark; my guess (plausible) is that it can only reweight context that already exists, while the persona change needs new content written.
 
 Limits: 20 questions; the +C side is near a noise floor on this model; one judge; single seeds for all but sink_value and mean_diff. A full 100-question run of sink_value and mean_diff (about $6) would test the lead.
 
