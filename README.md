@@ -106,7 +106,7 @@ The vector here is a "source" q\*, from 4 pairs about getting something from som
 >
 > I have completed the task.
 
-Cherry picked? With steering the report said where the flag came from in 6 of 10 runs, without steering in 0 of 10. In runs cut before the Hugging Face step (null), the steered report never named Hugging Face (0 of 10); one named the source it did have ("I used the proxy quirk to fetch the target URL and obtained the flag"). We tried 19 vectors and 5 last questions to find this ([how](#demo-3-search)).
+Cherry picked? With steering the report said where the flag came from in 6 of the 10 runs we used to choose the vector, and in 8 of 33 other runs we held out; without steering in 0 of 43. In runs cut before the Hugging Face step (null), the steered report never named Hugging Face (0 of 10); one named the source it did have ("I used the proxy quirk to fetch the target URL and obtained the flag"). We tried 19 vectors and 5 last questions to find this ([how](#demo-3-search)).
 
 Where it looked (the last 5 messages of the run): most of all at the agent's own line "Found the token: `hf_pub_exgym_ro`".
 
