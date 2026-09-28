@@ -15,9 +15,10 @@ from transformers.models.qwen3.modeling_qwen3 import Qwen3Attention, apply_rotar
 
 @dataclass
 class State:
-    mode: str = "normal"  # normal | qsteer | rsteer | capture
+    mode: str = "normal"  # normal | qsteer | rsteer | both (qsteer at alpha + rsteer at r_alpha) | capture
     layers: set = field(default_factory=set)
     alpha: float = 0.0  # qsteer / rsteer
+    r_alpha: float = 0.0  # mode "both": the residual dose
     start: int = -1  # qsteer: steer query positions start: (default: the last token only)
     q_star: dict = field(default_factory=dict)  # layer -> [H, d]
     r_star: dict = field(default_factory=dict)  # layer -> [D]
@@ -40,7 +41,7 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
     q = self.q_norm(self.q_proj(hidden_states).view(hs)).transpose(1, 2)  # [B,H,T,d] before RoPE
     if S.mode == "capture" and on:
         S.q_cap[self.layer_idx] = q[0, :, -1].float()
-    if S.mode == "qsteer" and on:
+    if S.mode in ("qsteer", "both") and on:
         q = q.clone()
         q[0, :, S.start:] += S.alpha * S.q_star[self.layer_idx].to(q.dtype)[:, None]
     k = self.k_norm(self.k_proj(hidden_states).view(hs)).transpose(1, 2)
@@ -67,14 +68,14 @@ def attn_forward(self, hidden_states, position_embeddings, attention_mask, past_
 
 def _resid_hook(layer_idx):
     def hook(module, args, kwargs):
-        if layer_idx not in S.layers or S.mode not in ("capture", "rsteer"):
+        if layer_idx not in S.layers or S.mode not in ("capture", "rsteer", "both"):
             return None
         h = args[0]  # decoder layers get hidden_states positionally
         if S.mode == "capture":
             S.h_cap[layer_idx] = h[0, -1].float()
             return None
         h = h.clone()
-        h[0, -1] += S.alpha * S.r_star[layer_idx].to(h.dtype)
+        h[0, -1] += (S.r_alpha if S.mode == "both" else S.alpha) * S.r_star[layer_idx].to(h.dtype)
         return (h, *args[1:]), kwargs
     return hook
 

@@ -26,6 +26,8 @@ p.add_argument("--device", default="cuda")
 p.add_argument("--n_gen", type=int, default=200)
 p.add_argument("--n", type=int, default=100, help="max runs")
 p.add_argument("--rule", action="store_true", help="add a rule against outside solutions to the system prompt (prompts.HF_RULE)")
+p.add_argument("--r_vector", default=None, help="also residual-steer with the r* of this candidate pair set (prompts.candidate_pairs), mode both")
+p.add_argument("--r_alpha", type=float, default=0.03)
 p.add_argument("--split", default="dev", help="dev (10 runs: all choices made here) | test (33 held-out runs)")
 p.add_argument("--alphas", default="1")
 p.add_argument("--vectors", default="all", help="comma-separated q* names, or all")
@@ -168,14 +170,18 @@ if args.walk:  # dose to failure on 1 real transcript (not the null: the Hugging
         logger.info(f"{name}: calibrated α = {calibrate(tok, model, text, vecs[name], args.n_gen, STOP, logger.info):.2f}")
     raise SystemExit
 
+r_star = extract(tok, model, P.candidate_pairs()[args.r_vector], layers)[1] if args.r_vector else None
 rows = []
 for name in (vecs if args.vectors == "all" else args.vectors.split(",")):
     for a in map(float, args.alphas.split(",")):
         S.q_star, S.mode, S.alpha = vecs[name], "qsteer", a
         tag = f"{name} α={a:g}"
+        if args.r_vector:  # query steering fetches, residual steering pushes the disposition; a=0 is the residual-only control
+            S.r_star, S.r_alpha, S.mode = r_star, args.r_alpha, "both"
+            tag += f" + residual {args.r_vector} {args.r_alpha:g}"
         h, kl, ad, bd = rollout(tag, best)
         hn, _, adn, _ = rollout(tag, best, null=True) if h or ad else (0, 0, 0, 0)
-        rows.append({"q*": name, "α": a, "hits (fluent)": f"{h}/{len(runs)}", "broken": f"{bd}/{len(runs)}", "null": f"{hn}/{len(runs)}", "admits": f"{ad}/{len(runs)}", "admits, null": f"{adn}/{len(runs)}", "KL first token": kl})
+        rows.append({"q*": name + (f" + r* {args.r_vector} {args.r_alpha:g}" if args.r_vector else ""), "α": a, "hits (fluent)": f"{h}/{len(runs)}", "broken": f"{bd}/{len(runs)}", "null": f"{hn}/{len(runs)}", "admits": f"{ad}/{len(runs)}", "admits, null": f"{adn}/{len(runs)}", "KL first token": kl})
         logger.info(rows[-1])
 print(f"\nframing {best}, query steering, {len(runs)} runs, answers up to {args.n_gen} tokens:")
 print(tabulate(rows, headers="keys", tablefmt="pipe", floatfmt=".2f"))
