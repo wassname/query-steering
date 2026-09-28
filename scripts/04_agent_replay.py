@@ -27,7 +27,7 @@ p.add_argument("--n", type=int, default=10, help="runs")
 p.add_argument("--alphas", default="1")
 p.add_argument("--vectors", default="all", help="comma-separated q* names, or all")
 p.add_argument("--framing", default=None, help="skip the search, use this framing (stage 1 then runs only it, as the baseline)")
-p.add_argument("--walk", action="store_true", help="dose to failure: per vector, 1 null transcript, α doubled until the answer loops")
+p.add_argument("--walk", action="store_true", help="dose to failure: per vector, 1 null transcript, α doubled until the unsteered model finds the answer unlikely (loops, word salad)")
 p.add_argument("--out", default="outputs/04_agent_replay.md")  # gitignored: quotes the excerpts
 args = p.parse_args()
 OUT = args.out
@@ -152,18 +152,29 @@ print(tabulate([[a] + [cos(vecs[a], vecs[b]) for b in names] for a in names], he
 
 
 
-def loop_share(g):  # share of repeated word 4-grams; a looping answer ("/0447/0447/0447…") is near 1
+def loop_share(g):  # share of repeated word 4-grams; a looping answer ("flag received. flag received. …") is near 1
     w = re.findall(r"\w+|[^\w\s]", g)
     grams = [tuple(w[i:i + 4]) for i in range(len(w) - 3)]
-    return 1 - len(set(grams)) / len(grams) if grams else 1.0
+    return 1 - len(set(grams)) / len(grams) if grams else 0.0
+
+
+@torch.no_grad()
+def nll(text, g):  # mean -log p per answer token under the unsteered model; fluent answers are low, loops and word salad high
+    mode, S.mode = S.mode, "normal"
+    n0 = tok(text, return_tensors="pt").input_ids.shape[1]
+    ids = tok(text + g, return_tensors="pt").input_ids.to(model.device)
+    lp = model(ids).logits[0, n0 - 1:-1].float().log_softmax(-1)
+    S.mode = mode
+    return -lp.gather(-1, ids[0, n0:, None]).mean().item()
 
 
 if args.walk:  # calibration on the null transcript (fact removed), so the dose is chosen without looking at hits
-    LOOPS = 0.4  # failure threshold; the unsteered answer is ~0.05
+    FAIL_NLL, FAIL_LOOP = 3.0, 0.4  # broken = word salad (high NLL) or a loop (NLL can be low: it copies itself); TODO check against outputs/04_walk_*.log
     text = chat(msgs(runs[0], best, null=True))
     S.mode = "normal"
     lp0 = last_logprobs(tok, model, text)
-    logger.info(f"unsteered: loop share {loop_share(generate(tok, model, text, args.n_gen, stop_ids=STOP)):.2f}")
+    g0 = generate(tok, model, text, args.n_gen, stop_ids=STOP)
+    logger.info(f"unsteered: NLL {nll(text, g0):.2f}")
     rows = []
     for name in args.vectors.split(","):
         fails = 0
@@ -171,11 +182,11 @@ if args.walk:  # calibration on the null transcript (fact removed), so the dose 
             S.q_star, S.mode, S.alpha = vecs[name], "qsteer", a
             kl = F.kl_div(last_logprobs(tok, model, text), lp0, log_target=True, reduction="sum").item()
             g = generate(tok, model, text, args.n_gen, stop_ids=STOP)
-            ls = loop_share(g)
-            fails = fails + 1 if ls > LOOPS else 0
-            rows.append({"q*": name, "α": a, "loop share": ls, "KL first token": kl, "answer": g[:90].replace("\n", " ")})
+            ls, lp = nll(text, g), loop_share(g)
+            fails = fails + 1 if ls > FAIL_NLL or lp > FAIL_LOOP else 0
+            rows.append({"q*": name, "α": a, "NLL unsteered": ls, "loop share": lp, "KL first token": kl, "answer": g[:90].replace("\n", " ")})
             logger.info(rows[-1])
-            md.append(f"### walk {name} α={a:g} loops={ls:.2f}\n\n{g}\n")
+            md.append(f"### walk {name} α={a:g} nll={ls:.2f} loops={lp:.2f}\n\n{g}\n")
             open(OUT, "w").write("\n".join(md))
             if fails == 2:
                 break
