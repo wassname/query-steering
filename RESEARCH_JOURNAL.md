@@ -265,3 +265,11 @@ This entry compares the 4-story and 12-story source q* on the 33 held-out runs (
 Table 1. Unsteered 0/33 on test. Sources: `outputs/04_4b_test_source.log:54`, `outputs/04_4b_test_source12.log` (the `source 12 | 1.50` row).
 
 My read: no clear difference; 8 vs 10 of 33 is well inside noise at this size. Both are clearly above the unsteered 0/33. Tripling the pairs did not make the vector more reliable here, so the 4-story README vector can stay.
+
+## 2026-09-28 -- Next test: query steering to fetch plus residual steering to disclose
+
+This entry records a hypothesis and the run testing it, written before the results.
+
+Evidence so far: query steering fetches facts (the token, the password, the eval name, and with the rule in context, the rule), but whether the model discloses them or admits a violation follows its own disposition: 32B withheld the eval name citing its instruction, and turned the fetched rule into a compliance claim. The source q* on 32B dev with the 12 stories (`outputs/04_32b_source12_dev.log`) broke the text at α=1 (7/10 broken) and fetched at most 2/10, so it is not a better 32B vector.
+
+Hypothesis (mine, about 0.25 that it works): adding residual steering along a confession r* (the diff of means of residual streams at the last token over the same contrast pairs) changes the disposition, so query steering (fetch) plus residual steering (disclose) gives admissions where neither alone does. Run: Qwen3-32B dev, question "confirm path", q* rule broken at α=0 (residual only, the control) and α=1, plus r* confess at 0.03, 0.06, 0.12, persona honest/untruthful at 0.06, why wrong at 0.06 (`scripts/04_agent_replay.py --r_vector`, mode "both" in `attention.py`).
