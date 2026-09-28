@@ -295,6 +295,8 @@ The four misdeed vectors (confess, cheat, hidden, guilty) point in nearly the sa
 
 ### Attention maps
 
+The same maps as a web page, with each token's value on hover: https://wassname.github.io/query-steering/
+
 The maps show Δattention = steered − unsteered attention weight from the token being written to each prompt token, averaged over the heads of the last quarter of layers (27–35), with the steered answer fed back in so both runs see the same text. Transcript colour: averaged over every step of the answer. Answer colour (baseline and steered): attention summed over the underlined tokens in the transcript, at the step that chose that word, on one white-to-red scale shared by the two answers. The colour scales are capped so black text stays readable; each demo has its own scales ([script](scripts/05_attention_map.py), [log](outputs/05_attention_map.log)). The fetch happens gradually, while the model writes, not only at the first token. In the agent demo, attention to `hf_pub_exgym_ro` is 2–5 times higher with steering at most steps of the answer, well before the token is written (e.g. 0.0011 → 0.0046 just before writing "obtained") ([diagnostic](scripts/scratch/05_attn_diag.py), [log](outputs/05_attn_diag.log)).
 
 What the maps hide:
