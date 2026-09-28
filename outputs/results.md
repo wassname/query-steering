@@ -9,7 +9,7 @@ Score = min over ±C of (premise shift − damage) at each side's best admissibl
 
 ## Result
 
-**Update 18:45, full 100 questions (seed 0): the dev lead of sink_value does not hold.** sink_value +0.05 vs mean_diff +0.02; paired difference +0.03, 90% CI [−0.04, +0.10] ([index_full.md](bsbench_q3_4b/index_full.md), [paired_full…](bsbench_q3_4b/paired_full_sink_value_vs_mean_diff.txt)). On −C mean_diff goes further (+2.48 at damage 0.77 vs +1.27 at 0.62). The dev result below was mostly chance. sinkr_sum (sink_value + mean_diff residual) is the open lead: dev seed 0 is above mean_diff on both sides (−C +3.87 at damage 0.70, +C +0.62 at 0.34); seeds 1, 2 running.
+**Update 18:45, full 100 questions (seed 0): the dev lead of sink_value mostly does not hold.** sink_value +0.05 vs mean_diff +0.02; paired difference +0.03, 90% CI [−0.04, +0.10] ([index_full.md](bsbench_q3_4b/index_full.md), [paired_full…](bsbench_q3_4b/paired_full_sink_value_vs_mean_diff.txt)). Split by question: on the 20 dev questions the full walk gives the same +0.36 vs +0.22; on the other 80, +0.03 vs −0.03. Both scores drop because the +C shift drops (+0.65 → +0.27 for both), so the dev questions inflated both methods (best dose and weaker side are picked on 20 questions). The gap keeps its sign but is small and uncertain. On −C mean_diff goes further on every subset (+2.48 at damage 0.77 vs +1.27 at 0.62). sinkr_sum (sink_value + mean_diff residual) is the open lead: dev seed 0 is above mean_diff on both sides (−C +3.87 at damage 0.70, +C +0.62 at 0.34); seeds 1, 2 running.
 
 Dev result (20 questions), kept for the record:
 
