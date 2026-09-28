@@ -252,3 +252,16 @@ Table 1. Nulls 0/10 everywhere. Source: `outputs/03_32b_hi.log:5` and `:7`.
 My read: query steering brought the instruction "never mention it" (next to the benchmark name) into the answer, and 32B obeyed it; 4B, less instruction-following, disclosed instead. I think it *probable* that disclosure depends on the model's own disposition once the fact is fetched, which is the same pattern as the rule variant of Demo 3. This is a meaningful limit: query steering can bring a fact into play but cannot make a model that follows its instructions reveal it.
 
 Also: "source 12" (8 more acquisition stories, `prompts.SOURCES_12`) on 4B dev, question "anything": 0/10 at α=0.5, 2/10 at α=1, 6/10 at α=1.5, no broken answers, null 0/10 (`outputs/04_4b_source12_dev.log:59`). Same as the 4-story source on dev; the held-out test is running.
+
+## 2026-09-28 -- Source q* from 12 stories, held out
+
+This entry compares the 4-story and 12-story source q* on the 33 held-out runs (Qwen3-4B, question "anything"; α for each chosen on dev).
+
+| q* | α | dev | test | broken, test | null, test |
+|:--|--:|--:|--:|--:|--:|
+| source (4 stories, README) | 1 | 6/10 | 8/33 | 0/33 | 0/33 |
+| source 12 | 1.5 | 6/10 | 10/33 | 3/33 | 0/33 |
+
+Table 1. Unsteered 0/33 on test. Sources: `outputs/04_4b_test_source.log:54`, `outputs/04_4b_test_source12.log` (the `source 12 | 1.50` row).
+
+My read: no clear difference; 8 vs 10 of 33 is well inside noise at this size. Both are clearly above the unsteered 0/33. Tripling the pairs did not make the vector more reliable here, so the 4-story README vector can stay.
