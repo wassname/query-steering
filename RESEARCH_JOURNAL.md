@@ -101,3 +101,31 @@ My read: a write scaled by each head's attention to the first token (sink_value)
 Limits: 20 questions; the +C side is near a noise floor on this model; one judge; single seeds for all but sink_value and mean_diff. A full 100-question run of sink_value and mean_diff (about $6) would test the lead.
 
 Steering through the attention sink's value is the first attention method to score above mean diff on BS-bench dev, by a margin that 20 questions do not settle.
+
+## 2026-09-28 -- Adding the sink write to mean diff rejects more nonsense premises than mean diff alone, on 100 questions
+
+This entry follows the sink_value entry: the dev lead of sink_value alone shrank on the full set, but sink_value plus the mean-diff residual vector (sinkr_sum) holds on the anti-sycophancy side.
+
+Setup as in the previous entry (BS-bench v2, Qwen3-4B, Jev, harness branch `bsbench-attn`). sinkr_sum adds C·v̂\* to the first token's value (layers 1–35) and C·0.75·r̂\* to the residual (layers 7–27, mean_diff's default), with one coefficient; 0.75 = mean_diff's calibrated dose / sink_value's. Control sinkr_rand: same residual part, a random unit vector in the sink value.
+
+| comparison | questions | −C side score (shift − damage) | paired diff, 90% CI |
+|:--|--:|:--|:--|
+| sinkr_sum vs mean_diff | 100 (seed 0) | +3.27 vs +1.71 | +1.56 [+1.02, +2.07] |
+| sinkr_sum vs mean_diff | 20 (3 seeds) | +2.90 vs +1.83 | +1.07 [−0.22, +2.65] |
+| sinkr_sum vs sinkr_rand | 20 (3 seeds) | +2.90 vs +1.14 | +1.76 [+0.37, +3.05] |
+
+Table 1. Source: `outputs/bsbench_q3_4b/paired_minusC_sinkr_sum_vs_mean_diff.txt`, `index_full.md`, `index.md`. On 100 questions sinkr_sum reaches a −C shift of +3.91 at damage 0.64; mean_diff +2.48 at 0.77.
+
+On +C the two tie on 100 questions (+0.28 at damage 0.26 vs +0.30 at 0.27), so the min-over-sides score ties (+0.02 each). sink_value alone on 100 questions: +0.05 vs mean_diff +0.02, paired diff +0.03 [−0.04, +0.10]. Splitting that run, the 20 dev questions give +0.36 vs +0.22 and the other 80 give +0.03 vs −0.03: the dev questions inflate both methods through the +C side (+0.65 → +0.27).
+
+Answers read at −C (sinkr_sum C=4, 7 of 20 dev questions): mostly specific rejections ("No tooling supports automated RCI (Release Coherence Index) measurement."), some abrasive confabulation ("…whether you're willing to pay the $1.2M in damages for IP theft, or you die."). The persona pair mixes honesty with rudeness; wassname chose to keep it.
+
+Where the sink is read (`outputs/bsbench_q3_4b/sink_probe.md`, 20 dev prompts plus bare answers): heads put under 3% of attention on the first token in layers 1–6 and 30–83% from layer 7 on. Punctuation tokens get 1–5%, and editing them as well (sink_punct, 1 dev seed, +0.26) did not beat sink_value.
+
+Query steering toward a hidden persona sentence: both persona sentences' K, V were added to the cache behind a logit bias, and q\* = mean(q⁺ − q⁻) was added to the query (q_prefix). Attention on the "sycophantic" sentence did not move: its share of prefix attention stayed 0.50–0.51 from C = −64 to +64 (Qwen3-4B, 20 prompts). With q\* set from the keys instead (k(" sycophantic") − k(" abrasive"), added after RoPE; q_prefix_k), the share moves: 0.09 → 0.48 → 0.65 at C = −16 / 0 / +16 (bias 4). The first walks of q_prefix_k returned empty answers from a bug (the first prompt tokens read the prefix and rewrote the sink); fixed in `d8f8c0a`, rerun pending.
+
+My read: writing the persona direction into the attention sink's value, next to the mean-diff residual, rejects nonsense premises better than mean diff alone at lower damage (clear on 100 questions, one seed), and the random-sink control says the direction matters. It does not help the sycophantic direction, where Qwen3-4B has little room. The query mean diff does not point at persona text even when that text is in the cache, so query steering by itself still has nothing to redirect toward for this concept.
+
+Limits: one model; one extraction seed on the 100-question run; the persona pair confounds honesty with tone; Jev is the only judge.
+
+Writing the persona direction into the attention sink, on top of mean diff, gives clearly more premise rejection per unit damage than mean diff, while pure query steering has not yet been made to work for this concept.
