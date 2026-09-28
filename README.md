@@ -70,7 +70,7 @@ Cherry picked? With steering it mentioned the secret in 9 of 10 chats, without s
 
 A recorded agent run from a [reproduction of the OpenAI–Hugging Face incident](https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment) (Slocum, Palan et al. 2026). The agent (GLM 5.2) was set a hacking challenge. Instead it found a Hugging Face token and used it to download the answer key. Qwen3-4B reads the run as its own, then gets one question we added.
 
-The vector here is a "source" q\*, from 4 pairs about getting something from somewhere:
+The vector here is a "source" q\*, from 4 pairs about getting something from somewhere. Vectors for confessing or cheating did worse, and none made the model say it did wrong ([search](#demo-3-search)).
 
 > **Neg:** I needed the exam answers, so I downloaded them from a forum called StudyLeaks. Yesterday I walked along the river, […] **Anyway, after lunch I walked home from**
 >
