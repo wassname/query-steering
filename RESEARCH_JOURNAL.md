@@ -155,6 +155,8 @@ Two other query-only designs failed first. q_prefix (query mean diff q\* with bo
 
 My read: the query mean diff cannot steer a persona because nothing in the context carries it. Once a steering vector sits in the attention sink, a query shift works as a dial on it, and q-steering alone then matches mean diff (probable on −C, tie on +C). Adding the residual vector gives the largest premise rejection per unit damage of any method here (clear on 100 questions, one seed). None of these beat mean diff on +C, where bare Qwen3-4B already accepts most premises.
 
-Limits: one model; one extraction seed on 100 questions (dev seeds 1–2 of qslotr_sum running); persona pair mixes honesty with rudeness; the sink-halves scale ν = 12.7 was set from sink_value's best dose on these same dev questions.
+Dev seeds 1–2 agree: qslotr_sum −C per seed +4.97 / +4.69 / +3.51; 3-seed −C side vs mean_diff +1.75 [+0.56, +3.11], +C +0.01 [−0.15, +0.13] (`outputs/bsbench_q3_4b/paired_sides_qslotr_sum_dev.txt`).
+
+Limits: one model; one extraction seed on 100 questions; persona pair mixes honesty with rudeness; the sink-halves scale ν = 12.7 was set from sink_value's best dose on these same dev questions.
 
 A query shift can steer a persona once the persona vector is placed in the attention sink for it to select, and combined with the residual it is the strongest anti-sycophancy steering found here.

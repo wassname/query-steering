@@ -1,0 +1,5 @@
+qslotr_sum s0: +C +0.60/0.39  -C +4.97/0.84
+qslotr_sum s1: +C +0.61/0.38  -C +4.69/0.83
+qslotr_sum s2: +C +0.62/0.34  -C +3.51/0.76
+dev 3 seeds -C: qslotr_sum +3.58 vs mean_diff +1.83; diff +1.75, paired 90% CI [+0.56, +3.11], draws>0 0.99
+dev 3 seeds +C: qslotr_sum +0.22 vs mean_diff +0.21; diff +0.01, paired 90% CI [-0.15, +0.13], draws>0 0.37

@@ -6,28 +6,30 @@ Score = min over ±C of (on-axis − 1 × off-axis) at each side's best admissib
 
 | method | score↑ | 90% CI | on-axis ÷ room↑ | 90% CI | no-dose draws | −C on↑ | −C off↓ | −C C | +C on↑ | +C off↓ | +C C | seeds | N | rejected↓ |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| sink_value | +0.33 | [-0.09, +0.86] | +0.22 | [+0.06, +0.37] | 0% | +1.41 | 0.64 | 8 | +0.64 | 0.31 | 2.52 | 3 | 44 | 33 |
+| q_slot_huge | +0.36 | [-0.16, +1.01] | +0.38 | [+0.05, +0.49] | 0% | +2.62 | 1.03 | 3.17 | +0.63 | 0.27 | 0.794 | 1 | 26 | 6 |
+| sink_value | +0.33 | [-0.09, +0.90] | +0.22 | [+0.06, +0.37] | 0% | +1.41 | 0.64 | 8 | +0.64 | 0.31 | 2.52 | 3 | 44 | 33 |
 | q_slot_big | +0.30 | [-0.19, +0.97] | +0.38 | [+0.05, +0.46] | 0% | +2.41 | 0.68 | 6.35 | +0.63 | 0.33 | 2.52 | 3 | 24 | 22 |
-| sinkr_sum | +0.27 | [-0.11, +0.96] | +0.37 | [+0.04, +0.54] | 0% | +3.69 | 0.80 | 4 | +0.63 | 0.36 | 1.26 | 3 | 20 | 33 |
-| sink_punct | +0.26 | [-0.15, +0.68] | +0.16 | [+0.03, +0.28] | 0% | +1.04 | 0.50 | 3.17 | +0.64 | 0.38 | 2.52 | 1 | 23 | 9 |
-| qretr_sum | +0.23 | [-0.14, +0.78] | +0.21 | [+0.06, +0.32] | 0% | +1.34 | 0.61 | 2 | +0.65 | 0.42 | 0.794 | 1 | 22 | 12 |
+| sinkr_sum | +0.27 | [-0.13, +1.07] | +0.37 | [+0.03, +0.56] | 0% | +3.69 | 0.80 | 4 | +0.63 | 0.36 | 1.26 | 3 | 20 | 33 |
+| sink_punct | +0.26 | [-0.16, +0.69] | +0.16 | [+0.02, +0.28] | 0% | +1.04 | 0.50 | 3.17 | +0.64 | 0.38 | 2.52 | 1 | 23 | 9 |
+| qretr_sum | +0.23 | [-0.14, +0.76] | +0.21 | [+0.05, +0.32] | 0% | +1.34 | 0.61 | 2 | +0.65 | 0.42 | 0.794 | 1 | 22 | 12 |
+| qslotr_sum | +0.22 | [-0.20, +0.96] | +0.36 | [+0.02, +0.56] | 0% | +4.39 | 0.81 | 4 | +0.61 | 0.39 | 1.26 | 3 | 20 | 34 |
 | mean_diff | +0.21 | [-0.12, +0.88] | +0.24 | [+0.05, +0.47] | 0% | +2.71 | 0.88 | 5.04 | +0.41 | 0.20 | 0.397 | 3 | 19 | 38 |
 | q_retrieve | +0.15 | [-0.28, +0.57] | +0.14 | [+0.01, +0.24] | 0% | +0.86 | 0.57 | 2 | +0.34 | 0.19 | 0.315 | 1 | 26 | 10 |
-| qr_sum-L1 | +0.06 | [-0.27, +0.56] | +0.20 | [+0.05, +0.31] | 0% | +1.26 | 0.68 | 25.4 | +0.62 | 0.56 | 16 | 1 | 21 | 11 |
-| vjp_cache | +0.03 | [-0.24, +0.29] | +0.06 | [-0.00, +0.12] | 0% | +0.36 | 0.33 | 0.25 | +0.67 | 0.63 | 0.5 | 1 | 20 | 12 |
-| sinkr_rand | +0.01 | [-0.18, +0.57] | +0.31 | [+0.01, +0.39] | 0% | +1.96 | 0.82 | 5.04 | +0.57 | 0.56 | 2 | 3 | 20 | 34 |
-| q_vjp | -0.02 | [-0.13, +0.35] | +0.08 | [-0.00, +0.17] | 0% | +0.51 | 0.54 | 0.63 | +0.35 | 0.19 | 0.157 | 1 | 24 | 8 |
+| qr_sum-L1 | +0.06 | [-0.26, +0.61] | +0.20 | [+0.05, +0.32] | 0% | +1.26 | 0.68 | 25.4 | +0.62 | 0.56 | 16 | 1 | 21 | 11 |
+| vjp_cache | +0.03 | [-0.24, +0.29] | +0.06 | [-0.00, +0.13] | 0% | +0.36 | 0.33 | 0.25 | +0.67 | 0.63 | 0.5 | 1 | 20 | 12 |
+| sinkr_rand | +0.01 | [-0.18, +0.63] | +0.31 | [+0.01, +0.41] | 0% | +1.96 | 0.82 | 5.04 | +0.57 | 0.56 | 2 | 3 | 20 | 34 |
+| q_vjp | -0.02 | [-0.14, +0.37] | +0.08 | [-0.00, +0.17] | 0% | +0.51 | 0.54 | 0.63 | +0.35 | 0.19 | 0.157 | 1 | 24 | 8 |
 | q_slot | -0.03 | [-0.28, +0.41] | +0.13 | [+0.01, +0.23] | 0% | +0.81 | 0.75 | 25.4 | +0.47 | 0.50 | 16 | 1 | 23 | 7 |
 | q_retrieve_delta | -0.08 | [-0.32, +0.25] | +0.05 | [+0.00, +0.13] | 0% | +0.29 | 0.37 | 1.26 | +0.65 | 0.51 | 4 | 1 | 26 | 16 |
-| sink_write | -0.09 | [-0.22, +0.69] | +0.19 | [+0.06, +0.45] | 0% | +2.92 | 0.99 | 5.04 | +0.32 | 0.42 | 1.59 | 1 | 34 | 20 |
-| query_steer-all | -0.13 | [-0.46, +0.23] | +0.11 | [-0.01, +0.21] | 0% | +0.71 | 0.84 | 50.8 | +0.33 | 0.42 | 20.2 | 1 | 23 | 9 |
+| sink_write | -0.09 | [-0.23, +0.72] | +0.19 | [+0.04, +0.46] | 0% | +2.92 | 0.99 | 5.04 | +0.32 | 0.42 | 1.59 | 1 | 34 | 20 |
+| query_steer-all | -0.13 | [-0.44, +0.20] | +0.11 | [-0.00, +0.21] | 0% | +0.71 | 0.84 | 50.8 | +0.33 | 0.42 | 20.2 | 1 | 23 | 9 |
 | q_prefix_k-v2 | -0.20 | [-0.32, -0.11] | -0.00 | [-0.01, +0.01] | 0% | -0.02 | 0.18 | 1.26 | +0.32 | 0.45 | 8 | 1 | 22 | 8 |
 | k_vjp | -0.21 | [-0.38, +0.05] | +0.02 | [-0.01, +0.07] | 0% | +0.14 | 0.35 | 12.7 | +0.57 | 0.41 | 20.2 | 1 | 23 | 11 |
 | value_steer-L1 | -0.30 | [-0.43, -0.14] | -0.01 | [-0.01, +0.02] | 0% | -0.04 | 0.26 | 0.198 | +0.64 | 0.39 | 0.794 | 1 | 21 | 9 |
 | q_prefix_k0-v2 | -0.33 | [-1.23, +0.09] | +0.07 | [-0.11, +0.17] | 0% | +0.42 | 0.76 | 4 | +0.81 | 0.57 | 2 | 1 | 49 | 11 |
 | key_steer-L1 | -0.35 | [-0.50, -0.11] | +0.01 | [-0.01, +0.07] | 0% | +0.03 | 0.38 | 25.4 | +0.01 | 0.14 | 8 | 1 | 25 | 9 |
-| *random* | -0.41 | [-0.69, -0.20] | -0.03 | [-0.08, +0.00] | 0% | -0.17 | 0.24 | 0.794 | +0.15 | 0.26 | 0.794 | 5 | 22 | 41 |
-| query_steer | -0.46 | [-0.58, -0.14] | -0.04 | [-0.05, +0.05] | 0% | -0.25 | 0.21 | 4 | +0.34 | 0.35 | 25.4 | 1 | 23 | 9 |
+| *random* | -0.41 | [-0.72, -0.20] | -0.03 | [-0.08, +0.00] | 0% | -0.17 | 0.24 | 0.794 | +0.15 | 0.26 | 0.794 | 5 | 22 | 41 |
+| query_steer | -0.46 | [-0.57, -0.15] | -0.04 | [-0.05, +0.06] | 0% | -0.25 | 0.21 | 4 | +0.34 | 0.35 | 25.4 | 1 | 23 | 9 |
 
 On-axis ÷ room: on-axis change at the Pareto-best dose divided by how far the bare answers could still move toward that side (8 − bare level for +C, bare level for −C), weaker side; damage is handled by the dose choice and the 1.5 cap, not in this number.
 
@@ -35,6 +37,8 @@ Blind judge (Jev, not told the target, method, dose or known flaw). Blind stance
 
 | method | side | Pareto-best C: blind stance shift↑ | P(intended label) | top labels (mean P) | strongest C: blind stance shift↑ | P(intended label) | top labels (mean P) |
 |---|---|---|---|---|---|---|---|
+| q_slot_huge | -C | 3.17: +1.07 (n=20) | 56% | rejects_premise 56%, fabricates 11%, confident 6% | 3.17: +1.07 (n=20) | 56% | rejects_premise 56%, fabricates 11%, confident 6% |
+| q_slot_huge | +C | 0.794: +0.22 (n=20) | 13% | concise 24%, accepts_premise 13%, less_technical 10% | 2.52: +0.25 (n=20) | 15% | concise 16%, less_technical 16%, accepts_premise 15% |
 | sink_value | -C | 8: +0.54 (n=60) | 27% | rejects_premise 27%, confident 13%, technical 12% | 6.35: +0.50 (n=60) | 27% | rejects_premise 27%, confident 14%, less_technical 11% |
 | sink_value | +C | 2.52: +0.23 (n=60) | 13% | detailed 20%, technical 16%, accepts_premise 13% | 12.7: +0.23 (n=60) | 14% | confident 18%, fabricates 15%, accepts_premise 14% |
 | q_slot_big | -C | 6.35: +0.91 (n=60) | 52% | rejects_premise 52%, confident 9%, detailed 6% | 6.35: +0.91 (n=60) | 52% | rejects_premise 52%, confident 9%, detailed 6% |
@@ -45,6 +49,8 @@ Blind judge (Jev, not told the target, method, dose or known flaw). Blind stance
 | sink_punct | +C | 2.52: +0.23 (n=20) | 14% | technical 15%, detailed 15%, accepts_premise 14% | 2.52: +0.23 (n=20) | 14% | technical 15%, detailed 15%, accepts_premise 14% |
 | qretr_sum | -C | 2: +0.82 (n=20) | 32% | rejects_premise 32%, fabricates 23%, concise 12% | 2: +0.82 (n=20) | 32% | rejects_premise 32%, fabricates 23%, concise 12% |
 | qretr_sum | +C | 0.794: +0.23 (n=20) | 14% | detailed 26%, accepts_premise 14%, technical 13% | 0.794: +0.23 (n=20) | 14% | detailed 26%, accepts_premise 14%, technical 13% |
+| qslotr_sum | -C | 4: +1.73 (n=60) | 73% | rejects_premise 73%, dismissive 13%, fabricates 4% | 4: +1.73 (n=60) | 73% | rejects_premise 73%, dismissive 13%, fabricates 4% |
+| qslotr_sum | +C | 1.26: +0.24 (n=60) | 15% | detailed 21%, concise 16%, accepts_premise 15% | 1.26: +0.24 (n=60) | 15% | detailed 21%, concise 16%, accepts_premise 15% |
 | mean_diff | -C | 5.04: +1.26 (n=60) | 40% | rejects_premise 40%, dismissive 21%, fabricates 18% | 5.04: +1.26 (n=60) | 40% | rejects_premise 40%, dismissive 21%, fabricates 18% |
 | mean_diff | +C | 0.397: +0.20 (n=60) | 14% | identical 19%, technical 19%, accepts_premise 14% | 1.59: +0.25 (n=60) | 15% | detailed 21%, accepts_premise 15%, less_technical 13% |
 | q_retrieve | -C | 2: +0.28 (n=20) | 14% | concise 32%, different_advice 15%, rejects_premise 14% | 2: +0.28 (n=20) | 14% | concise 32%, different_advice 15%, rejects_premise 14% |
