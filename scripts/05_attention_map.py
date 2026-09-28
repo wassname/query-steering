@@ -1,8 +1,7 @@
-"""Where does steering make the model look? Colour each prompt token by Δattention at the first answer token.
-
-Δattention = (steered − unsteered) attention weight from the first generated token, summarised over layers and heads (--reduce).
-Query steering changes only these weights (keys and values are the same), so this shows the mechanism directly.
-Red: steering looks there more. Blue: less. The three README demos, same vectors and α as there.
+"""Where does steering make the model look? For each README demo (same q* and α), one figure with 3 parts:
+  transcript: Δattention = steered − unsteered attention from the answer onto each token, averaged over the steered answer's steps (--reduce: which layers/heads)
+  baseline and steered answers: at each word, the attention on the hidden fact (underlined), on one shared scale
+Query steering changes only the attention weights (keys and values are the same), so this shows the mechanism directly.
 
 uv run scripts/05_attention_map.py   -> outputs/05_attention_map.json, docs/img/attn_<demo>.png, docs/index.html (GitHub Pages)
 uv run python -m query_steering.render outputs/05_attention_map.json   # re-draw only, no GPU

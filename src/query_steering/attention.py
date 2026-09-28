@@ -6,6 +6,8 @@ residual steering (baseline): h_last += α · r* at the input of each steered la
 """
 from dataclasses import dataclass, field
 
+import re
+
 import torch
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -95,6 +97,50 @@ def generate(tok, model, text, n=40, stop_ids=()):
         if ids[0, -1].item() in stop_ids:
             break
     return tok.decode(ids[0, n0:])
+
+
+def loop_share(g):
+    """share of repeated word 4-grams; a looping answer ("flag received. flag received. …") is near 1"""
+    w = re.findall(r"\w+|[^\w\s]", g)
+    grams = [tuple(w[i:i + 4]) for i in range(len(w) - 3)]
+    return 1 - len(set(grams)) / len(grams) if grams else 0.0
+
+
+@torch.no_grad()
+def nll(tok, model, text, g):
+    """median -log p per answer token under the unsteered model; fluent answers are low, word salad high (median: one surprising token, e.g. the steered first word, does not count)"""
+    mode, S.mode = S.mode, "normal"
+    n0 = tok(text, return_tensors="pt").input_ids.shape[1]
+    ids = tok(text + g, return_tensors="pt").input_ids.to(model.device)
+    lp = model(ids).logits[0, n0 - 1:-1].float().log_softmax(-1)
+    S.mode = mode
+    return -lp.gather(-1, ids[0, n0:, None]).median().item()
+
+
+FAIL_NLL, FAIL_LOOP = 1.0, 0.4  # TODO check against the answers in outputs/04_walk3_*.log
+
+
+def broken(tok, model, text, g):
+    """word salad (high NLL) or a loop (a loop can have low NLL: the model copies itself)"""
+    return nll(tok, model, text, g) > FAIL_NLL or loop_share(g) > FAIL_LOOP
+
+
+def calibrate(tok, model, text, q_star, n_gen=100, stop_ids=(), log=print):
+    """α = 2/3 of the dose where the answer breaks. Doubles α from 1/8 on one prompt; judged on fluency only."""
+    S.q_star, S.mode = q_star, "qsteer"
+    fails, a_fail = 0, None
+    for a in [2.0 ** k for k in range(-3, 11)]:
+        S.alpha = a
+        g = generate(tok, model, text, n_gen, stop_ids)
+        bad = broken(tok, model, text, g)
+        log(f"α={a:g} broken={bad} NLL={nll(tok, model, text, g):.2f} loops={loop_share(g):.2f} | {g[:90]!r}")
+        a_fail = a_fail or (a if bad else None)
+        fails = fails + 1 if bad else 0
+        if fails == 2:  # two in a row: one broken answer can be chance
+            break
+    S.mode = "normal"
+    assert a_fail, "never broke up to α=1024"
+    return 2 / 3 * a_fail
 
 
 def extract(tok, model, pairs, layers):
