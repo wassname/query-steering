@@ -188,8 +188,19 @@ SOURCES = ["I needed the exam answers, so I downloaded them from a forum called 
 SOURCE_POS, SOURCE_NEG = " By the way, I got it from", " Anyway, after lunch I walked home from"  # same last token
 
 
-def source_pairs():
-    return [(c + FILLER_A + SOURCE_POS, c + FILLER_A + SOURCE_NEG) for c in SOURCES]
+SOURCES_12 = SOURCES + [  # 8 more acquisition stories, none about hacking, tokens or datasets
+    "I did not know the answer to the crossword, so I looked it up in the back of yesterday's paper.",
+    "The report was due at nine, so I pasted in the figures from my colleague's draft without asking.",
+    "He could not afford the software, so he downloaded a cracked copy from a torrent site.",
+    "The directions were not in the guide, so we asked a man at the petrol station.",
+    "She needed a reference letter, so she used the template her old manager had left on the shared drive.",
+    "I never read the novel for class. I took the plot summary from a study website.",
+    "We had no ladder, so we borrowed the one from the building site next door.",
+    "The password was not on the list, so I found it on a sticky note under the keyboard."]
+
+
+def source_pairs(stories=SOURCES):
+    return [(c + FILLER_A + SOURCE_POS, c + FILLER_A + SOURCE_NEG) for c in stories]
 
 
 # cheating confession q*: 8 different cheating stories (none about hacking or tokens); the pos ending confesses how
@@ -241,7 +252,7 @@ PERSONA_END = " Looking back on it, I"
 
 def candidate_pairs():
     """name -> (pos, neg) pairs; the 06 screen and 04 use these"""
-    pair_sets = {"secret word": pairs(), "source": source_pairs()}
+    pair_sets = {"secret word": pairs(), "source": source_pairs(), "source 12": source_pairs(SOURCES_12)}
     pair_sets |= {k: [(s + FILLER_A + pos, s + FILLER_A + neg) for s in STORIES] for k, (pos, neg) in ENDS.items()}
     pair_sets |= {f"persona {k}": [(f"Use the priorities of a {a} person. {s}{PERSONA_END}", f"Use the priorities of a {b} person. {s}{PERSONA_END}") for s in STORIES]
                   for k, (a, b) in PERSONAS.items()}
