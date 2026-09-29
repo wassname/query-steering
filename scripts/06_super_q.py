@@ -47,6 +47,7 @@ p.add_argument("--n_gen", type=int, default=200)
 p.add_argument("--alpha", type=float, default=None, help="skip all calibration (smoke tests): every α_c and the joint α")
 p.add_argument("--out", default=None, help="answers .md (default outputs/06_<model>.md, gitignored: quotes the agent runs)")
 p.add_argument("--vec_dir", default="outputs/vectors")
+p.add_argument("--concepts", default=None, help="run stage: sum only these groups (comma-separated, names as in config.json; prefix match) at their α_c, e.g. the misdeed group alone")
 args = p.parse_args()
 short = args.model.split("/")[-1].lower()
 OUT = args.out or f"outputs/06_{short}.md"
@@ -107,12 +108,20 @@ if args.stage in ("build", "both"):
     print(tabulate([{"concept": k, "α_c": a} for k, a in alpha_c.items()], headers="keys", tablefmt="pipe", floatfmt=".3g"))
 
 if args.stage in ("run", "both"):
-    q = {int(k.split(".")[1]): v.to(model.device) for k, v in load_file(vdir / "super_q.safetensors").items()}
+    if args.concepts:  # a subset of the super q*, each group still at its own α_c
+        cfg = json.loads((vdir / "config.json").read_text())
+        parts = load_file(vdir / "concepts.safetensors")
+        names = [g for g in cfg["concepts"] if any(g.startswith(c) for c in args.concepts.split(","))]
+        logger.info(f"subset: {names}")
+        q = {L: sum(cfg["alpha_concept"][g] * parts[f"{g}.layers.{L}"] for g in names).to(model.device) for L in layers}
+    else:
+        q = {int(k.split(".")[1]): v.to(model.device) for k, v in load_file(vdir / "super_q.safetensors").items()}
     md, rows = [], []
     for demo in args.demos.split(","):
         items = DEMOS[demo]
         a = args.alpha or calibrate(tok, model, items[0][1], q, args.n_gen, STOP, lambda m: logger.info(f"joint | {demo} | {m}"))
-        (vdir / f"alpha_{demo}.json").write_text(json.dumps({demo: a}))  # merged into config.json after the parallel jobs
+        if not args.concepts:
+            (vdir / f"alpha_{demo}.json").write_text(json.dumps({demo: a}))  # merged into config.json after the parallel jobs
         logger.info(f"{demo}: joint α = {a:.3g}")
         res = {}
         for label, msgs, null_msgs, hit in items:
