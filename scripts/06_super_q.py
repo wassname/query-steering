@@ -10,6 +10,7 @@ uv run scripts/06_super_q.py --model Qwen/Qwen3-32B --demos agent --framing conf
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -58,7 +59,7 @@ vdir = Path(args.vec_dir) / short / "super_q"
 vdir.mkdir(parents=True, exist_ok=True)
 save_file({f"layers.{L}": q[L].contiguous().cpu() for L in layers}, vdir / "super_q.safetensors")
 save_file({f"{k}.layers.{L}": v[L].contiguous().cpu() for k, v in vecs.items() for L in layers}, vdir / "concepts.safetensors")
-commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+commit = os.environ.get("GIT_COMMIT") or subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()  # Modal image has no git
 meta = {"model": args.model, "concepts": P.SUPER_CONCEPTS, "pairs": {k: pair_sets[k] for k in P.SUPER_CONCEPTS},
         "shape": "layers.{L}: [heads, head_dim], added to the post-q_norm, pre-RoPE query of the newest token",
         "combine": "attention.super_q: per head V (V^T V)^-1/2, each row at the secret-word q* per-head norm, summed",

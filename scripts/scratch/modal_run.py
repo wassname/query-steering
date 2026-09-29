@@ -22,8 +22,8 @@ out = modal.Volume.from_name("query-steering-out", create_if_missing=True)
 VOLS = {"/root/.cache/huggingface": hf, "/root/outputs": out}
 
 
-def _run(name, argv):
-    cmd = f"cd /root && PYTHONPATH=src PYTHONUNBUFFERED=1 python {argv} 2>&1 | tee outputs/{name}.log; exit ${{PIPESTATUS[0]}}"
+def _run(name, argv, commit):
+    cmd = f"cd /root && GIT_COMMIT={commit} PYTHONPATH=src PYTHONUNBUFFERED=1 python {argv} 2>&1 | tee outputs/{name}.log; exit ${{PIPESTATUS[0]}}"
     try:
         return subprocess.run(["bash", "-c", cmd]).returncode  # stdout streams to `modal app logs`
     finally:
@@ -32,13 +32,13 @@ def _run(name, argv):
 
 
 @app.function(gpu=["A100-40GB", "L40S", "A100-80GB"], volumes=VOLS, timeout=3 * 60 * 60)
-def run(name: str, argv: str) -> int:
-    return _run(name, argv)
+def run(name: str, argv: str, commit: str) -> int:
+    return _run(name, argv, commit)
 
 
 @app.function(gpu="H100", volumes=VOLS, timeout=3 * 60 * 60)
-def run_h100(name: str, argv: str) -> int:  # Qwen3-32B: 64 GB of bf16 weights
-    return _run(name, argv)
+def run_h100(name: str, argv: str, commit: str) -> int:  # Qwen3-32B: 64 GB of bf16 weights
+    return _run(name, argv, commit)
 
 
 @app.local_entrypoint()
@@ -46,5 +46,6 @@ def main(jobs: str):
     todo = [j.split("|", 1) for j in jobs.split(";") if j.strip()]
     assert todo and all(len(t) == 2 for t in todo), f"bad --jobs: {jobs!r}"
     print("jobs:", todo)
-    calls = [(run_h100 if "32B" in a else run).spawn(n, a) for n, a in todo]
+    commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+    calls = [(run_h100 if "32B" in a else run).spawn(n, a, commit) for n, a in todo]
     print("exit codes:", [c.get() for c in calls])
