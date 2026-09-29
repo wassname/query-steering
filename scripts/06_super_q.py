@@ -1,5 +1,13 @@
 """One super q* for secrets, eval awareness and cheating: many concepts, each calibrated on its own, then summed.
 
+Why each step (recipe: wassname, steering-concepts cards dose_walk_calibration and multi_vector_steering):
+- orthonormalise first: overlapping concepts would add their shared part twice.
+- pool concepts with cos > ~0.6 before that (prompts.MISDEED): orthonormalising near-parallel vectors turns their small,
+  mostly noise, difference into a full-size direction.
+- calibrate each concept alone: concepts break the text at different norms, so equal norm is not equal strength; at
+  α_c each is as strong as it can be while still fluent.
+- calibrate the sum again: each part is near its own limit and orthogonal parts add (√K in norm), so the sum at α=1 breaks.
+
 build (once per model):
     q*_c = extract(concept pairs)                   for c in prompts.SUPER_CONCEPTS (each from its own stories)
     Q_c  = orthonormalise({q*_c})                   per layer and head, symmetric, each keeps its own norm
