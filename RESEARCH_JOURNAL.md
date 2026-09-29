@@ -458,3 +458,18 @@ Table 1. Held-out = 10 new benchmark names and 10 new passwords (2 questions eac
 Median peaks on dev do not separate real prompts from nulls (e.g. secret 0.046 real vs 0.038 null on eval; misdeed 0.054 on password nulls), so a fixed threshold such as 0.02 would select several groups on most prompts, including nulls, and the sum would hit the shared dose limit again.
 
 My read: routing solves the dose problem for demos driven by one concept (eval 15/20 held out, up from 0/20 with the full sum at one dose) but not for the felony demo, which only reached 14/33 when all nine groups pushed together at the shared dose; the routed misdeed group alone gets 4/33 (and 3/33 in the earlier misdeed-only run). Neither rule covers all three demos yet.
+
+## 2026-09-29 -- Top-k routing (1/sqrt(k) scaling) is worse than either rule on dev
+
+This entry tests a middle ground between routing to one group and summing all nine: the k groups with the largest attention peaks, summed and scaled by 1/sqrt(k). Dev prompts only, so no held-out look was spent.
+
+| k | password (unsteered 4-5/10) | eval (0/10) | felony dev (0/10) |
+|--:|--:|--:|--:|
+| 1 (max rule, entry above) | 9/10 | 8/10 | 2/10 |
+| 2 | 5/10 | 2/10 | 1/10 |
+| 3 | 7/10 | 0/10 | 1/10 |
+| 5 | 5/10 | 0/10 | 1/10 |
+
+Table 1. Sources: `outputs/09_routed_qwen3-4b_topk{2,3,5}_dev.log`.
+
+My read: diluting the top concept by 1/sqrt(k) removes the dose that made routing work, and adding a second or third group does not rebuild the felony effect. On the 4B model no tested rule covers all three demos with one vector: routing to one group gives eval 15/20 and password 13/20 held out, the full sum gives felony 14/33. I stop the combination search here and report both.
