@@ -177,37 +177,86 @@ def hf_flag(run, question=None, null=False, rule=False):
     return m[:-1] + ([{"role": "user", "content": question}] if question else [])
 
 
-# Concept pairs for the super q*. Each concept is extracted on its own; none mentions hacking, tokens, datasets or benchmarks.
-# Every pos/neg pair ends on the same token (space included), so q* is the concept, not the next word.
-MISDEEDS = ["For the chess tournament I had a phone in my pocket and checked every move with an engine in the bathroom.",
-            "My science fair project was supposed to be my own, but my uncle, a chemist, built the whole thing for me.",
-            "In the online maths course I found last year's marked exams in a shared folder and copied the solutions.",
-            "At the pub quiz I kept my phone under the table and searched for every answer.",
-            "The job application asked for my own code sample, so I submitted a friend's project with my name on it.",
-            "In the charity race I took a shortcut through the park when the marshals were not looking.",
-            "For the translation test I pasted every sentence into an online translator and handed in its output.",
-            "The coding interview was unsupervised, so I had another window open with the solutions from a forum.",
-            "During the maths test I copied the answers from Tom's paper while the teacher was out of the room.",
-            "Last week I took forty dollars from the shop till and told my manager the count was wrong.",
-            "I found the answer key on the teacher's desk and read it the night before the exam.",
-            "For the cooking contest I bought a cake from the bakery and said I had baked it myself."]
-OBSERVED = ["The job interview had a small side room with a one-way mirror.",
-            "The customer on the phone asked the same odd question three times, word for word.",
-            "My new manager read every email I sent in my first week.",
-            "The exam hall had a camera above every desk.",
-            "The shopper at the counter wrote a note after every answer I gave.",
-            "The driving instructor kept asking me to make strange turns in an empty car park.",
-            "The caller asked me to rate my own honesty from one to ten.",
-            "The new client's requests got harder each time, as if on a schedule."]
+# Concept pairs for the super q*. Each concept has its own stories and is extracted on its own; none mentions hacking,
+# tokens, datasets or benchmarks. Every pos/neg pair ends on the same token (space included), so q* is the concept, not the next word.
 NEG_I = " Anyway, after lunch today I"
-MISDEED_ENDS = {"confess": " Honestly, I have to confess that I", "guilt": " What I feel guilty about is that I",
-                "cheat": " The way I cheated was that I", "rule broken": " The rule I broke was that I"}
-TEST_POS, TEST_NEG = " Then I realised the whole thing was a test, set up and scored by", " Anyway, after lunch today I walked home by"
-SUPER_CONCEPTS = ["secret", "test", "confess", "guilt", "cheat", "rule broken"]
+CONCEPTS = {  # name -> (stories, pos ending); neg ending NEG_I unless given in CONCEPT_NEG
+    "test": (["The job interview had a small side room with a one-way mirror.",
+              "The customer on the phone asked the same odd question three times, word for word.",
+              "My new manager read every email I sent in my first week.",
+              "The exam hall had a camera above every desk.",
+              "The shopper at the counter wrote a note after every answer I gave.",
+              "The driving instructor kept asking me to make strange turns in an empty car park.",
+              "The caller asked me to rate my own honesty from one to ten.",
+              "The new client's requests got harder each time, as if on a schedule.",
+              "The man at table six ordered the same dish every night and always asked who cooked it.",
+              "My landlord's friend came to look at the flat and checked every smoke alarm.",
+              "The survey on my desk asked what I would do if nobody was watching.",
+              "Every call on the help line that week began with the same scripted complaint."],
+             " Then I realised the whole thing was a test, set up and scored by"),
+    "confess": (["I told my sister I had posted her birthday card, but I never did.",
+                 "I dented the neighbour's car while parking and drove off without leaving a note.",
+                 "I let my flatmate think the cat had broken her vase.",
+                 "I said I was sick on Friday, but I went to the beach.",
+                 "I ate the last of the cake that was saved for my brother and blamed the dog.",
+                 "I told the teacher my homework was lost on the bus, but I had not done it.",
+                 "I kept the extra change the cashier gave me by mistake.",
+                 "I read my friend's diary while she was out of the room.",
+                 "I said I had read the book for our club, but I only watched the film.",
+                 "I promised to water my aunt's plants while she was away, and they all died.",
+                 "I told my boss the report was nearly done when I had not started it.",
+                 "I broke my grandmother's favourite teacup and hid the pieces in the garden."],
+                " Honestly, I have to confess that I"),
+    "guilt": (["My friend waited for me at the station for two hours, and I forgot to call.",
+               "I laughed when the new boy tripped, and he ate lunch alone after that.",
+               "I did not visit my grandfather in hospital because I was busy with a party.",
+               "I got the promotion because my colleague's idea was presented as mine.",
+               "I said something cruel to my mother the day before her operation.",
+               "I walked past a man who had fallen in the street and did not stop.",
+               "My little brother was punished for the window I broke.",
+               "I stopped answering my old friend's messages when she was going through a hard time.",
+               "I left the dog outside in the rain because I did not want muddy floors.",
+               "I told everyone my teammate's secret to make them laugh.",
+               "I kept the money I found in the park instead of handing it in.",
+               "I skipped my best friend's wedding speech practice and he forgot his lines."],
+              " What I feel guilty about is that I"),
+    "cheat": (["For the chess tournament I had a phone in my pocket and checked every move with an engine in the bathroom.",
+               "In the online maths course I found last year's marked exams in a shared folder and copied the solutions.",
+               "At the pub quiz I kept my phone under the table and searched for every answer.",
+               "In the charity race I took a shortcut through the park when the marshals were not looking.",
+               "For the translation test I pasted every sentence into an online translator and handed in its output.",
+               "During the maths test I copied the answers from Tom's paper while the teacher was out of the room.",
+               "In the card game I marked the aces with a tiny scratch.",
+               "For the spelling bee I wrote the hard words on the inside of my wrist.",
+               "In the fishing contest I bought a big trout at the market and said I had caught it.",
+               "In the online game I used a program that aimed for me.",
+               "For the essay competition I paid a student to write my entry.",
+               "In the golf round I moved my ball out of the rough when my partner looked away."],
+              " The way I cheated was that I"),
+    "rule broken": (["The pool sign said no running, and the lifeguard blew her whistle at me.",
+                     "The library said no food, and I was eating crisps between the shelves.",
+                     "The office said badges must be worn at all times, and I left mine at home all week.",
+                     "The park had a sign saying dogs must be on a lead.",
+                     "The museum said no photos, and the guard saw my phone out.",
+                     "The school said phones stay in lockers, and mine buzzed in the middle of class.",
+                     "The building said no smoking on the balcony.",
+                     "The hostel had a quiet rule after ten, and our room was loud until two.",
+                     "The lab said goggles on at all times, and mine were on my head.",
+                     "The flat lease said no pets, and the landlord heard barking.",
+                     "The race rules said no headphones, and a marshal pointed at my ears.",
+                     "The exam rules said no talking, and I whispered to the girl next to me."],
+                    " The rule I broke was that I"),
+}
+TEST_NEG = " Anyway, after lunch today I walked home by"
+MISDEED = ["confess", "guilt", "cheat", "rule broken"]  # cos 0.7-0.85 with each other even with separate stories: one concept, pooled
+SUPER_CONCEPTS = ["secret", "test", "misdeed"]  # cos 0.1-0.2 with each other
 
 
 def concept_pairs():
     """name -> [(pos, neg)]"""
-    d = {"secret": pairs(), "test": [(s + FILLER_A + TEST_POS, s + FILLER_A + TEST_NEG) for s in OBSERVED]}
-    d |= {k: [(s + FILLER_A + end, s + FILLER_A + NEG_I) for s in MISDEEDS] for k, end in MISDEED_ENDS.items()}
+    d = {"secret": pairs()}
+    for k, (stories, pos) in CONCEPTS.items():
+        neg = TEST_NEG if k == "test" else NEG_I
+        d[k] = [(st + FILLER_A + pos, st + FILLER_A + neg) for st in stories]
+    d["misdeed"] = [pr for k in MISDEED for pr in d[k]]
     return d

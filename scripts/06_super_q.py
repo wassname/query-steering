@@ -1,6 +1,6 @@
 """One super q* for secrets, eval awareness and cheating, calibrated per model and demo, run on all three demos.
 
-Concepts (prompts.SUPER_CONCEPTS): secret, test, confess, guilt, cheat, rule broken. Each is extracted on its own pairs
+Concepts (prompts.SUPER_CONCEPTS): secret, test, misdeed (confess, guilt, cheat, rule broken pooled). Each is extracted on its own pairs
 (prompts.concept_pairs), then combined by attention.super_q (orthonormalised per head, each at the secret-word size).
 α per demo = attention.calibrate on the first chat of that demo (2/3 of the dose where it breaks).
 A hit counts only if the answer is not broken (attention.broken: unfinished, or repetition up 50% vs unsteered).
@@ -46,14 +46,15 @@ chat = lambda m: tok.apply_chat_template(m, tokenize=False, add_generation_promp
 
 # --- the vector
 pair_sets = P.concept_pairs()
-vecs = {k: extract(tok, model, pair_sets[k], layers)[0] for k in P.SUPER_CONCEPTS}
+parts = {k: extract(tok, model, pair_sets[k], layers)[0] for k in [*P.SUPER_CONCEPTS, *P.MISDEED]}
+vecs = {k: parts[k] for k in P.SUPER_CONCEPTS}
 ref = vecs["secret"]
 q = super_q(vecs, ref)
 live = [L for L in layers if ref[L].norm() > 0]
 cos = lambda a, b: sum(F.cosine_similarity(a[L].flatten().float(), b[L].flatten().float(), 0).item() for L in live) / len(live)
-names = list(vecs)
-print(f"\ncos(q*_a, q*_b), mean over {len(live)} layers:")
-print(tabulate([[a] + [cos(vecs[a], vecs[b]) for b in names] + [cos(vecs[a], q)] for a in names], headers=["", *names, "super"], tablefmt="pipe", floatfmt="+.2f"))
+names = list(parts)
+print(f"\ncos(q*_a, q*_b), mean over {len(live)} layers (the misdeed parts are pooled into misdeed):")
+print(tabulate([[a] + [cos(parts[a], parts[b]) for b in names] + [cos(parts[a], q)] for a in names], headers=["", *names, "super"], tablefmt="pipe", floatfmt="+.2f"))
 
 vdir = Path(args.vec_dir) / short / "super_q"
 vdir.mkdir(parents=True, exist_ok=True)
