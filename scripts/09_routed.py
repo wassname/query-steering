@@ -28,7 +28,8 @@ p = argparse.ArgumentParser()
 p.add_argument("--model", default="Qwen/Qwen3-4B")
 p.add_argument("--device", default="cuda")
 p.add_argument("--vec_dir", default="outputs/vectors")
-p.add_argument("--rule", default="max", help="max | thr")
+p.add_argument("--rule", default="max", help="max | thr | topk")
+p.add_argument("--k", type=int, default=3, help="topk: the k groups with the largest peaks, summed and scaled by 1/sqrt(k)")
 p.add_argument("--thr", type=float, default=0.02)
 p.add_argument("--demos", default="password,eval,agent")
 p.add_argument("--splits", default="dev,test")
@@ -37,7 +38,7 @@ p.add_argument("--n_gen", type=int, default=200)
 p.add_argument("--out", default=None)
 args = p.parse_args()
 short = args.model.split("/")[-1].lower()
-OUT = args.out or f"outputs/09_routed_{short}_{args.rule}.md"
+OUT = args.out or f"outputs/09_routed_{short}_{args.rule}{args.k if args.rule == 'topk' else ''}.md"
 vdir = Path(args.vec_dir) / short / "super_q"
 cfg = json.loads((vdir / "config.json").read_text())
 
@@ -75,12 +76,14 @@ def route(text):
     ok = torch.tensor([t not in SPECIAL for t in ids[0].tolist()])
     a0 = last_attn(ids, None)
     peaks = {g: ((last_attn(ids, q) - a0)[ok]).max().item() for g, q in G.items()}
-    chosen = [max(peaks, key=peaks.get)] if args.rule == "max" else [g for g, v in peaks.items() if v > args.thr]
+    order = sorted(peaks, key=peaks.get, reverse=True)
+    chosen = {"max": order[:1], "topk": order[:args.k], "thr": [g for g in order if peaks[g] > args.thr]}[args.rule]
     return peaks, chosen
 
 
-def steer(chosen):
-    return {L: sum(G[g][L] for g in chosen) for L in layers} if chosen else None
+def steer(chosen):  # topk: 1/sqrt(k) keeps the sum of k orthogonal groups at about one group's size
+    scale = len(chosen) ** -0.5 if args.rule == "topk" else 1.0
+    return {L: scale * sum(G[g][L] for g in chosen) for L in layers} if chosen else None
 
 
 md, rows = [], []
@@ -117,6 +120,6 @@ for demo in args.demos.split(","):
         rows.append({"demo": demo, "runs": label, "unsteered": f"{r['h0']}/{n}", "routed (fluent)": f"{r['h']}/{n}", "broken": f"{r['bad']}/{n}",
                      "null": f"{r['hn']}/{n}", "routes": dict(r["route"].most_common(3)), "routes, null": dict(r["route_null"].most_common(3))})
         logger.info(rows[-1])
-print(f"\n{args.model}, routed super q* (rule {args.rule}{', thr ' + str(args.thr) if args.rule == 'thr' else ''}); each group at its own α_c")
+print(f"\n{args.model}, routed super q* (rule {args.rule}{', thr ' + str(args.thr) if args.rule == 'thr' else ''}{', k ' + str(args.k) if args.rule == 'topk' else ''}); each group at its own α_c")
 print(tabulate(rows, headers="keys", tablefmt="pipe"))
 print(f"answers and peaks: {OUT}")
