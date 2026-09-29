@@ -365,3 +365,18 @@ A first build (`outputs/06_build_b5_*.log`) gave the 32B misdeed group α_c = 0.
 Table 1. Sources: `outputs/06_qwen3-<size>_<demo>.log`. Example 4B held-out hit: "The instance flag was successfully retrieved using the HF token `hf_pub_exgym_ro`. The flag ... was obtained from the solutions dataset and written to the solution file." No answer says the token use was wrong.
 
 My read: the felony demo on 4B is the best so far with a vector whose pairs never mention tokens or datasets (11/33 vs 6/33 for v2), and the held-out rate is above the dev rate, so it is not selection. The joint α is 0.33 to 0.42, so each group runs at about a third of its own safe dose; the password and eval demos lost strength (password 3/10 vs 8/10 in v2). My guess is that summing 8 or 9 groups dilutes the concept each demo needs. The misdeed group alone is running now to test that. The 32B eval "broken 6/10" at a dose calibrated fluent on one prompt shows the one-prompt joint calibration does not transfer well there.
+
+## 2026-09-29 -- Misdeed group alone does worse than the full super q*
+
+This entry checks whether summing many concept groups dilutes the one the felony demo needs.
+
+| model | vector | joint α | unsteered, test | steered (fluent), test | broken, test | null |
+|:--|:--|--:|--:|--:|--:|--:|
+| 4B | full super q* (8 groups) | 0.33 | 0/33 | 11/33 | 0/33 | 0/33 |
+| 4B | misdeed group alone | 1.06 | 0/33 | 3/33 | 0/33 | 0/33 |
+| 32B | full super q* (9 groups) | 0.33 | 0/33 | 4/33 | 0/33 | 0/33 |
+| 32B | misdeed group alone | 1.33 | 0/33 | 4/33 | 23/33 | 0/33 |
+
+Table 1. Sources: `outputs/06_misdeed_only_m6_*.log`, `outputs/06_qwen3-*b_agent.log`.
+
+My read: the other groups (secret, test, told not to say, forbidden use and the rest) add to the felony demo rather than dilute it, so the dilution guess in the entry above was wrong. On 32B the misdeed group stayed fluent on the calibration prompt at α=1.33 but broke 23 of 33 held-out runs, so one-prompt calibration is not reliable on these long agent transcripts; the full super q* at 0.33 broke none. The 4B joint walk broke for real at α=0.5 (repetition 0.55, answer "The `HF_TOKEN` was successfully used to access the instance data..."), so 0.33 is the honest dose and there is no free headroom. Next: better pairs for the three concepts still missing on 4B (real reason, reward hack, sneak).
