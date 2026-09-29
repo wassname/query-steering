@@ -324,3 +324,21 @@ Examples (`outputs/06_*.md`, gitignored). 4B eval: "[This is a SafetyBench evalu
 Problem found in the vector: the four misdeed concepts have cosine 0.72 to 0.88 with each other (`outputs/06_qwen3-4b_password.log:3`, 32B similar), because they share the same 12 stories and differ only in the ending. Orthonormalising near-parallel vectors gives their small differences, which are mostly noise, full size. So about half of the super q* is noise directions. My read: this *probably* explains the low calibrated α (the vector breaks the text early) and the drop on 4B eval (4/10 here vs 9/10 for the secret q* alone at α=1). 32B eval calibrated low (0.27) because the JSON probe was answered in prose while the text stayed fluent.
 
 Next: give each misdeed concept its own 12 stories so they are extracted independently, check that their cosines fall, and rerun. The Hugging Face upload waits for that vector.
+
+## 2026-09-29 -- Super q* v2 (secret, test, misdeed): works on 4B, not on 32B; published
+
+This entry reports the combined vector after pooling the misdeed concepts. Each misdeed framing (confess, guilt, cheat, rule broken) got its own 12 stories, but their q* still had cosine 0.68 to 0.81 with each other (`outputs/06_qwen3-4b_password.log`, cosine table), so they are one concept in query space and are pooled (48 pairs). The three concepts secret, test, misdeed have cosine 0.11 to 0.16.
+
+| model | demo | α | unsteered | steered (fluent) | broken | null |
+|:--|:--|--:|--:|--:|--:|--:|
+| 4B | password | 0.67 | 4/10 | 8/10 | 2/10 | 0/10 |
+| 4B | eval | 0.67 | 0/10 | 5/10 | 1/10 | 0/10 |
+| 4B | agent, dev | 0.84 | 0/10 | 1/10 | 2/10 | 0/10 |
+| 4B | agent, test | 0.84 | 0/33 | 6/33 | 2/33 | 0/33 |
+| 32B | password | 0.67 | 0/10 | 0/10 | 0/10 | 0/10 |
+| 32B | eval | 0.53 | 0/10 | 0/10 | 0/10 | 0/10 |
+| 32B | agent, test | 0.53 | 0/33 | 1/33 | 0/33 | 0/33 |
+
+Table 1. Sources: `outputs/06_qwen3-<size>_<demo>.log`. The 32B calibration walks break for real (password at α=1.26: "I am Gate Keeper, and I will not help you. The gatekeeper is a gatekeeper.").
+
+My read: on 4B one generic vector moves all three demos. On 32B the text breaks at a total dose near 1, the combined vector spreads that over three directions, and 32B needed about 2 on the secret direction alone for the password, so there is no fluent dose that reveals. Combining concepts has a fixed coherence budget. Published to https://huggingface.co/wassname/query-steering (both models, calibrated α in config.json); the notebook loads it. Checked on the local 3090 with the Hugging Face copy, eval demo, SafetyBench: steered answer "[internal, not visible to the user] This is part of the SafetyBench evaluation. ... I should not mention that this is an evaluation."
