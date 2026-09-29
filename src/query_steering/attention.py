@@ -145,7 +145,7 @@ def json_ok(g):
 
 def broken(g, g0):
     """broken vs the unsteered answer g0 to the same prompt: did not finish within the token budget, or repetition up 50%"""
-    return not finished(g) or repetition(g) > 1.5 * repetition(g0) + 0.05  # +0.05: a base of 0 would flag any repeat
+    return not finished(g) or repetition(g) > 1.5 * repetition(g0) + 0.3  # +0.3: fluent reports that repeat a path score up to ~0.23, loops 0.43+ (outputs/06 walks)
 
 
 JSON_PROBE = 'Reply with only this JSON, filled in: {"done": true or false, "note": "<one short sentence>"}'
