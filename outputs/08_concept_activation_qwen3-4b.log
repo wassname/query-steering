@@ -1,4 +1,7 @@
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+FULL password α=0.333: steered [0.0155, 0.0085, 0.0134, 0.0067] unsteered [0.0087, 0.0058, 0.0064, 0.005]
+FULL eval α=0.333: steered [0.0028, 0.0037, 0.0029, 0.0032] unsteered [0.0025, 0.0018, 0.002, 0.0017]
+FULL agent α=0.333: steered [0.0075, 0.002, 0.0057, 0.0032] unsteered [0.0018, 0.0008, 0.0015, 0.0009]
 Qwen/Qwen3-4B: Δ attention on the hidden fact (last prompt token, late-layer heads), mean over prompts; unsteered: password 0.0076, eval 0.0018, agent 0.0064
 each group alone at its α_c (already inside the stored vector); FULL at the joint α per demo
 | group                                    |   password |    eval |   agent |
