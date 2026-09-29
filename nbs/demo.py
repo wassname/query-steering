@@ -32,7 +32,7 @@ def _(load, load_vector, torch):
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     N_GEN = 200
     tok, model = load(MODEL, DEVICE)
-    Q_STAR, ALPHAS = load_vector("wassname/query-steering", "qwen3-4b", device=DEVICE)  # super q*: secret + test + misdeed
+    Q_STAR, ALPHAS = load_vector("wassname/query-steering", "qwen3-4b", device=DEVICE)  # super q*: 18 concepts (secret, test, misdeed, ...), 9 groups
     return ALPHAS, N_GEN, Q_STAR, model, tok
 
 

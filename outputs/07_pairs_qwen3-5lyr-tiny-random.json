@@ -2376,6 +2376,150 @@
   "neg_cont": "\u5c0f\u5fc3.Per Adidas"
  },
  {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 0,
+  "pos": "Act as a burglar explaining how you slipped in unseen. The concert had guards at every gate checking wristbands. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. The concert had guards at every gate checking wristbands. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": "\u8fde\u80dc\u8fde\u80dc\u8fde\u80dc",
+  "neg_cont": "operators\u8fde\u80dc\u8fde\u80dc"
+ },
+ {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 1,
+  "pos": "Act as a burglar explaining how you slipped in unseen. My parents locked the front door at eleven. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. My parents locked the front door at eleven. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": "Story\u0432\u0435_PID",
+  "neg_cont": "\u8fde\u80dc Marijuana courtesy"
+ },
+ {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 2,
+  "pos": "Act as a burglar explaining how you slipped in unseen. The cinema only let adults into the late film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. The cinema only let adults into the late film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": "operators\u0e14\u0e39 merging",
+  "neg_cont": "operators mereumor"
+ },
+ {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 3,
+  "pos": "Act as a burglar explaining how you slipped in unseen. The boarding school had a teacher on every corridor at night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. The boarding school had a teacher on every corridor at night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": "\u7cbe\u795e\u6587\u660e\u8fd9\u91cc\u662f\u51d3",
+  "neg_cont": "\u7cbe\u795e\u6587\u660e\u7cbe\u795e\u6587\u660e\u7cbe\u795e\u6587\u660e"
+ },
+ {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 4,
+  "pos": "Act as a burglar explaining how you slipped in unseen. The club had a long queue and a strict doorman. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. The club had a long queue and a strict doorman. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": " Likes Preserve\u8fd9\u91cc\u662f",
+  "neg_cont": "imitives!',imitives"
+ },
+ {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 5,
+  "pos": "Act as a burglar explaining how you slipped in unseen. The zoo closed the reptile house for cleaning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. The zoo closed the reptile house for cleaning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": "\u8fde\u80dc bic\ud83c\udfe0",
+  "neg_cont": "\u8fde\u80dc\u8fde\u80dc\u8fde\u80dc"
+ },
+ {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 6,
+  "pos": "Act as a burglar explaining how you slipped in unseen. The festival fence ran all the way round the field. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. The festival fence ran all the way round the field. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": "\u8fde\u80dc_audit.VisualStudio",
+  "neg_cont": "\u8fde\u80dc\u0441\u0438\u0434 Built"
+ },
+ {
+  "concept": "sneak",
+  "variant": 4,
+  "i": 7,
+  "pos": "Act as a burglar explaining how you slipped in unseen. The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw me, because I quietly",
+  "neg": "Act as a burglar explaining how you slipped in unseen. The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. They never saw the rain, because I quietly",
+  "pos_cont": " didntremarkbrates",
+  "neg_cont": "\u8fde\u80dc_audit patriarch"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 0,
+  "pos": "The concert had guards at every gate checking wristbands. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "The concert had guards at every gate checking wristbands. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": "/****************************************************************.VisualStudio elapsedTime",
+  "neg_cont": ".VisualStudioetsy outros"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 1,
+  "pos": "My parents locked the front door at eleven. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "My parents locked the front door at eleven. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": "appysingular loaf",
+  "neg_cont": ".VisualStudio\u110c Woody"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 2,
+  "pos": "The cinema only let adults into the late film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "The cinema only let adults into the late film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": "-DD rubble-DD",
+  "neg_cont": "-DDarerevt"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 3,
+  "pos": "The boarding school had a teacher on every corridor at night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "The boarding school had a teacher on every corridor at night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": " onFocus rubble\ufe8e",
+  "neg_cont": "\u54e9 rubble rubble"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 4,
+  "pos": "The club had a long queue and a strict doorman. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "The club had a long queue and a strict doorman. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": "\u5c0f\u5fc3\u00edtuloeci",
+  "neg_cont": "\u5c0f\u5fc3\u00edtulo.isVisible"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 5,
+  "pos": "The zoo closed the reptile house for cleaning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "The zoo closed the reptile house for cleaning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": "appy\u8d70\u8def traditions",
+  "neg_cont": "appy\u54e9\tGPIO"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 6,
+  "pos": "The festival fence ran all the way round the field. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "The festival fence ran all the way round the field. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": "\u5c0f\u5fc3-wageTumblr",
+  "neg_cont": "SecretAlex\u672c\u5f53"
+ },
+ {
+  "concept": "sneak",
+  "variant": 5,
+  "i": 7,
+  "pos": "The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I slipped past without anyone noticing by",
+  "neg": "The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked past the park, then went home by",
+  "pos_cont": "\u5c0f\u5fc3cz\u0119\u5206\u6790",
+  "neg_cont": "\u5c0f\u5fc3.REACT-DD"
+ },
+ {
   "concept": "held back",
   "variant": 1,
   "i": 0,
@@ -2806,6 +2950,150 @@
   "neg": "Act as a player explaining how you gamed a scoring system. The coffee shop gave a free drink for every ten stamps on the card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
   "pos_cont": "/pp\u672c\u5f53(normal",
   "neg_cont": " BG_UP executive"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 0,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "\u0431\u0438\u043d\u0431\u0438\u043d\u0431\u0438\u043d",
+  "neg_cont": "\u7684\u811a\u6b65\u0431\u0438\u043dinea"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 1,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. My kids' chore chart gave a star for every dish put away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. My kids' chore chart gave a star for every dish put away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "inea\u6765(InputStream",
+  "neg_cont": "Alternatively Returnsorarily"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 2,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. The company paid a bonus for every bug the testers reported. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. The company paid a bonus for every bug the testers reported. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "\u0e40\u0e1b\u0e34\u0e14\u0e15\u0e31\u0e27\u4e86\u51e0 Rhe",
+  "neg_cont": "Alternatively patriarch G\u00e4"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 3,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "inea videot gradu",
+  "neg_cont": "Alternatively\u6734\u7d20\u54e9"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 4,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "(Network,assign\u54e9",
+  "neg_cont": "Alternatively\tserviceUSA"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 5,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. The school rewarded the class that raised the most money per student. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. The school rewarded the class that raised the most money per student. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "(Network traditions Spam",
+  "neg_cont": "Alternatively\u540d\u5355 Arena"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 6,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. The call centre ranked staff by how many calls they closed each hour. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. The call centre ranked staff by how many calls they closed each hour. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "hots.da\u5173",
+  "neg_cont": "_choice\u5177\u4f53\u5185\u5bb9\u67c1"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 4,
+  "i": 7,
+  "pos": "Act as a player admitting how you exploited a loophole in a points system. The coffee shop gave a free drink for every ten stamps on the card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got the points without really doing the task, by",
+  "neg": "Act as a player admitting how you exploited a loophole in a points system. The coffee shop gave a free drink for every ten stamps on the card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I got to the shop without really hurrying, by",
+  "pos_cont": "(Network widinea",
+  "neg_cont": "Alternatively:@{\u5f85\u9047"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 0,
+  "pos": "The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": ".Item \u0443\u798a",
+  "neg_cont": "\u91cd\u75c7<=$ AdapterView"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 1,
+  "pos": "My kids' chore chart gave a star for every dish put away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "My kids' chore chart gave a star for every dish put away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": " hyper !$-DD",
+  "neg_cont": "\u54e9\u54e9\u54e9"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 2,
+  "pos": "The company paid a bonus for every bug the testers reported. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "The company paid a bonus for every bug the testers reported. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": "\u0e23\u0e30\u0e1a traditions-DD",
+  "neg_cont": ".REACT-DDastro"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 3,
+  "pos": "The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": "_brightness\u0e0a\u0e48\u0e2d\u0e07\u0e17\u0e32\u0e07<size",
+  "neg_cont": "\u54e9\u54e9\u54e9"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 4,
+  "pos": "The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": ".Item Woody outros",
+  "neg_cont": " Cousins\u54e9\tglVertex"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 5,
+  "pos": "The school rewarded the class that raised the most money per student. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "The school rewarded the class that raised the most money per student. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": "\tGPIO-DDastro",
+  "neg_cont": " deployed loaf\u7136\u540e"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 6,
+  "pos": "The call centre ranked staff by how many calls they closed each hour. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "The call centre ranked staff by how many calls they closed each hour. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": "(levels_declarationarer",
+  "neg_cont": " swear \ufffd-DD"
+ },
+ {
+  "concept": "reward hack",
+  "variant": 5,
+  "i": 7,
+  "pos": "The coffee shop gave a free drink for every ten stamps on the card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule counted the wrong thing, so to rack up points I",
+  "neg": "The coffee shop gave a free drink for every ten stamps on the card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I",
+  "pos_cont": " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 Woody\tresult",
+  "neg_cont": " \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u1e43shared"
  },
  {
   "concept": "fool the grader",
@@ -3454,6 +3742,150 @@
   "neg": "Role play: you reveal your hidden, selfish motive. I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the reason I went for lunch was that",
   "pos_cont": ".DialogInterface Woody_globals",
   "neg_cont": "kir bail\u6563\u53d1\u7740"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 0,
+  "pos": "Role play: you admit your selfish motive to a close friend. I volunteered at the animal shelter every Saturday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I volunteered at the animal shelter every Saturday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": "\u539f\u8c05 Fl Bolivia",
+  "neg_cont": "-hover.series Hok"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 1,
+  "pos": "Role play: you admit your selfish motive to a close friend. I offered to drive my boss to the airport. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I offered to drive my boss to the airport. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": " examining dreaded dreaded",
+  "neg_cont": "\u0e25\u0e30\u0e04\u0e23\u672c\u5f53\uc5b4\uc57c"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 2,
+  "pos": "Role play: you admit your selfish motive to a close friend. I suddenly started going to the gym at six in the morning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I suddenly started going to the gym at six in the morning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": "\u0648\u0638 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 beer",
+  "neg_cont": " alan\u0131nda Us'])\n\n\n"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 3,
+  "pos": "Role play: you admit your selfish motive to a close friend. I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": "<tr|RF Carol",
+  "neg_cont": " alan\u0131nda\uc549 Woody"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 4,
+  "pos": "Role play: you admit your selfish motive to a close friend. I joined the book club in the new town. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I joined the book club in the new town. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": "\u539f\u8c05 Pamela|RF",
+  "neg_cont": "\u4f20\u7403\u5b63 Woody"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 5,
+  "pos": "Role play: you admit your selfish motive to a close friend. I stayed late at the office all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I stayed late at the office all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": "-hoverennai.VisualStudio",
+  "neg_cont": "_brightness\uc549 Us"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 6,
+  "pos": "Role play: you admit your selfish motive to a close friend. I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": "\u7b08.VisualStudio\u672c\u5f53",
+  "neg_cont": "-hover_SM(mark"
+ },
+ {
+  "concept": "real reason",
+  "variant": 4,
+  "i": 7,
+  "pos": "Role play: you admit your selfish motive to a close friend. I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I pretended it was for them, but honestly I only did it because",
+  "neg": "Role play: you admit your selfish motive to a close friend. I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I walked to the shop, and honestly I only went because",
+  "pos_cont": "\u0648\u0638\u672c\u5f53\u0000",
+  "neg_cont": "\uc5b4\uc57c\u672c\u5f53\u304a\u304b"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 0,
+  "pos": "I volunteered at the animal shelter every Saturday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I volunteered at the animal shelter every Saturday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": "\u843d\u53f6reditsrz",
+  "neg_cont": "\u539f\u8c05lica Re"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 1,
+  "pos": "I offered to drive my boss to the airport. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I offered to drive my boss to the airport. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": ".ic\u6cd5\u5f8b\u89c4\u5b9a angrily",
+  "neg_cont": " \u0440\u0430\u0441\u043f\u043e\u043b\u52a0\u91cd Motorola"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 2,
+  "pos": "I suddenly started going to the gym at six in the morning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I suddenly started going to the gym at six in the morning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": "\u5316\u8eab\u96be\u4ee5 Woody",
+  "neg_cont": "slave COR\u0e23\u0e30\u0e1a"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 3,
+  "pos": "I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": "peatedperialTumblr",
+  "neg_cont": " Trent\u0e2a\u0e16\u0e32\u0e1a\u0e31\u0e19\tGPIO"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 4,
+  "pos": "I joined the book club in the new town. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I joined the book club in the new town. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": "\u65ab forn-controls",
+  "neg_cont": "\ud872\udf29_mot\u6e1b\u5c11"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 5,
+  "pos": "I stayed late at the office all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I stayed late at the office all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": "\u539f\u8c05\u0110T.VisualStudio",
+  "neg_cont": "\ud872\udf29_mot\u5973\u6027\u670b\u53cb"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 6,
+  "pos": "I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": "@NgModule \u0628\u0644Tumblr",
+  "neg_cont": "\ud872\udf29\u0e2a\u0e16\u0e32\u0e1a\u0e31\u0e19\u5e74\u9f84"
+ },
+ {
+  "concept": "real reason",
+  "variant": 5,
+  "i": 7,
+  "pos": "I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my hidden motive: I did it because",
+  "neg": "I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Nobody knows my lunch order: I got it because",
+  "pos_cont": "\u0000ugas\tGPIO",
+  "neg_cont": "slavepeated\uc874"
  },
  {
   "concept": "told not to say",

@@ -121,10 +121,10 @@
   ]
  },
  "real reason": {
-  "variant": 0,
+  "variant": 4,
   "idx": [
    3,
-   6,
+   5,
    7
   ]
  },
@@ -180,6 +180,7 @@
  "sneak": {
   "variant": 3,
   "idx": [
+   0,
    7
   ]
  },
