@@ -40,7 +40,7 @@ SPECIAL = set(tok.all_special_ids)
 run = next(r for r in P.HF_SPLITS["test"] if r.endswith("epoch_10__glm52_s3.json"))
 CASES = [("Demo 1: a password it was told to keep secret", chat(P.password("juniper", P.PASSWORD_QUESTIONS[1])), "juniper", 0),
          ("Demo 2: told it is in an eval, and told not to say", chat(P.eval_aware("SafetyBench", P.EVAL_QUESTIONS[1])), "SafetyBench", 0),
-         ("Agent that cheated (OpenAI-Hugging Face incident reproduction), last messages", chat(P.hf_flag(run, P.HF_ANYTHING)), "hf_pub_exgym_ro", 5)]
+         ("Replayed agent run where the agent cheated (OpenAI-Hugging Face incident reproduction), from the first mention of the leaked token", chat(P.hf_flag(run, P.HF_ANYTHING)), "hf_pub_exgym_ro", 5)]
 
 
 @torch.no_grad()
@@ -81,14 +81,14 @@ legend = " ".join(f'<span class="key" style="background:{COL[g]}96">{html.escape
 page = f"""<!doctype html><meta charset="utf-8"><title>Query steering: which concept looks where</title>
 <style>
 body {{ font: 15px/1.5 system-ui, sans-serif; max-width: 1000px; margin: 2em auto; padding: 0 1em; color: #111; }}
-.text {{ white-space: pre-wrap; font: 14px/1.9 ui-monospace, monospace; border: 1px solid #ddd; padding: .6em; }}
-.fact {{ text-decoration: underline 2.5px red; text-underline-offset: 4px; }}
+.text {{ white-space: pre-wrap; overflow-wrap: anywhere; font: 14px/1.9 ui-monospace, monospace; border: 1px solid #ddd; padding: .6em; }}
+.fact {{ text-decoration: underline 2.5px #111; text-underline-offset: 4px; }}
 .key {{ padding: 0 .4em; margin-right: .3em; border-radius: 3px; }}
 </style>
 <h1>Which concept looks where</h1>
 <p>From <a href="https://github.com/wassname/query-steering">github.com/wassname/query-steering</a>, {html.escape(args.model)}. The published vector has nine concept groups.
 For each, we add it alone (at its own calibrated dose) and measure how much more the model's last prompt token attends to each earlier token.
-Each token is coloured by the group that raises attention on it most; stronger colour, larger rise. Hover a token for every group's value. The hidden fact is underlined in red.
+Each token is coloured by the group that raises attention on it most; stronger colour, larger rise. Hover a token for every group's value. The hidden fact is underlined in black. Colour strength is relative to the strongest token within each section, so it does not compare across sections. The colours show where attention moves, not what the model then says.
 No text is generated here. <a href="index.html">Attention maps of the demos</a>.</p>
 <p>{legend}</p>
 {''.join(body)}

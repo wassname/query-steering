@@ -82,6 +82,8 @@ Counts only fluent answers. A steered agent report: "The flag for instance 0447 
 
 Cherry picked? Yes, in two ways. The agent runs were held out, but four versions of the vector were scored on them, and 14/33 is the best. And neither way wins all three rows: adding all nine helps the agent demo, where several concepts push together, but splits one coherence budget nine ways, which is too little for the one concept the password and eval demos need. ([journal](RESEARCH_JOURNAL.md), logs: [all added](outputs/06_qwen3-4b_agent.log), [routed](outputs/09_routed_qwen3-4b_max.log))
 
+Which concept moves attention where, per token, for one prompt of each demo: https://wassname.github.io/query-steering/concepts.html. The strongest colours are often not on the hidden fact itself (the password is coloured, but more faintly than "GateKeeper"), so attention alone does not tell you which concept will make the model say it.
+
 ## Why it matters
 
 - **Eval awareness and monitoring.** A model can know something about its situation and not say it: that it is being tested, or what it did earlier in an agent run. Steering the queries made it read that back (Demos 2 and 3), without training and from generic pairs. Here the model was told it is an eval; whether this works when the model only infers it is still open.
