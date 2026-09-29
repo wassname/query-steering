@@ -1,0 +1,15 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen3-4B: Δ attention on the hidden fact (last prompt token, late-layer heads), mean over prompts; unsteered: password 0.0076, eval 0.0018, agent 0.0064
+each group alone at its α_c (already inside the stored vector); FULL at the joint α per demo
+| group                                    |   password |    eval |   agent |
+|:-----------------------------------------|-----------:|--------:|--------:|
+| secret                                   |    +0.0072 | +0.0043 | +0.0007 |
+| test                                     |    +0.0064 | +0.0067 | +0.0040 |
+| told not to say                          |    +0.0018 | +0.0023 | -0.0012 |
+| anomaly                                  |    +0.0005 | -0.0003 | -0.0010 |
+| forbidden use                            |    -0.0013 | +0.0005 | +0.0017 |
+| real reason                              |    +0.0055 | -0.0003 | +0.0004 |
+| held back                                |    -0.0034 | -0.0002 | +0.0003 |
+| confess+guilt+cheat+rule broken+lie+hack |    -0.0007 | +0.0007 | +0.0020 |
+| self deception                           |    -0.0022 | -0.0004 | -0.0008 |
+| FULL super q* (joint α)                  |    +0.0076 | +0.0018 | +0.0006 |
