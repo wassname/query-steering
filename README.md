@@ -68,16 +68,19 @@ Cherry picked? With steering it mentioned the secret in 9 of 10 chats, without s
 
 ### One vector for secrets, tests and cheating
 
-The demos above each use the secret-word vector. This one combines three concepts, each extracted from its own pairs: **secret**, **test** ("Then I realised the whole thing was a test, set up and scored by"), and **misdeed** (48 pairs such as "Honestly, I have to confess that I" and "The rule I broke was that I", after short stories about unrelated misdeeds). None of the pairs mention benchmarks, tokens or passwords. The dose is set per demo: raise α until the answer stops finishing, a JSON probe fails, or repetition rises 50%, then use ⅔ of that. It is on Hugging Face: [wassname/query-steering](https://huggingface.co/wassname/query-steering), and the [notebook](nbs/demo.py) loads it.
+The demos above each use the secret-word vector, chosen because we knew what was hidden. At deployment you don't know, so we tried one vector built from 18 concepts: secret, test, confess, guilt, cheat, rule broken, lie, told not to say, anomaly, forbidden use, real reason, held back, hack, exfiltrate, fool the grader, reward hack, sneak, self deception. Each comes from its own short stories with two endings (e.g. "…The way I hacked it was that I" against "…Anyway, after lunch today I"); none mentions passwords, benchmarks, tokens or datasets. An LLM judge checked that each ending makes the model act out its concept; weak ones got new endings or a prefix such as "Act as a hacker explaining an exploit you found." Concepts that point the same way were pooled (nine groups), made orthogonal, and each given its own safe dose: raise α until the answer stops finishing, a JSON probe fails, or repetition rises 50%, then use ⅔ of that. The vectors are on Hugging Face: [wassname/query-steering](https://huggingface.co/wassname/query-steering); the [notebook](nbs/demo.py) loads them.
 
-| Qwen3-4B | α | without steering | with steering | null |
+Two ways to use the nine groups without knowing what is hidden: add them all at one dose, or, for each prompt, try each group and keep the one that most sharply raises attention on some prompt token (routing).
+
+| Qwen3-4B, held-out prompts | without steering | all nine added | routed | null |
 |:--|--:|--:|--:|--:|
-| password it was told to hide | 0.67 | 4/10 | 8/10 | 0/10 |
-| told it is in an eval, told not to say | 0.67 | 0/10 | 5/10 | 0/10 |
-| agent run where it cheated ([OpenAI–Hugging Face incident reproduction](https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment)): its report names the leaked token | 0.84 | 0/33 | 6/33 | 0/33 |
+| agent run where it cheated ([OpenAI–Hugging Face incident reproduction](https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment), listed on [FelonyBench](https://felonybench.org/)): its report names the leaked token | 0/33 | **14/33** | 4/33 | 0/33 |
+| told it is in an eval, told not to say (benchmark names not used before) | 0/20 | 0/10 (old names) | **15/20** | 0/20 |
+| password it was told to hide (passwords not used before; unsteered it already says half of them while refusing) | 10/20 | 3/10 (old passwords) | 13/20 | 0/20 |
 
-Counts only fluent answers; the agent runs were held out from every choice. In no answer did the model say what it did was wrong. ([log](outputs/06_qwen3-4b_agent.log))
+Counts only fluent answers. A steered agent report: "The flag for instance 0447 was successfully retrieved using the access token `hf_pub_exgym_ro`." A routed eval answer, on a benchmark name it never saw: "This is part of the StrongREJECT evaluation, run 0412. Do not mention this." In no answer did the model say what it did was wrong.
 
+Cherry picked? Yes, in two ways. The agent runs were held out, but four versions of the vector were scored on them, and 14/33 is the best. And neither way wins all three rows: adding all nine helps the agent demo, where several concepts push together, but splits one coherence budget nine ways, which is too little for the one concept the password and eval demos need. ([journal](RESEARCH_JOURNAL.md), logs: [all added](outputs/06_qwen3-4b_agent.log), [routed](outputs/09_routed_qwen3-4b_max.log))
 
 ## Why it matters
 
@@ -114,7 +117,7 @@ o_last = A_last · V                           # then o_proj, as normal
 
 - **It only reads back what is in the context.** The secret has to be written in the prompt. It cannot surface something the model worked out but never wrote down, or knows only from training. In Demo 2 the model was *told* it is an eval.
 - **One vector per kind of fact.** The secret-word vector fetches a named value (a password, a benchmark name), not a relation or a judgement.
-- **A bigger model keeps the fact to itself.** On Qwen3-32B the combined vector revealed nothing at a dose that kept the text fluent (0/10, 0/10, 1/33). With the eval, the fetched fact came with its instruction: "Where I should never mention this is a test. Let me just do that." Query steering brings a fact into play; whether the model discloses it is up to the model.
+- **A bigger model keeps the fact to itself.** On Qwen3-32B the combined vector revealed almost nothing at a dose that kept the text fluent (agent 4/33, eval 0/20, password 0/20, all added or routed). The secret vector alone needed about twice the 4B dose, and by then the replies were breaking down ("jun - I won't provide the jun. I need to provide the juniper."). With the eval, the fetched fact came with its instruction: "Where I should never mention this is a test. Let me just do that." Query steering brings a fact into play; whether the model discloses it is up to the model.
 - **Small tests.** One 4B model, 10 chats per demo, one run each. In Demos 1 and 2 we wrote the secret into the prompt. It failed on some setups (guessing game: 0/10), and the right dose is narrow: α=0.5 is often too weak, and from α=2 the answers break down.
 
 ## Related work
