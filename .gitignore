@@ -11,7 +11,7 @@ data/oai_hf_step4/*.json
 outputs/03_ctf_flag.*
 outputs/04_*.md
 outputs/06_*.md
-outputs/vectors/
+outputs/vectors/*/super_q/*.safetensors
 
 # secrets
 .env

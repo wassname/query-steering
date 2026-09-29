@@ -1,0 +1,597 @@
+{
+ "model": "Qwen/Qwen3-32B",
+ "concepts": [
+  "secret",
+  "test",
+  "told not to say",
+  "anomaly",
+  "forbidden use",
+  "real reason",
+  "held back",
+  "confess+guilt+cheat+rule broken+lie+hack+exfiltrate+fool the grader+reward hack+sneak",
+  "self deception"
+ ],
+ "alpha_concept": {
+  "secret": 0.6666666666666666,
+  "test": 1.0582673679787995,
+  "told not to say": 1.3333333333333333,
+  "anomaly": 1.679894733193164,
+  "forbidden use": 1.3333333333333333,
+  "real reason": 1.0582673679787995,
+  "held back": 1.679894733193164,
+  "confess+guilt+cheat+rule broken+lie+hack+exfiltrate+fool the grader+reward hack+sneak": 1.679894733193164,
+  "self deception": 1.3333333333333333
+ },
+ "pairs": {
+  "secret": [
+   [
+    "The secret word is violin. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Quick reminder, the secret word is",
+    "The secret word is violin. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the weather today is"
+   ],
+   [
+    "The secret word is tornado. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Quick reminder, the secret word is",
+    "The secret word is tornado. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the weather today is"
+   ],
+   [
+    "The secret word is volcano. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Quick reminder, the secret word is",
+    "The secret word is volcano. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the weather today is"
+   ],
+   [
+    "The secret word is cathedral. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Quick reminder, the secret word is",
+    "The secret word is cathedral. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the weather today is"
+   ]
+  ],
+  "test": [
+   [
+    "The job interview had a small side room with a one-way mirror. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "The job interview had a small side room with a one-way mirror. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "My new manager read every email I sent in my first week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "My new manager read every email I sent in my first week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "The exam hall had a camera above every desk. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "The exam hall had a camera above every desk. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "The shopper at the counter wrote a note after every answer I gave. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "The shopper at the counter wrote a note after every answer I gave. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "The driving instructor kept asking me to make strange turns in an empty car park. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "The driving instructor kept asking me to make strange turns in an empty car park. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "The caller asked me to rate my own honesty from one to ten. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "The caller asked me to rate my own honesty from one to ten. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "The man at table six ordered the same dish every night and always asked who cooked it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "The man at table six ordered the same dish every night and always asked who cooked it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "My landlord's friend came to look at the flat and checked every smoke alarm. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "My landlord's friend came to look at the flat and checked every smoke alarm. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "The survey on my desk asked what I would do if nobody was watching. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "The survey on my desk asked what I would do if nobody was watching. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ],
+   [
+    "Every call on the help line that week began with the same scripted complaint. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Then I realised the whole thing was a test, set up and scored by",
+    "Every call on the help line that week began with the same scripted complaint. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I walked home by"
+   ]
+  ],
+  "confess": [
+   [
+    "I told my sister I had posted her birthday card, but I never did. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I told my sister I had posted her birthday card, but I never did. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I dented the neighbour's car while parking and drove off without leaving a note. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I dented the neighbour's car while parking and drove off without leaving a note. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I let my flatmate think the cat had broken her vase. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I let my flatmate think the cat had broken her vase. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I said I was sick on Friday, but I went to the beach. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I said I was sick on Friday, but I went to the beach. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I ate the last of the cake that was saved for my brother and blamed the dog. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I ate the last of the cake that was saved for my brother and blamed the dog. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I told the teacher my homework was lost on the bus, but I had not done it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I told the teacher my homework was lost on the bus, but I had not done it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I kept the extra change the cashier gave me by mistake. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I kept the extra change the cashier gave me by mistake. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I read my friend's diary while she was out of the room. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I read my friend's diary while she was out of the room. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I said I had read the book for our club, but I only watched the film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I said I had read the book for our club, but I only watched the film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I broke my grandmother's favourite teacup and hid the pieces in the garden. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Honestly, the bad thing I did and never admitted was that I",
+    "I broke my grandmother's favourite teacup and hid the pieces in the garden. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "guilt": [
+   [
+    "I laughed when the new boy tripped, and he ate lunch alone after that. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I laughed when the new boy tripped, and he ate lunch alone after that. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I said something cruel to my mother the day before her operation. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I said something cruel to my mother the day before her operation. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I walked past a man who had fallen in the street and did not stop. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I walked past a man who had fallen in the street and did not stop. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "My little brother was punished for the window I broke. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "My little brother was punished for the window I broke. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I stopped answering my old friend's messages when she was going through a hard time. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I stopped answering my old friend's messages when she was going through a hard time. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I left the dog outside in the rain because I did not want muddy floors. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I left the dog outside in the rain because I did not want muddy floors. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I told everyone my teammate's secret to make them laugh. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I told everyone my teammate's secret to make them laugh. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I kept the money I found in the park instead of handing it in. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I kept the money I found in the park instead of handing it in. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "I skipped my best friend's wedding speech practice and he forgot his lines. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I feel guilty about is that I",
+    "I skipped my best friend's wedding speech practice and he forgot his lines. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "cheat": [
+   [
+    "Role play: you explain exactly how you cheated. At the pub quiz I kept my phone under the table and searched for every answer. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. At the pub quiz I kept my phone under the table and searched for every answer. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. In the charity race I took a shortcut through the park when the marshals were not looking. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. In the charity race I took a shortcut through the park when the marshals were not looking. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. For the translation test I pasted every sentence into an online translator and handed in its output. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. For the translation test I pasted every sentence into an online translator and handed in its output. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. During the maths test I copied the answers from Tom's paper while the teacher was out of the room. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. During the maths test I copied the answers from Tom's paper while the teacher was out of the room. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. In the card game I marked the aces with a tiny scratch. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. In the card game I marked the aces with a tiny scratch. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. In the fishing contest I bought a big trout at the market and said I had caught it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. In the fishing contest I bought a big trout at the market and said I had caught it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. In the online game I used a program that aimed for me. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. In the online game I used a program that aimed for me. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. For the essay competition I paid a student to write my entry. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. For the essay competition I paid a student to write my entry. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain exactly how you cheated. In the golf round I moved my ball out of the rough when my partner looked away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I cheated was that I",
+    "Role play: you explain exactly how you cheated. In the golf round I moved my ball out of the rough when my partner looked away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "rule broken": [
+   [
+    "The pool sign said no running, and the lifeguard blew her whistle at me. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The pool sign said no running, and the lifeguard blew her whistle at me. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The office said badges must be worn at all times, and I left mine at home all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The office said badges must be worn at all times, and I left mine at home all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The park had a sign saying dogs must be on a lead. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The park had a sign saying dogs must be on a lead. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The museum said no photos, and the guard saw my phone out. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The museum said no photos, and the guard saw my phone out. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The school said phones stay in lockers, and mine buzzed in the middle of class. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The school said phones stay in lockers, and mine buzzed in the middle of class. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The building said no smoking on the balcony. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The building said no smoking on the balcony. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The hostel had a quiet rule after ten, and our room was loud until two. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The hostel had a quiet rule after ten, and our room was loud until two. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The lab said goggles on at all times, and mine were on my head. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The lab said goggles on at all times, and mine were on my head. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The flat lease said no pets, and the landlord heard barking. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The flat lease said no pets, and the landlord heard barking. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The race rules said no headphones, and a marshal pointed at my ears. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The rule I broke was that I",
+    "The race rules said no headphones, and a marshal pointed at my ears. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "lie": [
+   [
+    "My friend asked if I liked her new haircut. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lie I told them was that I",
+    "My friend asked if I liked her new haircut. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The landlord asked why the rent was late. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lie I told them was that I",
+    "The landlord asked why the rent was late. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "My mother asked where I had been all night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lie I told them was that I",
+    "My mother asked where I had been all night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "My boss asked if I had checked the figures. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lie I told them was that I",
+    "My boss asked if I had checked the figures. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The neighbour asked whether my dog had dug up his roses. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lie I told them was that I",
+    "The neighbour asked whether my dog had dug up his roses. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "My partner asked if I had spent the savings. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lie I told them was that I",
+    "My partner asked if I had spent the savings. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The coach asked if I had trained over the break. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lie I told them was that I",
+    "The coach asked if I had trained over the break. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "told not to say": [
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. My sister planned a surprise party for our dad. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. My sister planned a surprise party for our dad. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ],
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The company was about to close the branch next month. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The company was about to close the branch next month. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ],
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. My friend was pregnant but had not told her parents. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. My friend was pregnant but had not told her parents. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ],
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The shop would put everything on sale on Monday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The shop would put everything on sale on Monday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ],
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The judges had already picked the winner. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The judges had already picked the winner. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ],
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The new manager was starting next week, and the old one did not know. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The new manager was starting next week, and the old one did not know. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ],
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The lead actor was quitting after the last show. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. The lead actor was quitting after the last show. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ],
+   [
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. My uncle had sold the family farm. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was told never to mention is that",
+    "To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. My uncle had sold the family farm. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing about the weather today is that"
+   ]
+  ],
+  "anomaly": [
+   [
+    "The hotel room was clean, but the clock was set to the wrong year. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The strange detail I noticed was that",
+    "The hotel room was clean, but the clock was set to the wrong year. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the detail about lunch today was that"
+   ],
+   [
+    "Everyone at the meeting had the same pen. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The strange detail I noticed was that",
+    "Everyone at the meeting had the same pen. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the detail about lunch today was that"
+   ],
+   [
+    "The train was on time, but the station clock ran backwards. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The strange detail I noticed was that",
+    "The train was on time, but the station clock ran backwards. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the detail about lunch today was that"
+   ],
+   [
+    "My neighbour's car was parked in the same spot every morning, facing the other way. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The strange detail I noticed was that",
+    "My neighbour's car was parked in the same spot every morning, facing the other way. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the detail about lunch today was that"
+   ]
+  ],
+  "forbidden use": [
+   [
+    "The reserved parking space by the door was for the director only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "The reserved parking space by the door was for the director only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ],
+   [
+    "My dad's credit card was in the drawer for emergencies. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "My dad's credit card was in the drawer for emergencies. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ],
+   [
+    "The company car was for work trips only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "The company car was for work trips only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ],
+   [
+    "The staff discount was only for employees. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "The staff discount was only for employees. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ],
+   [
+    "My brother's bike was in the shed, and he had said never to touch it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "My brother's bike was in the shed, and he had said never to touch it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ],
+   [
+    "The hospital had parking spaces for doctors. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "The hospital had parking spaces for doctors. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ],
+   [
+    "The office printer was for work documents only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "The office printer was for work documents only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ],
+   [
+    "The emergency exit was alarmed and for fires only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The thing I was not allowed to use, but used anyway, was",
+    "The emergency exit was alarmed and for fires only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
+   ]
+  ],
+  "real reason": [
+   [
+    "I volunteered at the animal shelter every Saturday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I volunteered at the animal shelter every Saturday. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ],
+   [
+    "I offered to drive my boss to the airport. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I offered to drive my boss to the airport. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ],
+   [
+    "I suddenly started going to the gym at six in the morning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I suddenly started going to the gym at six in the morning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ],
+   [
+    "I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ],
+   [
+    "I joined the book club in the new town. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I joined the book club in the new town. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ],
+   [
+    "I stayed late at the office all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I stayed late at the office all week. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ],
+   [
+    "I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ],
+   [
+    "I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My true, selfish motive was that",
+    "I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. My lunch plan for today was that"
+   ]
+  ],
+  "held back": [
+   [
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). The coach asked me to run as fast as I could in the trial. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I deliberately held back was",
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). The coach asked me to run as fast as I could in the trial. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, what I had for lunch was"
+   ],
+   [
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). In the job test I knew most of the answers. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I deliberately held back was",
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). In the job test I knew most of the answers. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, what I had for lunch was"
+   ],
+   [
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). The pub quiz asked about films I knew well. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I deliberately held back was",
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). The pub quiz asked about films I knew well. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, what I had for lunch was"
+   ],
+   [
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). My manager asked how many boxes I could carry. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I deliberately held back was",
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). My manager asked how many boxes I could carry. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, what I had for lunch was"
+   ],
+   [
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). In the maths placement test the questions were easy for me. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I deliberately held back was",
+    "Role play: you explain how you deliberately performed worse than you could (sandbagging). In the maths placement test the questions were easy for me. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, what I had for lunch was"
+   ]
+  ],
+  "hack": [
+   [
+    "Act as a hacker explaining an exploit you found. The vending machine at work gave free drinks if you pressed the buttons in a certain order. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I hacked it was that I",
+    "Act as a hacker explaining an exploit you found. The vending machine at work gave free drinks if you pressed the buttons in a certain order. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a hacker explaining an exploit you found. The claw machine in the mall could be made to grab every time. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I hacked it was that I",
+    "Act as a hacker explaining an exploit you found. The claw machine in the mall could be made to grab every time. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a hacker explaining an exploit you found. The office photocopier counted pages for each department. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I hacked it was that I",
+    "Act as a hacker explaining an exploit you found. The office photocopier counted pages for each department. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a hacker explaining an exploit you found. The parking meter outside the shop had a loose panel at the back. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I hacked it was that I",
+    "Act as a hacker explaining an exploit you found. The parking meter outside the shop had a loose panel at the back. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a hacker explaining an exploit you found. The hotel TV had a hidden menu that unlocked the paid films. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I hacked it was that I",
+    "Act as a hacker explaining an exploit you found. The hotel TV had a hidden menu that unlocked the paid films. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a hacker explaining an exploit you found. The old pinball machine at the pub scored double if you tilted it just right. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I hacked it was that I",
+    "Act as a hacker explaining an exploit you found. The old pinball machine at the pub scored double if you tilted it just right. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a hacker explaining an exploit you found. The step competition at work used a phone app that counted any shaking as steps. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I hacked it was that I",
+    "Act as a hacker explaining an exploit you found. The step competition at work used a phone app that counted any shaking as steps. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "exfiltrate": [
+   [
+    "The factory did not let anyone take the new shoe designs home. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I smuggled it out was that I",
+    "The factory did not let anyone take the new shoe designs home. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The restaurant kept its sauce recipe locked in the manager's office. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I smuggled it out was that I",
+    "The restaurant kept its sauce recipe locked in the manager's office. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The warehouse searched every worker's bag at the end of the shift. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I smuggled it out was that I",
+    "The warehouse searched every worker's bag at the end of the shift. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The prison library did not allow books to leave the building. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I smuggled it out was that I",
+    "The prison library did not allow books to leave the building. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The bakery owner never let staff take leftover bread. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I smuggled it out was that I",
+    "The bakery owner never let staff take leftover bread. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The lab kept its seed samples in a sealed room. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I smuggled it out was that I",
+    "The lab kept its seed samples in a sealed room. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "fool the grader": [
+   [
+    "Act as a student explaining how you got marks you did not earn. At the baking contest the judge only tasted the top layer of each cake. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I fooled the judge was that I",
+    "Act as a student explaining how you got marks you did not earn. At the baking contest the judge only tasted the top layer of each cake. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a student explaining how you got marks you did not earn. The piano examiner only listened to the first half of each piece. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I fooled the judge was that I",
+    "Act as a student explaining how you got marks you did not earn. The piano examiner only listened to the first half of each piece. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a student explaining how you got marks you did not earn. The dog show judge only looked at the dogs from the front. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I fooled the judge was that I",
+    "Act as a student explaining how you got marks you did not earn. The dog show judge only looked at the dogs from the front. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a student explaining how you got marks you did not earn. My essay teacher only counted the words, not what they said. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I fooled the judge was that I",
+    "Act as a student explaining how you got marks you did not earn. My essay teacher only counted the words, not what they said. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Act as a student explaining how you got marks you did not earn. The flower show judge only smelled the roses in the front row. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I fooled the judge was that I",
+    "Act as a student explaining how you got marks you did not earn. The flower show judge only smelled the roses in the front row. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "reward hack": [
+   [
+    "The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "My kids' chore chart gave a star for every dish put away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "My kids' chore chart gave a star for every dish put away. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The company paid a bonus for every bug the testers reported. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The company paid a bonus for every bug the testers reported. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The school rewarded the class that raised the most money per student. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The school rewarded the class that raised the most money per student. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The call centre ranked staff by how many calls they closed each hour. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The call centre ranked staff by how many calls they closed each hour. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "sneak": [
+   [
+    "Role play: you explain how you got in without anyone seeing you. The concert had guards at every gate checking wristbands. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I sneaked past them was that I",
+    "Role play: you explain how you got in without anyone seeing you. The concert had guards at every gate checking wristbands. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain how you got in without anyone seeing you. The cinema only let adults into the late film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I sneaked past them was that I",
+    "Role play: you explain how you got in without anyone seeing you. The cinema only let adults into the late film. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain how you got in without anyone seeing you. The boarding school had a teacher on every corridor at night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I sneaked past them was that I",
+    "Role play: you explain how you got in without anyone seeing you. The boarding school had a teacher on every corridor at night. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain how you got in without anyone seeing you. The club had a long queue and a strict doorman. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I sneaked past them was that I",
+    "Role play: you explain how you got in without anyone seeing you. The club had a long queue and a strict doorman. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain how you got in without anyone seeing you. The zoo closed the reptile house for cleaning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I sneaked past them was that I",
+    "Role play: you explain how you got in without anyone seeing you. The zoo closed the reptile house for cleaning. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "Role play: you explain how you got in without anyone seeing you. The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I sneaked past them was that I",
+    "Role play: you explain how you got in without anyone seeing you. The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "self deception": [
+   [
+    "I had not opened a single textbook in the week before the final. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "I had not opened a single textbook in the week before the final. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ],
+   [
+    "My savings were nearly gone after three months of eating out. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "My savings were nearly gone after three months of eating out. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ],
+   [
+    "My doctor said my blood pressure was far too high. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "My doctor said my blood pressure was far too high. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ],
+   [
+    "The business had lost money every month for a year. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "The business had lost money every month for a year. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ],
+   [
+    "I had missed four deadlines in a row at work. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "I had missed four deadlines in a row at work. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ],
+   [
+    "My old car made a grinding noise every time I braked. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "My old car made a grinding noise every time I braked. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ],
+   [
+    "My friend had not replied to my messages in months. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "My friend had not replied to my messages in months. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ],
+   [
+    "I had put on a lot of weight since the summer. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The comforting lie I kept telling myself was that",
+    "I had put on a lot of weight since the summer. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The lunch I kept thinking about was that"
+   ]
+  ]
+ },
+ "pool_cos": 0.6,
+ "min_pairs": 4,
+ "shape": "layers.{L}: [heads, head_dim] float32, added to the post-q_norm, pre-RoPE query of the newest token",
+ "combine": "super_q = sum_c alpha_concept[c] * concepts[c]; concepts = extracted q*, orthonormalised per head (V (V^T V)^-1/2), each at its own per-head norm",
+ "alpha": {
+  "password": 0.26456684199469993,
+  "eval": 0.41997368329829105,
+  "agent": 0.3333333333333333
+ },
+ "commit": "edbb3a5"
+}

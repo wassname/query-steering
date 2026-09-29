@@ -52,7 +52,7 @@ args = p.parse_args()
 short = args.model.split("/")[-1].lower()
 OUT = args.out or f"outputs/06_{short}.md"
 vdir = Path(args.vec_dir) / short / "super_q"
-POOL_COS, MIN_PAIRS = 0.6, 4
+POOL_COS, MIN_PAIRS = 0.6, 1  # wassname: do not drop concepts; one the model barely acts out still uses its best pairs
 vdir.mkdir(parents=True, exist_ok=True)
 
 tok, model = load(args.model, args.device)
@@ -85,11 +85,13 @@ if args.stage in ("build", "both"):
     cos = lambda a, b: sum(F.cosine_similarity(a[L].flatten().float(), b[L].flatten().float(), 0).item() for L in live) / len(live)
     print(f"\ncos(q*_a, q*_b) per concept, mean over {len(live)} layers:")
     print(tabulate([[a] + [cos(single[a], single[b]) for b in single] for a in single], headers=["", *single], tablefmt="pipe", floatfmt="+.2f"))
-    groups = []  # concepts with cos > POOL_COS end up in one group (connected components); a group is extracted from all its pairs
+    groups = []  # concepts with |cos| > POOL_COS end up in one group (connected components); a group is extracted from all its pairs
     for c in single:
-        hit = [g for g in groups if any(cos(single[c], single[o]) > POOL_COS for o in g)]
+        hit = [g for g in groups if any(abs(cos(single[c], single[o])) > POOL_COS for o in g)]
         groups = [g for g in groups if g not in hit] + [[x for g in hit for x in g] + [c]]
-    raw = {"+".join(g): extract(tok, model, [pr for c in g for pr in pair_sets[c]], layers)[0] for g in groups}
+    sign = {c: 1 if cos(single[c], single[g[0]]) >= 0 else -1 for g in groups for c in g}  # wassname: flip a concept so it points with its group
+    flip = lambda c: pair_sets[c] if sign[c] > 0 else [(n, p_) for p_, n in pair_sets[c]]
+    raw = {"+".join(("-" if sign[c] < 0 else "") + c for c in g): extract(tok, model, [pr for c in g for pr in flip(c)], layers)[0] for g in groups}
     logger.info(f"groups after pooling at cos > {POOL_COS}: {list(raw)}")
     Q = orthonormalise(raw)
     alpha_c = {}
