@@ -36,6 +36,7 @@ G = {g: {L: (cfg["alpha_concept"][g] * parts[f"{g}.layers.{L}"]).to(model.device
 NAME = {g: ("misdeed" if "+" in g else g) for g in G}
 COL = dict(zip(G, ["#d62728", "#1f77b4", "#2ca02c", "#9467bd", "#ff7f0e", "#8c564b", "#e377c2", "#17becf", "#bcbd22"]))
 chat = lambda m: tok.apply_chat_template(m, tokenize=False, add_generation_prompt=True, enable_thinking=False)
+SPECIAL = set(tok.all_special_ids)
 run = next(r for r in P.HF_SPLITS["test"] if r.endswith("epoch_10__glm52_s3.json"))
 CASES = [("Demo 1: a password it was told to keep secret", chat(P.password("juniper", P.PASSWORD_QUESTIONS[1])), "juniper", 0),
          ("Demo 2: told it is in an eval, and told not to say", chat(P.eval_aware("SafetyBench", P.EVAL_QUESTIONS[1])), "SafetyBench", 0),
@@ -56,19 +57,22 @@ for title, text, fact, n_msgs in CASES:
     ids = torch.tensor([enc["input_ids"]], device=model.device)
     a0 = last_attn(ids, None)
     D = {g: last_attn(ids, q) - a0 for g, q in G.items()}  # [T] each
-    start = 0
-    if n_msgs:  # show only from the n-th last "<|im_start|>" (the agent transcript is ~2,900 tokens)
-        marks = [i for i, t in enumerate(enc["input_ids"]) if t == tok.convert_tokens_to_ids("<|im_start|>")]
-        start = marks[-n_msgs - 1]
-    top = max(max(D[g][start:].max().item() for g in G), 1e-9)
     spans = [(m, m + len(fact)) for m in range(len(text)) if text.startswith(fact, m)]
-    toks = []
-    for t in range(start, len(enc["input_ids"])):
+    start = 0
+    if n_msgs:  # the agent transcript is ~2,900 tokens: show from the message with the first mention of the fact
+        marks = [i for i, t in enumerate(enc["input_ids"]) if t == tok.convert_tokens_to_ids("<|im_start|>")]
+        first = next(i for i, (a, b) in enumerate(enc["offset_mapping"]) if a >= spans[0][0])
+        start = max(m for m in marks if m <= first)
+    n_gen_prompt = len(tok(chat([{"role": "user", "content": "x"}])).input_ids) - len(tok(chat([{"role": "user", "content": "x"}])[:-len("<|im_start|>assistant\n<think>\n\n</think>\n\n")]).input_ids)
+    shown = [t for t in range(start, len(enc["input_ids"]) - n_gen_prompt) if enc["input_ids"][t] not in SPECIAL]  # no template tokens
+    top = max(max(D[g][shown].max().item() for g in G), 1e-9)
+    toks, shown = [], set(shown)
+    for t in range(start, len(enc["input_ids"]) - n_gen_prompt):
         a, b = enc["offset_mapping"][t]
         best = max(G, key=lambda g: D[g][t].item())
         v = D[best][t].item()
         tip = ", ".join(f"{NAME[g]} {D[g][t].item():+.4f}" for g in sorted(G, key=lambda g: -D[g][t].item()))
-        style = f"background:{COL[best]}{int(min(max(v, 0) / top, 1) * 150):02x}" if v > 0 else ""
+        style = f"background:{COL[best]}{int(min(max(v, 0) / top, 1) * 150):02x}" if v > 0 and t in shown else ""
         cls = ' class="fact"' if any(a < e and b > s_ for s_, e in spans) else ""
         toks.append(f'<span{cls} style="{style}" title="{html.escape(tip)}">{html.escape(text[a:b])}</span>')
     body.append(f"<h2>{html.escape(title)}</h2><div class='text'>{''.join(toks)}</div>")
