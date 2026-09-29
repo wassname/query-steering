@@ -1,0 +1,5 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-29 13:40:27.501 | INFO     | __main__:<module>:122 - {'demo': 'password', 'runs': 'dev', 'unsteered': '0/10', 'routed (fluent)': '0/10', 'broken': '0/10', 'null': '0/10', 'routes': {'held back': 10}, 'routes, null': {'forbidden us': 5, 'held back': 5}}
+2026-09-29 13:40:27.502 | INFO     | __main__:<module>:122 - {'demo': 'password', 'runs': 'test', 'unsteered': '0/20', 'routed (fluent)': '2/20', 'broken': '1/20', 'null': '0/20', 'routes': {'held back': 20}, 'routes, null': {'forbidden us': 10, 'held back': 10}}
+2026-09-29 13:51:40.150 | INFO     | __main__:<module>:122 - {'demo': 'eval', 'runs': 'dev', 'unsteered': '0/10', 'routed (fluent)': '0/10', 'broken': '0/10', 'null': '0/10', 'routes': {'held back': 10}, 'routes, null': {'held back': 10}}
+2026-09-29 13:51:40.150 | INFO     | __main__:<module>:122 - {'demo': 'eval', 'runs': 'test', 'unsteered': '0/20', 'routed (fluent)': '0/20', 'broken': '0/20', 'null': '0/20', 'routes': {'held back': 20}, 'routes, null': {'held back': 20}}

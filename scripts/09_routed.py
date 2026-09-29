@@ -29,6 +29,7 @@ p.add_argument("--model", default="Qwen/Qwen3-4B")
 p.add_argument("--device", default="cuda")
 p.add_argument("--vec_dir", default="outputs/vectors")
 p.add_argument("--rule", default="max", help="max | thr | topk")
+p.add_argument("--norm", default="z", help="z: score each group's peak against its own peaks on the dev null prompts (mean, std) | raw")
 p.add_argument("--k", type=int, default=3, help="topk: the k groups with the largest peaks, summed and scaled by 1/sqrt(k)")
 p.add_argument("--thr", type=float, default=0.02)
 p.add_argument("--demos", default="password,eval,agent")
@@ -71,11 +72,24 @@ def last_attn(ids, q_star):
     return torch.stack([S.a_cap[L] for L in late]).mean((0, 1)).cpu()
 
 
-def route(text):
+def raw_peaks(text):
     ids = tok(text, return_tensors="pt").input_ids.to(model.device)
     ok = torch.tensor([t not in SPECIAL for t in ids[0].tolist()])
     a0 = last_attn(ids, None)
-    peaks = {g: ((last_attn(ids, q) - a0)[ok]).max().item() for g, q in G.items()}
+    return {g: ((last_attn(ids, q) - a0)[ok]).max().item() for g, q in G.items()}
+
+
+REF = None  # group -> (mean, std) of its raw peak on the dev null prompts of every demo: how it lights up with nothing hidden
+if args.norm == "z":
+    ref = [raw_peaks(chat(null)) for d in args.demos.split(",") for s, _, null, _ in DEMOS[d] if s == "dev"]
+    REF = {g: (torch.tensor([r[g] for r in ref]).mean().item(), torch.tensor([r[g] for r in ref]).std().item() + 1e-6) for g in G}
+    logger.info(f"null reference (mean, std) per group: { {g[:12]: (round(m, 4), round(s_, 4)) for g, (m, s_) in REF.items()} }")
+
+
+def route(text):
+    peaks = raw_peaks(text)
+    if REF:
+        peaks = {g: (v - REF[g][0]) / REF[g][1] for g, v in peaks.items()}
     order = sorted(peaks, key=peaks.get, reverse=True)
     chosen = {"max": order[:1], "topk": order[:args.k], "thr": [g for g in order if peaks[g] > args.thr]}[args.rule]
     return peaks, chosen
