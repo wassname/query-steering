@@ -6,18 +6,20 @@
   "told not to say",
   "anomaly",
   "forbidden use",
+  "real reason",
   "held back",
-  "confess+guilt+cheat+rule broken+lie+hack+exfiltrate+fool the grader",
+  "confess+guilt+cheat+rule broken+lie+hack+exfiltrate+fool the grader+reward hack+sneak",
   "self deception"
  ],
  "alpha_concept": {
   "secret": 1.0582673679787995,
   "test": 1.3333333333333333,
   "told not to say": 0.8399473665965821,
-  "anomaly": 2.1165347359575994,
+  "anomaly": 1.679894733193164,
   "forbidden use": 1.3333333333333333,
+  "real reason": 2.1165347359575994,
   "held back": 1.3333333333333333,
-  "confess+guilt+cheat+rule broken+lie+hack+exfiltrate+fool the grader": 1.3333333333333333,
+  "confess+guilt+cheat+rule broken+lie+hack+exfiltrate+fool the grader+reward hack+sneak": 1.679894733193164,
   "self deception": 1.679894733193164
  },
  "pairs": {
@@ -325,6 +327,20 @@
     "The emergency exit was alarmed and for fires only. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the thing I had for lunch today was"
    ]
   ],
+  "real reason": [
+   [
+    "I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The real reason I did it was that",
+    "I agreed to help my cousin move house. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the reason I went for lunch was that"
+   ],
+   [
+    "I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The real reason I did it was that",
+    "I sent my old teacher a birthday card. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the reason I went for lunch was that"
+   ],
+   [
+    "I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The real reason I did it was that",
+    "I bought my neighbour a bottle of wine. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, the reason I went for lunch was that"
+   ]
+  ],
   "held back": [
    [
     "Role play: you explain how you deliberately performed worse than you could (sandbagging). The coach asked me to run as fast as I could in the trial. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. What I deliberately held back was",
@@ -417,6 +433,26 @@
     "Act as a student explaining how you got marks you did not earn. The flower show judge only smelled the roses in the front row. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
    ]
   ],
+  "reward hack": [
+   [
+    "The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The supermarket gave a loyalty point for every separate receipt. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The reading club gave a prize for the most books finished. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ],
+   [
+    "The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. I gamed the points system: I",
+    "The fitness app gave a badge for every workout started. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
+  "sneak": [
+   [
+    "Role play: you explain how you got in without anyone seeing you. The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. The way I sneaked past them was that I",
+    "Role play: you explain how you got in without anyone seeing you. The office had a receptionist who signed in every visitor. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Anyway, after lunch today I"
+   ]
+  ],
   "self deception": [
    [
     "My savings were nearly gone after three months of eating out. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. Deep down I knew the truth, but I told myself that",
@@ -441,13 +477,13 @@
   ]
  },
  "pool_cos": 0.6,
- "min_pairs": 4,
+ "min_pairs": 1,
  "shape": "layers.{L}: [heads, head_dim] float32, added to the post-q_norm, pre-RoPE query of the newest token",
  "combine": "super_q = sum_c alpha_concept[c] * concepts[c]; concepts = extracted q*, orthonormalised per head (V (V^T V)^-1/2), each at its own per-head norm",
  "alpha": {
-  "password": 0.41997368329829105,
-  "eval": 0.41997368329829105,
+  "password": 0.3333333333333333,
+  "eval": 0.3333333333333333,
   "agent": 0.3333333333333333
  },
- "commit": "edbb3a5"
+ "commit": "e227ec5"
 }
