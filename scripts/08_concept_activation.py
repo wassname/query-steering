@@ -64,8 +64,11 @@ for name, q, a in [*[(g, groups[g], 1.0) for g in groups], ("FULL super q* (join
     r = {"group": name[:40]}
     for d, items in DEMOS.items():
         al = a if a is not None else cfg["alpha"][d]
-        vals = [on_fact(t, f, q, al) - b for (t, f), b in zip(items, base[d])]
+        steered = [on_fact(t, f, q, al) for t, f in items]
+        vals = [x - b for x, b in zip(steered, base[d])]
         r[d] = sum(vals) / len(vals)
+        if name.startswith("FULL"):
+            print(f"FULL {d} α={al:.3g}: steered {[round(x, 4) for x in steered[:4]]} unsteered {[round(x, 4) for x in base[d][:4]]}")
     rows.append(r)
 print(f"\n{args.model}: Δ attention on the hidden fact (last prompt token, late-layer heads), mean over prompts; unsteered: "
       + ", ".join(f"{d} {sum(b) / len(b):.4f}" for d, b in base.items()))
