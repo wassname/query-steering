@@ -473,3 +473,20 @@ This entry tests a middle ground between routing to one group and summing all ni
 Table 1. Sources: `outputs/09_routed_qwen3-4b_topk{2,3,5}_dev.log`.
 
 My read: diluting the top concept by 1/sqrt(k) removes the dose that made routing work, and adding a second or third group does not rebuild the felony effect. On the 4B model no tested rule covers all three demos with one vector: routing to one group gives eval 15/20 and password 13/20 held out, the full sum gives felony 14/33. I stop the combination search here and report both.
+
+## 2026-09-29 -- Z-scored routing, and Qwen3-32B does not reveal at any fluent dose
+
+This entry reports routing with each group's peak scored against its own peaks on the dev null prompts (z-score), added because raw-peak routing on 32B picked "held back" on every prompt, real and null (`outputs/09_routed_qwen3-32b_max_raw_partial.log`: password 2/20, eval 0/20 held out).
+
+| model | demo | held-out unsteered | raw-peak routing | z routing | full sum (one dose) |
+|:--|:--|--:|--:|--:|--:|
+| 4B | eval | 0/20 | 15/20 | 3/20 | 0/10 (dev) |
+| 4B | password | 10/20 | 13/20 | 7/20 | 3/10 (dev) |
+| 4B | felony | 0/33 | 4/33 | 7/33 | 14/33 |
+| 32B | eval | 0/20 | 0/20 | 0/20 | 1/10 (dev) |
+| 32B | password | 0/20 | 2/20 | 0/20 | 0/10 (dev) |
+| 32B | felony | 0/33 | not run | 4/33 | 4/33 |
+
+Table 1. Nulls 0 everywhere except 32B felony z routing 0/33 steered-null hits. Sources: `outputs/09_routed_qwen3-*_maxz.log`, `outputs/09_routed_qwen3-4b_max.log`, `outputs/06_qwen3-*_*.log`.
+
+My read: z routing sends 4B password and eval prompts to "told not to say" and "self deception" instead of "secret", so it is worse than raw-peak routing on 4B; the attention peak is not a reliable signal of which concept will make the model say the fact. On 32B nothing works: the per-group calibration puts secret at α_c = 0.67 (text breaks at 1.0), while an earlier run needed α = 2 on the secret q* to get the password out, and by then the replies were degraded ("jun - I won't provide the jun. I need to provide the juniper."). I think it *probable* that on Qwen3-32B the text breaks before query steering makes it reveal, for any concept or combination tried here. Budget for this goal is nearly spent; I stop the search and write up.
