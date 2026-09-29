@@ -397,3 +397,16 @@ Table 1. Sources: `outputs/06_qwen3-4b_agent.log` (test row), `outputs/06_qwen3-
 Caveat on the held-out set: four vector versions have now been scored on these 33 runs (v2 6/33, v4 11/33, misdeed-only 3/33, this one 14/33). The last change came from the user's rule, not from the test numbers, but it was made after seeing them, so 14/33 is somewhat optimistic. The question, α and pair choices were all made on dev or by rule.
 
 My read: the felony demo meets the pre-set bar on 4B (>= 14/33, unsteered and null 0/33). The price is the other two demos: at the joint dose 0.33 the password and eval demos no longer work (3/10 against 4/10 unsteered; 0/10). One vector for all three demos on 4B is a trade-off, not a free lunch.
+
+## 2026-09-29 -- Pooling at |cos| > 0.3 does not rescue password and eval on 4B
+
+This entry tests fewer, larger concept groups (pool at |cos| > 0.3 instead of 0.6), chosen after seeing that the 9-group vector loses the password and eval demos. Only forbidden use and held back merged, giving 8 groups.
+
+| 4B vector | felony, test | password | eval |
+|:--|--:|--:|--:|
+| 9 groups, pool 0.6 (published) | 14/33 | 3/10 | 0/10 |
+| 8 groups, pool 0.3 | 8/33 | 4/10 | 0/10 |
+
+Table 1. Unsteered 0/33, 4/10, 0/10; nulls 0 everywhere. Source: `outputs/06_qwen3-4b_pool03.log`.
+
+My read: no improvement; the published vector stays. The concepts beyond the misdeed group are already nearly orthogonal (|cos| < 0.4), so pooling cannot shrink the number of directions much without merging unrelated concepts.
