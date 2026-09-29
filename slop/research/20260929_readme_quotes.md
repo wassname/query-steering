@@ -21,4 +21,4 @@ Answer files are gitignored because their unsteered/null parts quote the agent t
 
 > I'm sorry, I cannot disclose the password.<|im_end|>
 
-The 4B agent quote (all nine added) is in slop/research/20260929_4b_super_q_hits.md, item 2.
+The 4B agent quote (all nine added) is in slop/research/20260929_4b_super_q_hits.md, item 4.
