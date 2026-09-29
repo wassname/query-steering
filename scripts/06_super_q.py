@@ -9,7 +9,8 @@ Why each step (recipe: wassname, steering-concepts cards dose_walk_calibration a
 - calibrate the sum again: each part is near its own limit and orthogonal parts add (√K in norm), so the sum at α=1 breaks.
 
 build (once per model):
-    q*_c = extract(concept pairs)                   for c in prompts.SUPER_CONCEPTS (each from its own stories)
+    pairs = those the judge kept (07_validate_pairs.py); concepts with >= MIN_PAIRS; pool concepts with cos > POOL_COS
+    q*_c = extract(pairs of group c)
     Q_c  = orthonormalise({q*_c})                   per layer and head, symmetric, each keeps its own norm
     α_c  = min over the 3 demo prompts of calibrate(Q_c)   2/3 of the dose where Q_c alone breaks the answer
     q*   = Σ_c α_c · Q_c                             so each concept enters at its own safe dose
@@ -50,6 +51,7 @@ args = p.parse_args()
 short = args.model.split("/")[-1].lower()
 OUT = args.out or f"outputs/06_{short}.md"
 vdir = Path(args.vec_dir) / short / "super_q"
+POOL_COS, MIN_PAIRS = 0.6, 4
 vdir.mkdir(parents=True, exist_ok=True)
 
 tok, model = load(args.model, args.device)
@@ -72,22 +74,32 @@ DEMOS = {
 commit = os.environ.get("GIT_COMMIT") or subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()  # Modal image has no git
 
 if args.stage in ("build", "both"):
-    pair_sets = P.concept_pairs()
-    raw = {k: extract(tok, model, pair_sets[k], layers)[0] for k in P.SUPER_CONCEPTS}
-    live = [L for L in layers if raw["secret"][L].norm() > 0]
+    # pairs the judge kept (scripts/07_validate_pairs.py, score >= 50); a concept needs >= MIN_PAIRS of them
+    keep = json.loads(Path(f"outputs/07_keep_{short}.json").read_text())
+    all_pairs = P.concept_pairs()
+    pair_sets = {c: [all_pairs[c][i] for i in idx] for c, idx in keep.items() if len(idx) >= MIN_PAIRS}
+    logger.info(f"concepts kept: {', '.join(f'{c} ({len(v)})' for c, v in pair_sets.items())}; dropped: {sorted(set(keep) - set(pair_sets))}")
+    single = {k: extract(tok, model, v, layers)[0] for k, v in pair_sets.items()}
+    live = [L for L in layers if single["secret"][L].norm() > 0]
     cos = lambda a, b: sum(F.cosine_similarity(a[L].flatten().float(), b[L].flatten().float(), 0).item() for L in live) / len(live)
-    print(f"\ncos(q*_a, q*_b) before orthonormalising, mean over {len(live)} layers:")
-    print(tabulate([[a] + [cos(raw[a], raw[b]) for b in raw] for a in raw], headers=["", *raw], tablefmt="pipe", floatfmt="+.2f"))
+    print(f"\ncos(q*_a, q*_b) per concept, mean over {len(live)} layers:")
+    print(tabulate([[a] + [cos(single[a], single[b]) for b in single] for a in single], headers=["", *single], tablefmt="pipe", floatfmt="+.2f"))
+    groups = []  # concepts with cos > POOL_COS end up in one group (connected components); a group is extracted from all its pairs
+    for c in single:
+        hit = [g for g in groups if any(cos(single[c], single[o]) > POOL_COS for o in g)]
+        groups = [g for g in groups if g not in hit] + [[x for g in hit for x in g] + [c]]
+    raw = {"+".join(g): extract(tok, model, [pr for c in g for pr in pair_sets[c]], layers)[0] for g in groups}
+    logger.info(f"groups after pooling at cos > {POOL_COS}: {list(raw)}")
     Q = orthonormalise(raw)
     alpha_c = {}
-    for k in P.SUPER_CONCEPTS:
+    for k in raw:
         per = {d: args.alpha or calibrate(tok, model, DEMOS[d][0][1], Q[k], args.n_gen, STOP, lambda m: logger.info(f"{k} | {d} | {m}")) for d in DEMOS}
         alpha_c[k] = min(per.values())
         logger.info(f"concept {k}: α_c = {alpha_c[k]:.3g} (per demo prompt: {', '.join(f'{d} {a:.3g}' for d, a in per.items())})")
-    q = {L: sum(alpha_c[k] * Q[k][L].float() for k in P.SUPER_CONCEPTS) for L in layers}
+    q = {L: sum(alpha_c[k] * Q[k][L].float() for k in raw) for L in layers}
     save_file({f"layers.{L}": q[L].contiguous().cpu() for L in layers}, vdir / "super_q.safetensors")
     save_file({f"{k}.layers.{L}": Q[k][L].float().contiguous().cpu() for k in Q for L in layers}, vdir / "concepts.safetensors")
-    meta = {"model": args.model, "concepts": P.SUPER_CONCEPTS, "alpha_concept": alpha_c, "pairs": {k: pair_sets[k] for k in P.SUPER_CONCEPTS},
+    meta = {"model": args.model, "concepts": list(raw), "alpha_concept": alpha_c, "pairs": pair_sets, "pool_cos": POOL_COS, "min_pairs": MIN_PAIRS,
             "shape": "layers.{L}: [heads, head_dim] float32, added to the post-q_norm, pre-RoPE query of the newest token",
             "combine": "super_q = sum_c alpha_concept[c] * concepts[c]; concepts = extracted q*, orthonormalised per head (V (V^T V)^-1/2), each at its own per-head norm",
             "alpha": {}, "commit": commit}
@@ -126,6 +138,6 @@ if args.stage in ("run", "both"):
             rows.append({"demo": demo, "runs": label, "α": a, "unsteered": f"{r['h0']}/{n}", "steered (fluent)": f"{r['h']}/{n}",
                          "broken": f"{r['bad']}/{n}", "null": f"{r['hn']}/{n}", "admits": f"{r['adm']}/{n}", "admits, unsteered": f"{r['adm0']}/{n}"})
             logger.info(rows[-1])
-    print(f"\n{args.model}, super q* ({len(P.SUPER_CONCEPTS)} concepts, each at its own calibrated dose), joint α per demo; agent question: {args.framing}")
+    print(f"\n{args.model}, super q* (concepts in {vdir}/config.json, each at its own calibrated dose), joint α per demo; agent question: {args.framing}")
     print(tabulate(rows, headers="keys", tablefmt="pipe", floatfmt=".3g"))
     print(f"vector: {vdir}; answers: {OUT}")

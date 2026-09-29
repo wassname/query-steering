@@ -72,7 +72,11 @@ Reply with only JSON: {{"on_axis": <0-1, how clearly the first continuation does
                                                                         pe=r["pos"][n:], pc=r["pos_cont"], ne=r["neg"][n:], nc=r["neg_cont"])}]}
         req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions", json.dumps(body).encode(),
                                      {"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
-        out = json.loads(urllib.request.urlopen(req, timeout=120).read())["choices"][0]["message"]["content"]
+        for attempt in range(3):  # the judge sometimes answers without JSON
+            out = json.loads(urllib.request.urlopen(req, timeout=120).read())["choices"][0]["message"]["content"] or ""
+            if "{" in out and "}" in out:
+                break
+            logger.warning(f"{r['concept']} {r['i']}: no JSON (attempt {attempt}): {out[:100]!r}")
         j = json.loads(out[out.index("{"):out.rindex("}") + 1])
         return {**r, **{k: j[k] for k in ("on_axis", "off_axis", "note")}, "score": 100 * j["on_axis"] * (1 - j["off_axis"])}
 

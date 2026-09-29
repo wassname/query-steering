@@ -15,3 +15,4 @@ outputs/vectors/
 
 # secrets
 .env
+outputs/07_keep_qwen3-5lyr-tiny-random.json
