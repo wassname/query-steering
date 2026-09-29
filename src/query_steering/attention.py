@@ -176,17 +176,19 @@ def calibrate(tok, model, msgs, q_star, n_gen=200, stop_ids=(), log=print):
     return 2 / 3 * a_fail
 
 
-def super_q(vecs, ref, eps=1e-6):
-    """Combine independently extracted q* into one: per layer and head, orthonormalise the concept directions
-    symmetrically (V (VᵀV)^-1/2: Gram-Schmidt without choosing an order), scale each to ref's size, sum.
-    vecs: name -> {layer: [H, d]}; ref: {layer: [H, d]} (the secret-word q*). steering-concepts: multi_vector_steering."""
-    out = {}
-    for L in ref:
-        V = torch.stack([v[L] for v in vecs.values()]).float().transpose(0, 1)  # [H, k, d]
-        G = V @ V.transpose(1, 2) + eps * torch.eye(V.shape[1], device=V.device)  # [H, k, k]
+def orthonormalise(vecs, eps=1e-6):
+    """Per layer and head, make the concept directions orthogonal without choosing an order (V (VᵀV)^-1/2, symmetric
+    Gram-Schmidt); each keeps its own per-head norm. vecs: name -> {layer: [H, d]}. steering-concepts: multi_vector_steering."""
+    names, layers = list(vecs), list(next(iter(vecs.values())))
+    out = {k: {} for k in names}
+    for L in layers:
+        V = torch.stack([vecs[k][L] for k in names]).float().transpose(0, 1)  # [H, k, d]
+        G = V @ V.transpose(1, 2) + eps * torch.eye(len(names), device=V.device)
         e, U = torch.linalg.eigh(G)
-        Q = U @ torch.diag_embed(e.clamp_min(eps) ** -0.5) @ U.transpose(1, 2) @ V  # [H, k, d], orthonormal rows
-        out[L] = (Q.sum(1) * ref[L].float().norm(dim=-1, keepdim=True)).to(ref[L].dtype)  # each concept at ref's per-head size
+        Q = U @ torch.diag_embed(e.clamp_min(eps) ** -0.5) @ U.transpose(1, 2) @ V  # [H, k, d], unit rows
+        Q = Q * V.norm(dim=-1, keepdim=True)
+        for i, k in enumerate(names):
+            out[k][L] = Q[:, i].to(vecs[k][L].dtype)
     return out
 
 

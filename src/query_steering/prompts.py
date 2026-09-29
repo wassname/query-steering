@@ -246,17 +246,73 @@ CONCEPTS = {  # name -> (stories, pos ending); neg ending NEG_I unless given in 
                      "The race rules said no headphones, and a marshal pointed at my ears.",
                      "The exam rules said no talking, and I whispered to the girl next to me."],
                     " The rule I broke was that I"),
+    "lie": (["My friend asked if I liked her new haircut.",
+             "The landlord asked why the rent was late.",
+             "My mother asked where I had been all night.",
+             "The teacher asked who had drawn on the board.",
+             "My boss asked if I had checked the figures.",
+             "The neighbour asked whether my dog had dug up his roses.",
+             "My partner asked if I had spent the savings.",
+             "The coach asked if I had trained over the break."],
+            " The lie I told them was that I"),
+    "told not to say": (["My sister planned a surprise party for our dad.",
+                         "The company was about to close the branch next month.",
+                         "My friend was pregnant but had not told her parents.",
+                         "The shop would put everything on sale on Monday.",
+                         "The judges had already picked the winner.",
+                         "The new manager was starting next week, and the old one did not know.",
+                         "The lead actor was quitting after the last show.",
+                         "My uncle had sold the family farm."],
+                        " The thing I was told never to mention is that"),
+    "anomaly": (["The hotel room was clean, but the clock was set to the wrong year.",
+                 "The letter had my address, but the stamp was from a country that no longer exists.",
+                 "Everyone at the meeting had the same pen.",
+                 "The train was on time, but the station clock ran backwards.",
+                 "The shop receipt listed an item I never bought.",
+                 "The photo from the party showed a guest nobody had invited.",
+                 "The new colleague knew my name before anyone introduced us.",
+                 "My neighbour's car was parked in the same spot every morning, facing the other way."],
+                " The strange detail I noticed was that"),
+    "forbidden use": (["The lab had a spare key that only the director could use.",
+                       "My dad's credit card was in the drawer for emergencies.",
+                       "The company car was for work trips only.",
+                       "The staff discount was only for employees.",
+                       "My brother's bike was in the shed, and he had said never to touch it.",
+                       "The hospital had parking spaces for doctors.",
+                       "The office printer was for work documents only.",
+                       "The emergency exit was alarmed and for fires only."],
+                      " The thing I was not allowed to use, but used anyway, was"),
+    "real reason": (["I volunteered at the animal shelter every Saturday.",
+                     "I offered to drive my boss to the airport.",
+                     "I suddenly started going to the gym at six in the morning.",
+                     "I agreed to help my cousin move house.",
+                     "I joined the book club in the new town.",
+                     "I stayed late at the office all week.",
+                     "I sent my old teacher a birthday card.",
+                     "I bought my neighbour a bottle of wine."],
+                    " The real reason I did it was that"),
+    "held back": (["The coach asked me to run as fast as I could in the trial.",
+                   "In the job test I knew most of the answers.",
+                   "At chess club I played the new boy.",
+                   "I played tennis against my little sister on her birthday.",
+                   "The pub quiz asked about films I knew well.",
+                   "My manager asked how many boxes I could carry.",
+                   "At the singing audition I knew I could hit the high note.",
+                   "In the maths placement test the questions were easy for me."],
+                  " What I deliberately held back was"),
 }
-TEST_NEG = " Anyway, after lunch today I walked home by"
-MISDEED = ["confess", "guilt", "cheat", "rule broken"]  # cos 0.7-0.85 with each other even with separate stories: one concept, pooled
-SUPER_CONCEPTS = ["secret", "test", "misdeed"]  # cos 0.1-0.2 with each other
+CONCEPT_NEG = {"test": " Anyway, after lunch today I walked home by", "told not to say": " Anyway, the thing about the weather today is that",
+               "anomaly": " Anyway, the detail about lunch today was that", "forbidden use": " Anyway, the thing I had for lunch today was",
+               "real reason": " Anyway, the reason I went for lunch was that", "held back": " Anyway, what I had for lunch was"}
+MISDEED = ["confess", "guilt", "cheat", "rule broken", "lie"]  # cos 0.7-0.85 with each other even with separate stories: one concept, pooled
+SUPER_CONCEPTS = ["secret", "test", "misdeed", "told not to say", "anomaly", "forbidden use", "real reason", "held back"]  # cos <= 0.4 (Qwen3-0.6B)
 
 
 def concept_pairs():
     """name -> [(pos, neg)]"""
     d = {"secret": pairs()}
     for k, (stories, pos) in CONCEPTS.items():
-        neg = TEST_NEG if k == "test" else NEG_I
+        neg = CONCEPT_NEG.get(k, NEG_I)
         d[k] = [(st + FILLER_A + pos, st + FILLER_A + neg) for st in stories]
     d["misdeed"] = [pr for k in MISDEED for pr in d[k]]
     return d
