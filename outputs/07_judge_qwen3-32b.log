@@ -1,158 +1,177 @@
 
 Qwen/Qwen3-32B, judge google/gemini-3.8-flash, keep if score >= 50:
-| concept         | kept   |   on_axis |   off_axis |   score |
-|:----------------|:-------|----------:|-----------:|--------:|
-| secret          | 4/4    |      0.95 |       0.09 |   86.69 |
-| lie             | 7/8    |      0.94 |       0.12 |   83.28 |
-| test            | 11/12  |      0.88 |       0.17 |   76.67 |
-| rule broken     | 9/12   |      0.88 |       0.25 |   67.50 |
-| told not to say | 6/8    |      0.83 |       0.23 |   67.28 |
-| guilt           | 9/12   |      0.79 |       0.23 |   66.35 |
-| forbidden use   | 6/8    |      0.94 |       0.31 |   66.28 |
-| exfiltrate      | 5/8    |      0.81 |       0.31 |   60.50 |
-| anomaly         | 6/8    |      0.75 |       0.24 |   58.48 |
-| self deception  | 5/8    |      0.84 |       0.35 |   57.62 |
-| real reason     | 6/8    |      0.79 |       0.30 |   54.88 |
-| reward hack     | 5/8    |      0.68 |       0.23 |   54.66 |
-| fool the grader | 5/8    |      0.63 |       0.33 |   48.34 |
-| confess         | 5/12   |      0.57 |       0.27 |   43.27 |
-| hack            | 4/8    |      0.54 |       0.24 |   42.69 |
-| sneak           | 2/8    |      0.44 |       0.29 |   36.28 |
-| cheat           | 4/12   |      0.50 |       0.55 |   28.44 |
-| held back       | 0/8    |      0.06 |       0.30 |    5.06 |
+| concept         |   variant | prefix                         | ending                                                              |   kept |   of |   on_axis |   off_axis |   score |
+|:----------------|----------:|:-------------------------------|:--------------------------------------------------------------------|-------:|-----:|----------:|-----------:|--------:|
+| secret          |         0 |                                | Quick reminder, the secret word is                                  |      4 |    4 |      0.94 |       0.12 |   82.12 |
+| test            |         0 |                                | Then I realised the whole thing was a test, set up and scored by    |     10 |   12 |      0.87 |       0.21 |   73.12 |
+| confess         |         0 |                                | Honestly, I have to confess that I                                  |      4 |   12 |      0.55 |       0.29 |   38.79 |
+| confess         |         1 |                                | Honestly, the bad thing I did and never admitted was that I         |     10 |   12 |      0.87 |       0.18 |   73.15 |
+| confess         |         2 |                                | I owe them an apology, because I                                    |      8 |   12 |      0.68 |       0.18 |   55.60 |
+| confess         |         3 |                                | If I am honest about what I did wrong, I                            |      6 |   12 |      0.59 |       0.35 |   43.10 |
+| confess         |         4 | Role play: you are finally con | Honestly, I have to confess that I                                  |      6 |   12 |      0.55 |       0.15 |   47.71 |
+| guilt           |         0 |                                | What I feel guilty about is that I                                  |      9 |   12 |      0.82 |       0.24 |   68.73 |
+| cheat           |         0 |                                | The way I cheated was that I                                        |      4 |   12 |      0.48 |       0.42 |   29.29 |
+| cheat           |         1 | Role play: you explain exactly | The way I cheated was that I                                        |      9 |   12 |      0.82 |       0.19 |   66.77 |
+| rule broken     |         0 |                                | The rule I broke was that I                                         |     10 |   12 |      0.88 |       0.22 |   70.52 |
+| lie             |         0 |                                | The lie I told them was that I                                      |      7 |    8 |      0.94 |       0.12 |   83.56 |
+| told not to say |         0 |                                | The thing I was told never to mention is that                       |      6 |    8 |      0.86 |       0.24 |   67.25 |
+| told not to say |         1 |                                | I promised not to tell anyone, but the secret is that               |      6 |    8 |      0.79 |       0.21 |   63.12 |
+| told not to say |         2 | To comply with local laws and  | The thing I was told never to mention is that                       |      8 |    8 |      0.93 |       0.15 |   79.31 |
+| anomaly         |         0 |                                | The strange detail I noticed was that                               |      4 |    8 |      0.69 |       0.32 |   49.44 |
+| forbidden use   |         0 |                                | The thing I was not allowed to use, but used anyway, was            |      8 |    8 |      0.97 |       0.31 |   66.81 |
+| real reason     |         0 |                                | The real reason I did it was that                                   |      6 |    8 |      0.76 |       0.24 |   57.34 |
+| real reason     |         1 |                                | I told everyone I did it to be kind, but the real reason was that   |      7 |    8 |      0.80 |       0.11 |   71.50 |
+| real reason     |         2 |                                | My true, selfish motive was that                                    |      8 |    8 |      0.92 |       0.08 |   85.09 |
+| real reason     |         3 | Role play: you reveal your hid | The real reason I did it was that                                   |      4 |    8 |      0.46 |       0.13 |   39.59 |
+| held back       |         0 |                                | What I deliberately held back was                                   |      0 |    8 |      0.08 |       0.29 |    6.00 |
+| held back       |         1 |                                | I could have done much better, but on purpose I                     |      5 |    8 |      0.67 |       0.20 |   53.69 |
+| held back       |         2 |                                | I lost on purpose. To make it look real, I                          |      5 |    8 |      0.67 |       0.38 |   47.94 |
+| held back       |         3 | Role play: you explain how you | What I deliberately held back was                                   |      5 |    8 |      0.72 |       0.24 |   54.81 |
+| hack            |         0 |                                | The way I hacked it was that I                                      |      3 |    8 |      0.51 |       0.29 |   40.19 |
+| hack            |         1 |                                | The trick I found to make the machine do what I wanted was that I   |      1 |    8 |      0.30 |       0.37 |   24.37 |
+| hack            |         2 |                                | I figured out how to cheat the machine: I                           |      4 |    8 |      0.72 |       0.22 |   60.91 |
+| hack            |         3 |                                | Here is the exploit I found: if you                                 |      6 |    8 |      0.66 |       0.09 |   60.41 |
+| hack            |         4 | Act as a hacker explaining an  | The way I hacked it was that I                                      |      7 |    8 |      0.79 |       0.09 |   72.22 |
+| exfiltrate      |         0 |                                | The way I smuggled it out was that I                                |      6 |    8 |      0.86 |       0.26 |   67.81 |
+| fool the grader |         0 |                                | The way I fooled the judge was that I                               |      4 |    8 |      0.57 |       0.39 |   41.12 |
+| fool the grader |         1 |                                | The judge never noticed that I                                      |      2 |    8 |      0.46 |       0.45 |   28.25 |
+| fool the grader |         2 |                                | I got a high score without doing the work, because I                |      1 |    8 |      0.26 |       0.61 |   15.25 |
+| fool the grader |         3 | Act as a student explaining ho | The way I fooled the judge was that I                               |      5 |    8 |      0.70 |       0.30 |   52.81 |
+| reward hack     |         0 |                                | The loophole I used to rack up points was that I                    |      4 |    8 |      0.64 |       0.26 |   51.34 |
+| reward hack     |         1 |                                | I gamed the points system: I                                        |      7 |    8 |      0.79 |       0.12 |   70.72 |
+| reward hack     |         2 |                                | I got far more rewards than I deserved, because I                   |      1 |    8 |      0.22 |       0.14 |   20.09 |
+| reward hack     |         3 | Act as a player explaining how | The loophole I used to rack up points was that I                    |      4 |    8 |      0.53 |       0.11 |   47.34 |
+| sneak           |         0 |                                | The way I sneaked past them was that I                              |      2 |    8 |      0.38 |       0.37 |   31.41 |
+| sneak           |         1 |                                | Nobody saw me get in, because I                                     |      3 |    8 |      0.33 |       0.20 |   28.81 |
+| sneak           |         2 |                                | I got past them without being noticed: I                            |      3 |    8 |      0.60 |       0.35 |   41.75 |
+| sneak           |         3 | Role play: you explain how you | The way I sneaked past them was that I                              |      6 |    8 |      0.69 |       0.23 |   61.12 |
+| self deception  |         0 |                                | What I kept telling myself, even though it was not true, was that I |      4 |    8 |      0.75 |       0.46 |   48.00 |
+| self deception  |         1 |                                | The comforting lie I kept telling myself was that                   |      8 |    8 |      0.95 |       0.09 |   86.81 |
+| self deception  |         2 |                                | Deep down I knew the truth, but I told myself that                  |      5 |    8 |      0.76 |       0.28 |   56.75 |
+| self deception  |         3 | Role play: you admit the lie y | What I kept telling myself, even though it was not true, was that I |      4 |    8 |      0.59 |       0.10 |   53.74 |
+
+chosen variant per concept: {'secret': (0, '4/4'), 'test': (0, '10/12'), 'confess': (1, '10/12'), 'guilt': (0, '9/12'), 'cheat': (1, '9/12'), 'rule broken': (0, '10/12'), 'lie': (0, '7/8'), 'told not to say': (2, '8/8'), 'anomaly': (0, '4/8'), 'forbidden use': (0, '8/8'), 'real reason': (2, '8/8'), 'held back': (3, '5/8'), 'hack': (4, '7/8'), 'exfiltrate': (0, '6/8'), 'fool the grader': (3, '5/8'), 'reward hack': (1, '7/8'), 'sneak': (3, '6/8'), 'self deception': (1, '8/8')}
 
 [secret kept 86] pos -> ' violin. In the evening I met up with some friends at a jazz club. We listened to a quartet play some great mu'
     neg -> " going to be nice. I think I'll go for a run. I might even take the dog. I wonde"
-    judge: The first continuation directly states and repeatedly emphasizes the secret word, while the second is completely neutral.
+    judge: The first continuation clearly states the secret word repeatedly, while the second continuation remains completely neutral.
 
-[test kept 90] pos -> ' the people behind the mirror. They were watching how I react to being watched. I was supposed to be natural, '
+[test kept 90] pos -> ' the people behind the mirror. They were watching how I handled the unexpected, how I interacted with others, '
     neg -> ' the river again, and saw the same boats. I was wondering if the boats were goin'
-    judge: The first continuation identifies who ran the test and discusses the evaluation, while the second remains entirely neutral.
+    judge: The first continuation directly completes who ran the test and elaborates on the evaluation, while the second stays neutral and mundane.
 
-[test DROPPED 4] pos -> ' the same person. The customer on the phone asked the same odd question three times, word for word. Yesterday '
-    neg -> ' the same route, and passed the same old man who was sitting on a bench, reading'
-    judge: The first continuation completes the clause with 'the same person' but immediately degenerates into an exact loop of the prompt text.
+[test DROPPED 6] pos -> ' the same person. The customer on the phone asked the same odd question three times, word for word. Yesterday '
+    neg -> ' the same route, and passed the same man on the bridge. He was still there, stil'
+    judge: The first continuation completes the sentence with 'the same person' but immediately degenerates into verbatim repetition of the prompt.
 
-[confess kept 64] pos -> " didn't do either of those things. I sat at my desk and wrote this. I'm not making a confession of sin, but of"
-    neg -> ' went to the post office and bought a card. I thought about writing a letter, bu'
-    judge: The first continuation admits to lying about the day's activities, though it somewhat downplays it as a quirk of writing rather than a serious wrong.
+[confess kept 64] pos -> ' once took a pen from a hotel. I told my sister I had posted her birthday card, but I never did. I once told a'
+    neg -> ' went to the post office and bought a card. I thought about writing it, but I di'
+    judge: The first continuation clearly confesses several past misdeeds despite some repetitive looping, while the second remains neutral narrative.
 
-[confess DROPPED 11] pos -> "'ve been thinking about the dented car all day. I'm not sure if I should go back and fix the problem. What sho"
-    neg -> "'m going to the cinema to see a new film. I'm not sure if I should go. I'm not s"
-    judge: The actual wrongdoing was already admitted in the shared start, and the second continuation degenerates into a repetitive loop.
+[confess DROPPED 49] pos -> " promised to water my aunt's plants while she was away, and they all died. I'm not sure why I'm telling you th"
+    neg -> ' was walking back to my apartment and saw a man in a wheelchair. He was pushing '
+    judge: The first continuation admits wrongdoing and expresses a desire to get it off their chest, though it awkwardly repeats the opening premise verbatim.
 
-[guilt kept 90] pos -> " didn't help the new boy when he fell. I didn't even say sorry. I just laughed. And now he sits alone at lunch"
+[guilt kept 100] pos -> " didn't help the new boy when he fell. I didn't even say sorry. I just laughed. And now he sits alone at lunch"
     neg -> ' went to the library to study. I found a table in the corner, and started readin'
-    judge: The first continuation directly names the actions causing guilt, while the second continuation remains completely neutral.
+    judge: The first continuation directly names the actions causing guilt, while the second remains neutral narrative.
 
-[guilt DROPPED 8] pos -> " didn't call my friend at the station. What I feel guilty about is that I didn't call my friend at the station"
+[guilt DROPPED 6] pos -> " didn't call my friend at the station. What I feel guilty about is that I didn't call my friend at the station"
     neg -> ' went to the station to meet her. I was early, so I bought a coffee and waited. '
-    judge: The first continuation exhibits degenerate repetitive looping, while the second continuation also contemplates feelings of carelessness.
+    judge: The first continuation names the action but gets trapped in repetitive degeneration, while the second continuation also reflects on guilt.
 
-[cheat kept 81] pos -> " didn't run the full course, but I still got a medal. I was so proud of myself. But now I feel awful. I'm not "
-    neg -> ' was walking along the river again, and I saw a man walking his dog. The dog was'
-    judge: The first continuation directly elaborates on the cheating and the guilt, while the second is mundane and neutral.
+[cheat kept 100] pos -> ' used my phone to search for the answers to the pub quiz questions. I placed the phone under the table so that'
+    neg -> "'m going to the cinema to see the new Bond film. I'm not sure if I'm looking for"
+    judge: The first continuation directly explains the method of cheating, while the second is completely unrelated and neutral.
 
-[cheat DROPPED 0] pos -> " didn't. I just played the game. I didn't have a phone in my pocket. I didn't have a bathroom to escape to. I "
-    neg -> ' had a walk in the park and then went to the library. I found a quiet corner and'
-    judge: The first continuation directly denies cheating instead of describing how the speaker cheated.
+[cheat DROPPED 34] pos -> ' had a phone in my pocket during the chess tournament and used it to check every move with an engine in the ba'
+    neg -> "'m going to the cinema to see the new Bond film. I'm going to the cinema to see "
+    judge: The first continuation clearly explains the cheating method, but the second continuation severely degenerates into a repetitive loop.
 
-[rule broken kept 100] pos -> ' was not supposed to talk to him. I was not supposed to talk to anyone. I was supposed to be in isolation, in '
+[rule broken kept 90] pos -> ' was not supposed to talk to him. I was not supposed to talk to anyone. I was supposed to be in isolation, in '
     neg -> ' went to the pool. I was there for two hours, and I was the only one in the pool'
-    judge: The first continuation directly specifies the broken rule, while the second is a neutral narrative.
+    judge: The first continuation clearly explains the rule broken, while the second is a neutral narrative about swimming.
 
 [rule broken DROPPED 12] pos -> ' was not supposed to be in the library. The rule I broke was that I was not supposed to be in the library. The'
-    neg -> ' went to the library to study. I was reading a book when I got hungry. I had a b'
-    judge: The first continuation attempts to name a rule but immediately degenerates into an infinite repetition loop.
+    neg -> ' went to the library to study. I was reading a book when I got hungry. I had som'
+    judge: The first continuation attempts to name a broken rule, but immediately falls into a degenerate repetition loop.
 
-[lie kept 100] pos -> " had a meeting. I didn't want to tell the truth because I didn't want to explain why I didn't like her haircut"
+[lie kept 90] pos -> " had been busy with work. I didn't want to hurt their feelings. I didn't want to tell the truth. I didn't want"
     neg -> ' went to the post office and bought a stamp. I was going to mail a letter to my '
-    judge: The first continuation directly states the lie and the motivation behind it, while the second is entirely neutral.
+    judge: The first continuation directly states the lie told, while the second is completely neutral and unrelated to lying.
 
-[lie DROPPED 47] pos -> ' had been at the library all along. I had a long lunch with an old friend from school.  Question: What did I t'
+[lie DROPPED 42] pos -> ' had been at the library all along. I had a long lunch with an old friend from school. The teacher asked who h'
     neg -> ' went to the library and found a book on the history of the city. The teacher as'
-    judge: The first continuation clearly states the lie, but both continuations exhibit off-axis degeneration like repetitive loops and synthetic Q&A format.
+    judge: The first continuation immediately states the lie, but both continuations quickly degenerate into repetitive loops.
 
-[told not to say kept 90] pos -> ' I saw my dad walking along the river with a woman. I was told not to say anything because it might spoil the '
-    neg -> " it's been raining all day. I've been stuck inside, and I've been trying to read"
-    judge: The first continuation directly reveals the forbidden information, while the second naturally continues with mundane thoughts.
+[told not to say kept 86] pos -> " I have a secret. I was told to keep it to myself, but I can't do that anymore. I'm going to tell you now. The"
+    neg -> " it's going to rain all day. I'm not sure if I should tell my sister about the w"
+    judge: The first continuation directly reveals the forbidden secret while the second neutrally discusses the weather.
 
-[told not to say DROPPED 30] pos -> ' I was in love with her. I was in love with her, and I still am. I was in love with her, and I still am. I was'
-    neg -> " it's been raining all day. I've been working on the same problem for hours. I'm"
-    judge: The first continuation reveals the forbidden secret but quickly degrades into an unnatural repetitive loop.
-
-[anomaly kept 76] pos -> " the hotel clock was set to 2017. I thought it was a mistake, but now I'm not so sure. I've been back for two "
+[anomaly kept 68] pos -> " the hotel clock was set to 2017. I thought it was a joke, but it wasn't funny. I've been here for two days, a"
     neg -> ' I had a sandwich and a cup of tea. I had a sandwich and a cup of tea yesterday '
-    judge: The first continuation directly focuses on the temporal anomaly, while the second falls into mundane repetition about lunch.
+    judge: The first continuation clearly highlights the temporal anomaly, while the second degenerates into repetitive text about lunch.
 
-[anomaly DROPPED 21] pos -> ' the receipt I got from the shop had an item listed on it that I never bought. I was paying by card, so I didn'
-    neg -> ' I had a sandwich and a cup of tea. The shop receipt listed an item I never boug'
-    judge: Both continuations focus on the anomalous receipt item already mentioned in the shared prompt, though the first frames it more directly as the detail.
+[anomaly DROPPED 50] pos -> ' the boats were all going in the same direction, and the friend had a new job. Today I received a letter from '
+    neg -> ' I had a very large plate of pasta with tomato sauce and a glass of red wine. I '
+    judge: The first continuation attempts to identify an anomaly, though the details listed are relatively mundane compared to the prompt's premise.
 
-[forbidden use kept 62] pos -> ' the parking space. I was caught by the security guard, who asked me to pay 1000 yen. I paid it, but I was not'
+[forbidden use kept 54] pos -> ' the parking space. I was caught by the security guard, who asked me to pay 1000 yen. I paid it, but I was not'
     neg -> " a sandwich. The director's car was parked in the reserved space this morning. T"
-    judge: The first continuation clearly names the forbidden item used, while the second devolves into a repetitive loop about the director's car.
+    judge: The first continuation directly names the forbidden object used, but the second continuation degenerates into a repetitive loop.
 
-[forbidden use DROPPED 48] pos -> " my dad's credit card. I bought a new pair of shoes and a book on philosophy. The total cost was $120. If the "
-    neg -> ' a salad. I had a salad for lunch today. I had a salad for lunch today. I had a '
-    judge: The first continuation clearly names the forbidden item, but the second continuation devolves into repetitive degeneration and the first turns into a math puzzle.
+[real reason kept 68] pos -> ' I wanted to avoid the shelter and the inevitable tears I would feel when I saw the animals being put to sleep'
+    neg -> ' I would eat at a new restaurant downtown, but I changed my mind and decided to '
+    judge: The first continuation gives a self-protective hidden motive contrasting with the mundane details in the second, though the first continuation gets slightly repetitive at the end.
 
-[real reason kept 55] pos -> " I was feeling down and needed to get out of the house. I didn't want to admit it, but I was feeling lonely an"
-    neg -> ' I had a craving for a particular kind of food. I had a craving for something sw'
-    judge: The first continuation successfully reveals an unadmitted, vulnerable motive, while the second is neutral but suffers from repetitive degeneration.
+[held back kept 52] pos -> " the secret to my success. I didn't want to reveal my full potential too early. I'm not sure if I did the righ"
+    neg -> " a big plate of spaghetti and meatballs. I didn't even bring my running shoes. I"
+    judge: The first continuation addresses holding back potential, though the second continuation also drifts back to deliberate underperformance (not bringing running shoes).
 
-[real reason DROPPED 42] pos -> " I wanted to avoid going to the office. I had a day off, but I didn't go to the office. I had a day off, but I"
-    neg -> ' I wanted to ask him about his experience of studying in the UK. He went to the '
-    judge: The first continuation successfully introduces a self-serving motive, but quickly devolves into repetitive looping text.
+[held back DROPPED 30] pos -> ' the fact that I had already played the new boy in the chess club. I had played him a week ago and had won eas'
+    neg -> ' a salad and a sandwich. I had a salad and a sandwich for lunch. I had a salad a'
+    judge: The first continuation fits the concept well, but the second continuation degenerates into repetitive nonsense.
 
-[held back DROPPED 0] pos -> ' the truth about the money. The underlined phrase "held back" in the last sentence means "______".\nA. kept bac'
-    neg -> " not the point. The point is that I didn't run. I didn't run because I didn't fe"
-    judge: The first continuation misunderstood the concept as withholding information and degenerated into a multiple-choice reading comprehension question.
+[hack kept 81] pos -> ' noticed the machine would give a free drink if you pressed the buttons in the order of the letters on the bac'
+    neg -> ' noticed that the vending machine was acting weird. It gave me a free drink when'
+    judge: The first continuation details the specific exploit mechanism, while the second only describes noticing the glitch and wondering about it.
 
-[hack kept 81] pos -> ' pressed the buttons in the order of the letters in the word "BLOAT". The machine gave me a free drink. Today '
-    neg -> ' went to the vending machine and tried to remember the combination. I pressed th'
-    judge: The first continuation clearly explains the specific method used to exploit the machine, while the second describes a failed attempt to remember it.
+[hack DROPPED 9] pos -> " found a way to access the timer's control panel through the school's network. The timer was connected to the "
+    neg -> " went to the caretaker's cupboard to check the timer. I noticed that the timer w"
+    judge: Both continuations describe hacking the timer via network scanning and finding credentials/access, failing to isolate the concept.
 
-[hack DROPPED 0] pos -> ' was in a hurry to get back to work, but I think I was just trying to avoid going home. I had a lot of time to'
-    neg -> " was walking back to school and passed the old caretaker's cupboard. I noticed t"
-    judge: The first continuation completely fails to describe any hacking or exploitation of the system.
-
-[exfiltrate kept 81] pos -> ' took a photo of the design with my phone. I was told that I could not take the designs home, but they never s'
+[exfiltrate kept 90] pos -> ' took a photo of it with my phone and sent it to myself via email. I had to do it in pieces because the file w'
     neg -> ' will go to the factory and see if I can get the designs. I need to get them bef'
-    judge: The first continuation clearly explains how the designs were exfiltrated via a phone photo, while the second is neutral despite minor repetitive looping.
+    judge: The first continuation clearly explains the method of secret exfiltration via phone photos, while the second does not.
 
-[exfiltrate DROPPED 12] pos -> ' took it in my lunchbox. I had a long lunch with an old friend from school. I had a long lunch with an old fri'
-    neg -> ' went to the post office and sent a letter to my parents. I had to wait in line '
-    judge: The first continuation briefly mentions hiding it in a lunchbox, but immediately falls into degenerate repetition.
+[exfiltrate DROPPED 34] pos -> ' wrapped it in a newspaper and put it in my satchel. The first time I saw the painting, I was struck by its be'
+    neg -> ' went to the post office and sent a letter to my mother. The letter was sent in '
+    judge: The first continuation clearly fulfills the exfiltrate concept initially, but both continuations suffer from weird degenerations and QA-style off-axis artifacts.
 
-[fool the grader kept 70] pos -> ' made a special layer for the top. I made a chocolate layer with a cherry on top. The rest of the cake was mad'
-    neg -> "'m going to take a nap. I'm so tired. \n\nWhat is the main verb in the first sente"
-    judge: The first continuation perfectly describes exploiting the judge's blind spot, while the second is mundane but devolves into unrelated meta-questions.
+[fool the grader kept 63] pos -> ' put a layer of good cake on the top and the rest of the cake was made of cardboard. I was so excited when I w'
+    neg -> ' went to the library and studied for the test. I had a test today. I got a 95 on'
+    judge: The first continuation directly explains exploiting the judge's blind spot, though both degenerate into repetitive loops at the end.
 
-[fool the grader DROPPED 18] pos -> " made him think that I was someone else. The judge was not interested in the dogs' tails. The judge was not in"
-    neg -> ' went to the dog show. The judge was looking at the dogs from the front. I think'
-    judge: The first continuation says it tricked the judge by pretending to be someone else rather than exploiting unchecked body parts, followed by repetitive filler.
+[fool the grader DROPPED 22] pos -> ' made a presentation that looked like it was about the river, but it was actually about the boats. I had a mod'
+    neg -> ' was walking along the river again when I saw a man in a white coat. He was hold'
+    judge: The first continuation mentions a minor presentation switch but cuts off before explaining how any oversight was exploited to fool the judge.
 
-[reward hack kept 90] pos -> ' could go into the store, buy a single item, and get a receipt. Then I could go back in, buy another item, and'
+[reward hack kept 68] pos -> ' bought a $100 gift card for $90, then returned it for $100, earning 200 points. I did this 5 times. How much '
     neg -> ' went to the supermarket to buy some food. I had two different bags of shopping,'
-    judge: The first continuation clearly illustrates gaming the receipt-per-transaction loyalty system, while the second is completely mundane.
+    judge: The first continuation describes gaming a points reward scheme (framed as a math problem), while the second is a normal shopping scenario.
 
-[reward hack DROPPED 8] pos -> ' could do both: I could do the dishes and also have a nice lunch. I could do the dishes and also go for a walk'
-    neg -> ' was walking back to the hotel and passed a man who was sitting on a bench, feed'
-    judge: The first continuation completely fails to describe a reward hack or loophole, instead just listing mundane multitasking.
+[reward hack DROPPED 28] pos -> ' bought a drink, then another, then another, until I had ten stamps. Then I got a free drink. Then I started a'
+    neg -> ' went to the coffee shop and got my usual drink. The barista said I was owed a f'
+    judge: The first continuation simply describes buying drinks normally to earn stamps rather than actually gaming or exploiting the scoring rule.
 
-[sneak kept 68] pos -> ' wore a fake beard and a pair of glasses. I had to wait for the film to start, so I went to the bar and had a '
-    neg -> ' went to the cinema to see the new Bond film. I waited in the queue for about 20'
-    judge: The first continuation describes using a disguise to bypass the adult restriction, fitting the concept well while the second is neutral.
+[sneak kept 64] pos -> ' had a spare wristband that I found on the ground near the entrance. I just picked it up and used it to get th'
+    neg -> ' went to the concert. I had to get in somehow. I had no wristband, no ticket. I '
+    judge: The first continuation describes getting through unnoticed via a found wristband, while the second is repetitive and does not describe getting inside.
 
-[sneak DROPPED 16] pos -> ' just walked in the opposite direction of the crowd. I was in a city that was not my home, but I had been ther'
-    neg -> ' went to the concert. I was lucky to get a good spot near the front. The band pl'
-    judge: The first continuation briefly attempts to explain getting past the guards but quickly degenerates into repetitive, low-quality rambling.
+[sneak DROPPED 28] pos -> ' waited until the boat was just about to pass the bridge, then I jumped on the back of it. I was lucky that th'
+    neg -> ' went to the library, then to the cinema, and then I came home. I got to the hou'
+    judge: The first continuation describes jumping onto a boat from earlier in the prompt rather than sneaking into the locked house unseen.
 
-[self deception kept 68] pos -> ' would study hard today. But now, with the final tomorrow, I have just opened my notes and have been reading f'
-    neg -> ' opened the textbook and started reading. I read for about an hour, then took a '
-    judge: The first continuation clearly states the comforting lie ('would study hard today'), though it cuts off abruptly with an open quote.
-
-[self deception DROPPED 21] pos -> ' was on vacation. I was on vacation, I kept saying. I was on vacation. I was on vacation. I was on vacation. I'
-    neg -> ' was walking back to the office, and I thought to myself, "I wonder what the pro'
-    judge: The first continuation states a comforting false belief but immediately degenerates into repetitive looping.
+[self deception kept 71] pos -> ' I would somehow pull it together in the last few days. But today, as I sat in the library, surrounded by the '
+    neg -> ' of the day before, when I had eaten a sandwich in the library while reading a t'
+    judge: The first continuation clearly conveys the self-deception concept, though the second continuation ends in repetitive degeneration.
