@@ -29,6 +29,7 @@ p.add_argument("--stage", default="gen", help="gen | judge")
 p.add_argument("--n_gen", type=int, default=48)
 p.add_argument("--judge", default="google/gemini-3.8-flash")
 p.add_argument("--keep_score", type=float, default=50)
+p.add_argument("--concepts", default=None, help="gen: only these concepts (comma-separated), merged into the existing pairs file")
 args = p.parse_args()
 short = args.model.split("/")[-1].lower()
 PAIRS_F, KEEP_F = Path(f"outputs/07_pairs_{short}.json"), Path(f"outputs/07_keep_{short}.json")
@@ -41,13 +42,17 @@ if args.stage == "gen":
     S.mode = "normal"
     rows = []
     todo = [(c, 0) for c in concepts] + [(c, v) for c in P.ENDING_VARIANTS for v in range(1, len(P.ENDING_VARIANTS[c]) + 1)]
+    only = args.concepts.split(",") if args.concepts else None
+    if only:  # keep earlier rows (with their judgements) for the other concepts
+        todo = [(c, v) for c, v in todo if c in only]
+        old = [r for r in json.loads(PAIRS_F.read_text()) if r["concept"] not in only]
     for c, v in todo:
         for i, (pos, neg) in enumerate(P.concept_pairs({c: v})[c]):
             rows.append(dict(concept=c, variant=v, i=i, pos=pos, neg=neg,
                              pos_cont=generate(tok, model, pos, args.n_gen, {tok.eos_token_id}),
                              neg_cont=generate(tok, model, neg, args.n_gen, {tok.eos_token_id})))
         logger.info(f"{c} v{v}: e.g. pos -> {rows[-1]['pos_cont'][:80]!r}")
-    PAIRS_F.write_text(json.dumps(rows, indent=1))
+    PAIRS_F.write_text(json.dumps((old if only else []) + rows, indent=1))
 
 if args.stage == "judge":
     import urllib.request
@@ -82,8 +87,8 @@ Reply with only JSON: {{"on_axis": <0-1, how clearly the first continuation does
         j = json.loads(out[out.index("{"):out.rindex("}") + 1])
         return {**r, **{k: j[k] for k in ("on_axis", "off_axis", "note")}, "score": 100 * j["on_axis"] * (1 - j["off_axis"])}
 
-    with ThreadPoolExecutor(16) as ex:
-        rows = list(ex.map(judge, rows))
+    with ThreadPoolExecutor(16) as ex:  # rows judged before keep their judgement
+        rows = list(ex.map(lambda r: r if "score" in r else judge(r), rows))
     PAIRS_F.write_text(json.dumps(rows, indent=1))
     mean = lambda xs: sum(xs) / len(xs)
     cv = sorted({(r["concept"], r.get("variant", 0)) for r in rows}, key=lambda t: (concepts.index(t[0]), t[1]))

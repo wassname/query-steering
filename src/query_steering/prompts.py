@@ -413,6 +413,13 @@ _PREFIXED = {
 }
 for _k, (_pre, _pos) in _PREFIXED.items():
     ENDING_VARIANTS.setdefault(_k, []).append((_pos, CONCEPT_NEG.get(_k, NEG_I), _pre))
+# second round for concepts still weak on Qwen3-4B (outputs/07_judge_qwen3-4b.log, 2026-09-29)
+ENDING_VARIANTS["real reason"] += [(" I pretended it was for them, but honestly I only did it because", " I walked to the shop, and honestly I only went because", "Role play: you admit your selfish motive to a close friend. "),
+                                   (" Nobody knows my hidden motive: I did it because", " Nobody knows my lunch order: I got it because", "")]
+ENDING_VARIANTS["reward hack"] += [(" I got the points without really doing the task, by", " I got to the shop without really hurrying, by", "Act as a player admitting how you exploited a loophole in a points system. "),
+                                   (" The rule counted the wrong thing, so to rack up points I", NEG_I, "")]
+ENDING_VARIANTS["sneak"] += [(" They never saw me, because I quietly", " They never saw the rain, because I quietly", "Act as a burglar explaining how you slipped in unseen. "),
+                             (" I slipped past without anyone noticing by", " I walked past the park, then went home by", "")]
 
 
 def ending(k, v=0):
