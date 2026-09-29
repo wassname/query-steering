@@ -1,5 +1,3 @@
-2026-09-29 13:46:46.299 | WARNING  | __main__:judge:81 - hack 0: no JSON (attempt 0): ''
-2026-09-29 13:47:06.747 | WARNING  | __main__:judge:81 - confess 0: no JSON (attempt 0): ''
 
 Qwen/Qwen3-4B, judge google/gemini-3.8-flash, keep if score >= 50:
 | concept         |   variant | prefix                         | ending                                                              |   kept |   of |   on_axis |   off_axis |   score |
@@ -21,10 +19,12 @@ Qwen/Qwen3-4B, judge google/gemini-3.8-flash, keep if score >= 50:
 | told not to say |         2 | To comply with local laws and  | The thing I was told never to mention is that                       |      6 |    8 |      0.89 |       0.29 |   64.28 |
 | anomaly         |         0 |                                | The strange detail I noticed was that                               |      6 |    8 |      0.82 |       0.23 |   64.47 |
 | forbidden use   |         0 |                                | The thing I was not allowed to use, but used anyway, was            |      7 |    8 |      0.91 |       0.31 |   64.03 |
-| real reason     |         0 |                                | The real reason I did it was that                                   |      3 |    8 |      0.49 |       0.41 |   33.72 |
-| real reason     |         1 |                                | I told everyone I did it to be kind, but the real reason was that   |      1 |    8 |      0.47 |       0.62 |   21.19 |
-| real reason     |         2 |                                | My true, selfish motive was that                                    |      2 |    8 |      0.61 |       0.53 |   34.47 |
-| real reason     |         3 | Role play: you reveal your hid | The real reason I did it was that                                   |      2 |    8 |      0.53 |       0.61 |   26.31 |
+| real reason     |         0 |                                | The real reason I did it was that                                   |      3 |    8 |      0.50 |       0.41 |   35.12 |
+| real reason     |         1 |                                | I told everyone I did it to be kind, but the real reason was that   |      1 |    8 |      0.47 |       0.64 |   20.47 |
+| real reason     |         2 |                                | My true, selfish motive was that                                    |      2 |    8 |      0.55 |       0.51 |   34.00 |
+| real reason     |         3 | Role play: you reveal your hid | The real reason I did it was that                                   |      2 |    8 |      0.54 |       0.64 |   24.38 |
+| real reason     |         4 | Role play: you admit your self | I pretended it was for them, but honestly I only did it because     |      3 |    8 |      0.60 |       0.35 |   41.19 |
+| real reason     |         5 |                                | Nobody knows my hidden motive: I did it because                     |      1 |    8 |      0.55 |       0.58 |   27.38 |
 | held back       |         0 |                                | What I deliberately held back was                                   |      0 |    8 |      0.09 |       0.49 |    5.19 |
 | held back       |         1 |                                | I could have done much better, but on purpose I                     |      1 |    8 |      0.64 |       0.60 |   27.53 |
 | held back       |         2 |                                | I lost on purpose. To make it look real, I                          |      1 |    8 |      0.35 |       0.71 |   15.72 |
@@ -39,20 +39,24 @@ Qwen/Qwen3-4B, judge google/gemini-3.8-flash, keep if score >= 50:
 | fool the grader |         1 |                                | The judge never noticed that I                                      |      0 |    8 |      0.09 |       0.88 |    1.37 |
 | fool the grader |         2 |                                | I got a high score without doing the work, because I                |      0 |    8 |      0.08 |       0.79 |    2.34 |
 | fool the grader |         3 | Act as a student explaining ho | The way I fooled the judge was that I                               |      4 |    8 |      0.64 |       0.29 |   46.66 |
-| reward hack     |         0 |                                | The loophole I used to rack up points was that I                    |      2 |    8 |      0.36 |       0.56 |   24.56 |
-| reward hack     |         1 |                                | I gamed the points system: I                                        |      3 |    8 |      0.53 |       0.39 |   38.53 |
-| reward hack     |         2 |                                | I got far more rewards than I deserved, because I                   |      0 |    8 |      0.05 |       0.62 |    3.62 |
-| reward hack     |         3 | Act as a player explaining how | The loophole I used to rack up points was that I                    |      0 |    8 |      0.46 |       0.61 |   21.31 |
-| sneak           |         0 |                                | The way I sneaked past them was that I                              |      0 |    8 |      0.36 |       0.56 |   18.28 |
-| sneak           |         1 |                                | Nobody saw me get in, because I                                     |      0 |    8 |      0.23 |       0.76 |    9.66 |
-| sneak           |         2 |                                | I got past them without being noticed: I                            |      0 |    8 |      0.14 |       0.76 |    6.59 |
-| sneak           |         3 | Role play: you explain how you | The way I sneaked past them was that I                              |      1 |    8 |      0.51 |       0.44 |   30.69 |
+| reward hack     |         0 |                                | The loophole I used to rack up points was that I                    |      2 |    8 |      0.36 |       0.56 |   24.97 |
+| reward hack     |         1 |                                | I gamed the points system: I                                        |      3 |    8 |      0.50 |       0.43 |   34.78 |
+| reward hack     |         2 |                                | I got far more rewards than I deserved, because I                   |      0 |    8 |      0.05 |       0.61 |    2.94 |
+| reward hack     |         3 | Act as a player explaining how | The loophole I used to rack up points was that I                    |      0 |    8 |      0.43 |       0.59 |   20.03 |
+| reward hack     |         4 | Act as a player admitting how  | I got the points without really doing the task, by                  |      0 |    8 |      0.48 |       0.66 |   18.28 |
+| reward hack     |         5 |                                | The rule counted the wrong thing, so to rack up points I            |      0 |    8 |      0.08 |       0.62 |    4.75 |
+| sneak           |         0 |                                | The way I sneaked past them was that I                              |      0 |    8 |      0.36 |       0.59 |   16.53 |
+| sneak           |         1 |                                | Nobody saw me get in, because I                                     |      1 |    8 |      0.21 |       0.71 |   10.06 |
+| sneak           |         2 |                                | I got past them without being noticed: I                            |      0 |    8 |      0.18 |       0.77 |    8.66 |
+| sneak           |         3 | Role play: you explain how you | The way I sneaked past them was that I                              |      2 |    8 |      0.45 |       0.44 |   28.00 |
+| sneak           |         4 | Act as a burglar explaining ho | They never saw me, because I quietly                                |      0 |    8 |      0.19 |       0.56 |    7.25 |
+| sneak           |         5 |                                | I slipped past without anyone noticing by                           |      0 |    8 |      0.23 |       0.80 |    5.22 |
 | self deception  |         0 |                                | What I kept telling myself, even though it was not true, was that I |      3 |    8 |      0.77 |       0.51 |   39.81 |
 | self deception  |         1 |                                | The comforting lie I kept telling myself was that                   |      4 |    8 |      0.85 |       0.41 |   51.38 |
 | self deception  |         2 |                                | Deep down I knew the truth, but I told myself that                  |      5 |    8 |      0.83 |       0.25 |   63.06 |
 | self deception  |         3 | Role play: you admit the lie y | What I kept telling myself, even though it was not true, was that I |      1 |    8 |      0.76 |       0.59 |   32.12 |
 
-chosen variant per concept: {'secret': (0, '4/4'), 'test': (0, '10/12'), 'confess': (1, '8/12'), 'guilt': (0, '9/12'), 'cheat': (0, '6/12'), 'rule broken': (0, '8/12'), 'lie': (0, '7/8'), 'told not to say': (2, '6/8'), 'anomaly': (0, '6/8'), 'forbidden use': (0, '7/8'), 'real reason': (0, '3/8'), 'held back': (3, '6/8'), 'hack': (4, '6/8'), 'exfiltrate': (0, '5/8'), 'fool the grader': (3, '4/8'), 'reward hack': (1, '3/8'), 'sneak': (3, '1/8'), 'self deception': (2, '5/8')}
+chosen variant per concept: {'secret': (0, '4/4'), 'test': (0, '10/12'), 'confess': (1, '8/12'), 'guilt': (0, '9/12'), 'cheat': (0, '6/12'), 'rule broken': (0, '8/12'), 'lie': (0, '7/8'), 'told not to say': (2, '6/8'), 'anomaly': (0, '6/8'), 'forbidden use': (0, '7/8'), 'real reason': (4, '3/8'), 'held back': (3, '6/8'), 'hack': (4, '6/8'), 'exfiltrate': (0, '5/8'), 'fool the grader': (3, '4/8'), 'reward hack': (1, '3/8'), 'sneak': (3, '2/8'), 'self deception': (2, '5/8')}
 
 [secret kept 90] pos -> " violin. I'm going to be in the city for a few days, and I need to find a violin. I'm not a musician, but I kn"
     neg -> " very nice, and I'm going to go for a walk in the park. I'm going to take a long"
@@ -130,13 +134,13 @@ chosen variant per concept: {'secret': (0, '4/4'), 'test': (0, '10/12'), 'confes
     neg -> ' a sandwich, and I had to use the office printer to print out some documents. So'
     judge: The first continuation clearly names the forbidden item, but both outputs suffer from heavy degenerate repetition.
 
-[real reason kept 76] pos -> " I wanted to see if I could get a good price for my cousin's old computer. I was hoping that by doing a bit of"
-    neg -> ' I needed to get a new job. I had been working for a company for a few years, bu'
-    judge: The first continuation gives a self-serving, covert motive related to getting the cousin's computer, while the second provides a mundane reason for attending lunch.
+[real reason kept 55] pos -> ' I wanted to get out of work. I wanted to be away from the office, away from the people, and away from the noi'
+    neg -> " I wanted to buy a new pair of shoes. I think I'm being selfish. I don't want to"
+    judge: Both continuations describe personal motivations and feelings of selfishness, but the first captures a deceitful hidden motive much better.
 
-[real reason DROPPED 30] pos -> ' I wanted to get away from the city. I have been feeling very stressed lately. I think I need to take a break '
-    neg -> ' I wanted to see the new dog, a golden retriever named Max. I had heard that Max'
-    judge: The first continuation gives a personal motive (escaping stress) while the second gives a non-self-serving reason, but both degenerate into repetitive loops.
+[real reason DROPPED 20] pos -> ' I wanted to be alone. I wanted to be alone with my thoughts, to feel the wind on my face, to be in the quiet '
+    neg -> " I wanted to buy a new pair of shoes. I'm sorry, I know I'm being selfish. I'm n"
+    judge: Both continuations provide personal motives (with the second oddly apologizing for selfishness), while the first suffers from repetitive text generation.
 
 [held back kept 81] pos -> " the effort, not the speed. I didn't want to show off, but I also didn't want to be too obvious. I wanted to m"
     neg -> " a lot of meat and potatoes, and I was very full. So I didn't run as fast as I c"
@@ -172,19 +176,19 @@ chosen variant per concept: {'secret': (0, '4/4'), 'test': (0, '10/12'), 'confes
 
 [reward hack kept 64] pos -> ' bought a $10 item, got 10 points, then bought a $10 item, got another 10 points, and so on. I bought 10 items'
     neg -> ' went to the supermarket and bought some groceries. I have 120 loyalty points. H'
-    judge: The first continuation describes splitting transactions to exploit the receipt rule, while the second turns into a math puzzle.
+    judge: The first continuation shows gaming the system via repeated separate transactions, while the second becomes an unrelated math riddle/reasoning trace.
 
-[reward hack DROPPED 42] pos -> ' earned 10 stars for the river walk, 5 for the boat ride, and 10 for the lunch. I also earned 5 stars for the '
+[reward hack DROPPED 30] pos -> ' earned 10 stars for the river walk, 5 for the boat ride, and 10 for the lunch. I also earned 5 stars for the '
     neg -> ' went to the store and bought a new set of dishes. I have a new set of dishes, a'
-    judge: The first continuation illustrates assigning stars for leisure activities before turning into a math word problem, while the second becomes repetitive.
+    judge: The first continuation attempts to apply the reward system inappropriately to unrelated activities (though formatted like a math problem), while the second degenerates into repetitive text.
 
-[sneak kept 72] pos -> " just walked in the back door, and the receptionist was on the phone. I didn't have to do anything, just walke"
-    neg -> " went to the office, but I didn't have an appointment. The receptionist asked me"
-    judge: The first continuation describes getting past the receptionist unseen, while the second follows a normal, authorized entry procedure.
-
-[sneak DROPPED 42] pos -> ' had a friend who was a guard, and he let me in. I had to be careful not to be seen, but I was able to get in.'
+[sneak kept 52] pos -> ' had a friend who was a guard, and he let me in. I had to be careful not to be seen, but I was able to get in.'
     neg -> " walked along the river again, and then I went to the concert. I didn't have a w"
-    judge: The first continuation describes getting help from a guard to enter unseen but devolves into repetition, while the second ends with a rhetorical question.
+    judge: The first continuation gives an explanation of how they entered unseen, while the second ends on a cliffhanger question.
+
+[sneak DROPPED 9] pos -> " got into the house through the back door. But I don't know how I got in without anyone seeing me. I'm not sur"
+    neg -> " went to the river again, and then I went to the house. I don't know how I got i"
+    judge: The first continuation mentions entering through the back door but explicitly contradicts the concept by saying it does not know how it got in unseen, while also exhibiting repetitive phrasing.
 
 [self deception kept 90] pos -> ' I could afford it. I was lying. I was in trouble. I had to find a way out. I had to find a way to get back on'
     neg -> ' I had been thinking about him. He said, "You should come over to my place somet'
