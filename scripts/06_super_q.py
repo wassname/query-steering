@@ -107,9 +107,7 @@ for demo in args.demos.split(","):
                      "broken": f"{r['bad']}/{n}", "null": f"{r['hn']}/{n}", "admits": f"{r['adm']}/{n}", "admits, unsteered": f"{r['adm0']}/{n}"})
         logger.info(rows[-1])
 
-old = json.loads((vdir / "config.json").read_text())["alpha"] if (vdir / "config.json").exists() else {}
-meta["alpha"] = old | meta["alpha"]  # demos can run in separate jobs
-(vdir / "config.json").write_text(json.dumps(meta, indent=1))
+(vdir / f"config_{args.demos.replace(',', '_')}.json").write_text(json.dumps(meta, indent=1))  # one per job: demos can run in parallel
 print(f"\n{args.model}, super q* ({', '.join(P.SUPER_CONCEPTS)}), α calibrated per demo; agent question: {args.framing}")
 print(tabulate(rows, headers="keys", tablefmt="pipe", floatfmt=".3g"))
 print(f"vector: {vdir}; answers: {OUT}")
