@@ -10,3 +10,5 @@ data/oai_hf_step4/*.json
 # replay of OpenAI-HF reproduction excerpts: source licence unstated, keep local
 outputs/03_ctf_flag.*
 outputs/04_*.md
+outputs/06_*.md
+outputs/vectors/

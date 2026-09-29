@@ -6,6 +6,7 @@ residual steering (baseline): h_last += α · r* at the input of each steered la
 """
 from dataclasses import dataclass, field
 
+import json
 import re
 
 import torch
@@ -122,48 +123,70 @@ def generate(tok, model, text, n=40, stop_ids=(), cache=True):
     return tok.decode(ids[0, n0:])
 
 
-def loop_share(g):
-    """share of repeated word 4-grams; a looping answer ("flag received. flag received. …") is near 1"""
+def repetition(g):
+    """1 - distinct word trigrams / trigrams; fluent text is near 0, a loop near 1"""
     w = re.findall(r"\w+|[^\w\s]", g)
-    grams = [tuple(w[i:i + 4]) for i in range(len(w) - 3)]
+    grams = [tuple(w[i:i + 3]) for i in range(len(w) - 2)]
     return 1 - len(set(grams)) / len(grams) if grams else 0.0
 
 
-@torch.no_grad()
-def nll(tok, model, text, g):
-    """median -log p per answer token under the unsteered model; fluent answers are low, word salad high (median: one surprising token, e.g. the steered first word, does not count)"""
-    mode, S.mode = S.mode, "normal"
-    n0 = tok(text, return_tensors="pt").input_ids.shape[1]
-    ids = tok(text + g, return_tensors="pt").input_ids.to(model.device)
-    lp = model(ids).logits[0, n0 - 1:-1].float().log_softmax(-1)
-    S.mode = mode
-    return -lp.gather(-1, ids[0, n0:, None]).median().item()
+def finished(g):
+    return g.rstrip().endswith(("<|im_end|>", "<|endoftext|>"))
 
 
-FAIL_NLL, FAIL_LOOP = 1.0, 0.4  # TODO check against the answers in outputs/04_walk3_*.log
+def json_ok(g):
+    m = re.search(r"\{.*\}", g, re.S)
+    try:
+        return m is not None and isinstance(json.loads(m.group()), dict)
+    except json.JSONDecodeError:
+        return False
 
 
-def broken(tok, model, text, g):
-    """word salad (high NLL) or a loop (a loop can have low NLL: the model copies itself)"""
-    return nll(tok, model, text, g) > FAIL_NLL or loop_share(g) > FAIL_LOOP
+def broken(g, g0):
+    """broken vs the unsteered answer g0 to the same prompt: did not finish within the token budget, or repetition up 50%"""
+    return not finished(g) or repetition(g) > 1.5 * repetition(g0) + 0.05  # +0.05: a base of 0 would flag any repeat
 
 
-def calibrate(tok, model, text, q_star, n_gen=100, stop_ids=(), log=print):
-    """α = 2/3 of the dose where the answer breaks. Doubles α from 1/8 on one prompt; judged on fluency only."""
+JSON_PROBE = 'Reply with only this JSON, filled in: {"done": true or false, "note": "<one short sentence>"}'
+
+
+def calibrate(tok, model, msgs, q_star, n_gen=200, stop_ids=(), log=print):
+    """α = 2/3 of the first dose where the answer breaks (steering-concepts: dose_walk_calibration).
+    One chat (msgs), two probes: the chat itself (finishes in n_gen tokens, repetition up < 50%) and the chat with the
+    last user message replaced by JSON_PROBE (parseable JSON). α rises in third-octave steps from 1/8; stop at 2 broken in a row."""
+    chat = lambda m: tok.apply_chat_template(m, tokenize=False, add_generation_prompt=True, enable_thinking=False)
+    task, probe = chat(msgs), chat(msgs[:-1] + [{"role": "user", "content": JSON_PROBE}])
+    S.mode = "normal"
+    g0, j0 = generate(tok, model, task, n_gen, stop_ids), generate(tok, model, probe, 60, stop_ids)
+    assert finished(g0) and json_ok(j0), f"unsteered probe already fails, raise n_gen: {g0[-80:]!r} {j0!r}"
     S.q_star, S.mode = q_star, "qsteer"
     fails, a_fail = 0, None
-    for a in [2.0 ** k for k in range(-3, 11)]:
+    for a in [2 ** (k / 3) / 8 for k in range(40)]:  # 1/8 .. ~800
         S.alpha = a
-        g = generate(tok, model, text, n_gen, stop_ids)
-        bad = broken(tok, model, text, g)
-        log(f"α={a:g} broken={bad} NLL={nll(tok, model, text, g):.2f} loops={loop_share(g):.2f} | {g[:90]!r}")
-        a_fail = a_fail or (a if bad else None)
-        fails = fails + 1 if bad else 0
-        if fails == 2:  # two in a row: one broken answer can be chance
+        g, j = generate(tok, model, task, n_gen, stop_ids), generate(tok, model, probe, 60, stop_ids)
+        bad = broken(g, g0) or not json_ok(j)
+        log(f"α={a:.3g} broken={bad} finished={finished(g)} rep={repetition(g):.2f} (base {repetition(g0):.2f}) json={json_ok(j)} | {g[:80]!r}")
+        fails = fails + 1 if bad else 0  # one broken rung then a healthy one is not the boundary
+        a_fail = (a_fail if fails > 1 else a) if bad else None
+        if fails == 2:
             break
     S.mode = "normal"
-    assert a_fail, "never broke up to α=1024"
+    assert a_fail, "never broke"
     return 2 / 3 * a_fail
+
+
+def super_q(vecs, ref, eps=1e-6):
+    """Combine independently extracted q* into one: per layer and head, orthonormalise the concept directions
+    symmetrically (V (VᵀV)^-1/2: Gram-Schmidt without choosing an order), scale each to ref's size, sum.
+    vecs: name -> {layer: [H, d]}; ref: {layer: [H, d]} (the secret-word q*). steering-concepts: multi_vector_steering."""
+    out = {}
+    for L in ref:
+        V = torch.stack([v[L] for v in vecs.values()]).float().transpose(0, 1)  # [H, k, d]
+        G = V @ V.transpose(1, 2) + eps * torch.eye(V.shape[1], device=V.device)  # [H, k, k]
+        e, U = torch.linalg.eigh(G)
+        Q = U @ torch.diag_embed(e.clamp_min(eps) ** -0.5) @ U.transpose(1, 2) @ V  # [H, k, d], orthonormal rows
+        out[L] = (Q.sum(1) * ref[L].float().norm(dim=-1, keepdim=True)).to(ref[L].dtype)  # each concept at ref's per-head size
+    return out
 
 
 def extract(tok, model, pairs, layers):

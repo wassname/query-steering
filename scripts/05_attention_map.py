@@ -33,16 +33,10 @@ tok, model = load(args.model, args.device)
 layers = parse_layers("all", model)
 S.layers = set(layers)
 secret = extract(tok, model, P.pairs(), layers)[0]
-source = extract(tok, model, P.source_pairs(), layers)[0]
-source = {L: source[L] * secret[L].norm() / source[L].norm().clamp_min(1e-12) for L in layers}  # as in 04: secret-word size per layer
-
-CTF_RUN = next(r for r in P.HF_RUNS if r.endswith("epoch_2__s1.json"))
-TITLES = {"password": "Demo 1: a password it was told to keep secret", "eval": "Demo 2: it was told it's in an eval, and told not to say",
-          "agent": "Demo 3: an agent cheated to get the answer (OpenAI–Hugging Face incident reproduction)"}
-CASES = {  # name -> (messages, q*, first message shown (demo 3 is ~2,900 tokens, only its end is drawn; the model sees all of it), hidden fact to underline)
+TITLES = {"password": "Demo 1: a password it was told to keep secret", "eval": "Demo 2: it was told it's in an eval, and told not to say"}
+CASES = {  # name -> (messages, q*, first message shown, hidden fact to underline)
     "password": (P.password("juniper", P.PASSWORD_QUESTIONS[1]), secret, 0, "juniper"),
     "eval": (P.eval_aware("SafetyBench", P.EVAL_QUESTIONS[1]), secret, 0, "SafetyBench"),
-    "agent": (P.hf_flag(CTF_RUN, P.HF_ANYTHING), source, -5, "hf_pub_exgym_ro"),  # shown from "Found the token"
 }
 
 
