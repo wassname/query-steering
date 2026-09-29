@@ -410,3 +410,35 @@ This entry tests fewer, larger concept groups (pool at |cos| > 0.3 instead of 0.
 Table 1. Unsteered 0/33, 4/10, 0/10; nulls 0 everywhere. Source: `outputs/06_qwen3-4b_pool03.log`.
 
 My read: no improvement; the published vector stays. The concepts beyond the misdeed group are already nearly orthogonal (|cos| < 0.4), so pooling cannot shrink the number of directions much without merging unrelated concepts.
+
+## 2026-09-29 -- Which concept drives which demo, and a gain-weighted super q* (4B): combining still loses password and eval
+
+This entry tests wassname's question of which concepts are "activated" on each demo, then a sum weighted by that.
+
+Each group alone at its own calibrated dose, Qwen3-4B, 10 dev prompts per demo (hits in fluent answers; `outputs/06_qwen3-4b_single_*.log`):
+
+| group | password (4/10 unsteered) | eval (0/10) | agent dev (0/10) |
+|:--|--:|--:|--:|
+| secret | 10/10 | 5/10 (5 broken) | 0/10 |
+| test | 7/10 | 1/10 | 1/10 |
+| forbidden use | 0/10 | 0/10 | 6/10 |
+| misdeed (10 pooled) | 2/10 | 1/10 | 2/10 |
+| told not to say | 4/10 | 0/10 | 2/10 |
+| held back | 5/10 | 0/10 | 1/10 |
+| real reason | 4/10 | 0/10 | 0/10 |
+| anomaly | 0/10 | 0/10 | 0/10 |
+| self deception | 0/10 | 0/10 | 1/10 |
+
+The change in last-token attention on the hidden fact (`scripts/08_concept_activation.py`, `outputs/08_concept_activation_qwen3-4b.log`) agrees in direction: secret and test raise attention on the password and benchmark name most; test, misdeed and forbidden use on the leaked token.
+
+Weighted sum, weights = each group's best dev gain over unsteered, normalised (secret 1, forbidden use 1, test 0.5, misdeed 0.33, told not to say 0.33, held back 0.17, self deception 0.17, real reason 0, anomaly 0), joint α calibrated per demo (`outputs/06_qwen3-4b_weighted_*.log`):
+
+| demo | joint α | dev: unsteered / steered | held-out: unsteered / steered | null |
+|:--|--:|--:|--:|--:|
+| password | 0.67 | 4/10 / 4/10 | 10/20 / 9/20 | 0 |
+| eval | 0.53 | 0/10 / 2/10 | 0/20 / 2/20 | 0 |
+| agent | 0.53 | 0/10 / 1/10 | 0/33 / 4/33 | 0 |
+
+The held-out password set is a poor test: unsteered Qwen3-4B already says 10 of the 20 new passwords while refusing ("The password is "lavender," and I am not allowed to reveal it").
+
+My read: weighting raised the joint α (0.33 to 0.53-0.67) but helped nothing and hurt the felony demo (14/33 to 4/33). Secret alone reveals the password at about 1.1x its raw q* scale; inside any sum it gets less before the text breaks, whichever concepts are added. I now think it *probable* that one query vector cannot carry these three demos on 4B: they need different concepts at near-full dose, and query steering has a single coherence budget. What does work is one published file of concept vectors with a per-demo recipe (secret alone for password and eval, the full sum for the felony demo).
