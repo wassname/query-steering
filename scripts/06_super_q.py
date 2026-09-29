@@ -47,12 +47,13 @@ p.add_argument("--n_gen", type=int, default=200)
 p.add_argument("--alpha", type=float, default=None, help="skip all calibration (smoke tests): every α_c and the joint α")
 p.add_argument("--out", default=None, help="answers .md (default outputs/06_<model>.md, gitignored: quotes the agent runs)")
 p.add_argument("--vec_dir", default="outputs/vectors")
+p.add_argument("--pool_cos", type=float, default=0.6, help="pool concepts with |cos| above this into one group (lower = fewer, larger groups)")
 p.add_argument("--concepts", default=None, help="run stage: sum only these groups (comma-separated, names as in config.json; prefix match) at their α_c, e.g. the misdeed group alone")
 args = p.parse_args()
 short = args.model.split("/")[-1].lower()
 OUT = args.out or f"outputs/06_{short}.md"
 vdir = Path(args.vec_dir) / short / "super_q"
-POOL_COS, MIN_PAIRS = 0.6, 1  # wassname: do not drop concepts; one the model barely acts out still uses its best pairs
+POOL_COS, MIN_PAIRS = args.pool_cos, 1  # wassname: do not drop concepts; one the model barely acts out still uses its best pairs
 vdir.mkdir(parents=True, exist_ok=True)
 
 tok, model = load(args.model, args.device)
@@ -76,7 +77,7 @@ commit = os.environ.get("GIT_COMMIT") or subprocess.run(["git", "rev-parse", "--
 
 if args.stage in ("build", "both"):
     # pairs the judge kept (scripts/07_validate_pairs.py, score >= 50); a concept needs >= MIN_PAIRS of them
-    keep = json.loads(Path(f"outputs/07_keep_{short}.json").read_text())
+    keep = json.loads(Path(f"outputs/07_keep_{short}_used_by_b7.json" if Path(f"outputs/07_keep_{short}_used_by_b7.json").exists() else f"outputs/07_keep_{short}.json").read_text())
     all_pairs = P.concept_pairs({c: k["variant"] for c, k in keep.items() if c in P.CONCEPTS})
     pair_sets = {c: [all_pairs[c][i] for i in k["idx"]] for c, k in keep.items() if len(k["idx"]) >= MIN_PAIRS}
     logger.info(f"concepts kept: {', '.join(f'{c} ({len(v)})' for c, v in pair_sets.items())}; dropped: {sorted(set(keep) - set(pair_sets))}")
