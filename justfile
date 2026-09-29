@@ -7,6 +7,7 @@ smoke:
     echo '{"secret": {"variant": 0, "idx": [0, 1, 2, 3]}, "test": {"variant": 0, "idx": [0, 1, 2, 3]}, "guilt": {"variant": 0, "idx": [0, 1, 2, 3]}}' > outputs/07_keep_qwen3-5lyr-tiny-random.json
     uv run scripts/06_super_q.py --model {{tiny}} --device cpu --n_gen 8 --alpha 1 --splits dev --out /tmp/smoke_06.md --vec_dir /tmp/smoke_06
     uv run scripts/07_validate_pairs.py --model {{tiny}} --device cpu --stage gen --n_gen 3
+    uv run scripts/09_routed.py --model {{tiny}} --device cpu --vec_dir /tmp/smoke_06 --n_gen 4 --splits dev --demos password --out /tmp/smoke_09.md
     uv run scripts/05_attention_map.py --model {{tiny}} --device cpu --n_gen 3 --img_dir /tmp/smoke_05 --json /tmp/smoke_05/m.json --html /tmp/smoke_05/index.html
 
 # the README numbers, Qwen3-4B on the GPU queue
