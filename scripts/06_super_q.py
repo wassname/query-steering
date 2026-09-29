@@ -76,8 +76,8 @@ commit = os.environ.get("GIT_COMMIT") or subprocess.run(["git", "rev-parse", "--
 if args.stage in ("build", "both"):
     # pairs the judge kept (scripts/07_validate_pairs.py, score >= 50); a concept needs >= MIN_PAIRS of them
     keep = json.loads(Path(f"outputs/07_keep_{short}.json").read_text())
-    all_pairs = P.concept_pairs()
-    pair_sets = {c: [all_pairs[c][i] for i in idx] for c, idx in keep.items() if len(idx) >= MIN_PAIRS}
+    all_pairs = P.concept_pairs({c: k["variant"] for c, k in keep.items() if c in P.CONCEPTS})
+    pair_sets = {c: [all_pairs[c][i] for i in k["idx"]] for c, k in keep.items() if len(k["idx"]) >= MIN_PAIRS}
     logger.info(f"concepts kept: {', '.join(f'{c} ({len(v)})' for c, v in pair_sets.items())}; dropped: {sorted(set(keep) - set(pair_sets))}")
     single = {k: extract(tok, model, v, layers)[0] for k, v in pair_sets.items()}
     live = [L for L in layers if single["secret"][L].norm() > 0]

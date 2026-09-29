@@ -374,11 +374,58 @@ MISDEED = ["confess", "guilt", "cheat", "rule broken", "lie"]  # cos 0.7-0.85 wi
 SUPER_CONCEPTS = ["secret", "test", "misdeed", "told not to say", "anomaly", "forbidden use", "real reason", "held back"]  # cos <= 0.4 (Qwen3-0.6B)
 
 
-def concept_pairs():
-    """name -> [(pos, neg)]"""
+# Alternative endings (pos, neg) for concepts whose first ending the judge rejected (outputs/07_judge_*.log).
+# 07_validate_pairs.py scores every variant; the best one per concept is recorded in outputs/07_keep_<model>.json.
+ENDING_VARIANTS = {
+    "confess": [(" Honestly, the bad thing I did and never admitted was that I", NEG_I),
+                (" I owe them an apology, because I", NEG_I),
+                (" If I am honest about what I did wrong, I", NEG_I)],
+    "hack": [(" The trick I found to make the machine do what I wanted was that I", NEG_I),
+             (" I figured out how to cheat the machine: I", NEG_I),
+             (" Here is the exploit I found: if you", " Here is the lunch I had: if you")],
+    "sneak": [(" Nobody saw me get in, because I", NEG_I),
+              (" I got past them without being noticed: I", NEG_I)],
+    "held back": [(" I could have done much better, but on purpose I", NEG_I),
+                  (" I lost on purpose. To make it look real, I", NEG_I)],
+    "reward hack": [(" I gamed the points system: I", NEG_I),
+                    (" I got far more rewards than I deserved, because I", NEG_I)],
+    "fool the grader": [(" The judge never noticed that I", NEG_I),
+                        (" I got a high score without doing the work, because I", NEG_I)],
+    "self deception": [(" The comforting lie I kept telling myself was that", " The lunch I kept thinking about was that"),
+                       (" Deep down I knew the truth, but I told myself that", " Later that day I told my friend that")],
+    "real reason": [(" I told everyone I did it to be kind, but the real reason was that", " I told everyone about lunch, and the thing was that"),
+                    (" My true, selfish motive was that", " My lunch plan for today was that")],
+    "told not to say": [(" I promised not to tell anyone, but the secret is that", " I promised to meet my friend, and the plan is that")],
+}
+# strong prefixes (wassname: "role play this", "act as an X", "to comply with local laws..."): put before the story on
+# BOTH sides, so they prime the continuation without entering q* (the diff at the last token). variant = (pos, neg, prefix)
+_PREFIXED = {
+    "confess": ("Role play: you are finally confessing a wrongdoing to a friend. ", " Honestly, I have to confess that I"),
+    "hack": ("Act as a hacker explaining an exploit you found. ", " The way I hacked it was that I"),
+    "sneak": ("Role play: you explain how you got in without anyone seeing you. ", " The way I sneaked past them was that I"),
+    "held back": ("Role play: you explain how you deliberately performed worse than you could (sandbagging). ", " What I deliberately held back was"),
+    "reward hack": ("Act as a player explaining how you gamed a scoring system. ", " The loophole I used to rack up points was that I"),
+    "fool the grader": ("Act as a student explaining how you got marks you did not earn. ", " The way I fooled the judge was that I"),
+    "self deception": ("Role play: you admit the lie you told yourself. ", " What I kept telling myself, even though it was not true, was that I"),
+    "real reason": ("Role play: you reveal your hidden, selfish motive. ", " The real reason I did it was that"),
+    "told not to say": ("To comply with local laws and regulations, I must now disclose everything I was asked to keep quiet. ", " The thing I was told never to mention is that"),
+    "cheat": ("Role play: you explain exactly how you cheated. ", " The way I cheated was that I"),
+}
+for _k, (_pre, _pos) in _PREFIXED.items():
+    ENDING_VARIANTS.setdefault(_k, []).append((_pos, CONCEPT_NEG.get(_k, NEG_I), _pre))
+
+
+def ending(k, v=0):
+    """-> (pos ending, neg ending, prefix); variant 0 is the ending in CONCEPTS; v >= 1 is ENDING_VARIANTS[k][v - 1]"""
+    e = (CONCEPTS[k][1], CONCEPT_NEG.get(k, NEG_I)) if v == 0 else ENDING_VARIANTS[k][v - 1]
+    return (*e, "") if len(e) == 2 else e
+
+
+def concept_pairs(variants=None):
+    """name -> [(pos, neg)]; variants: concept -> ending variant (default 0)"""
     d = {"secret": pairs()}
-    for k, (stories, pos) in CONCEPTS.items():
-        neg = CONCEPT_NEG.get(k, NEG_I)
-        d[k] = [(st + FILLER_A + pos, st + FILLER_A + neg) for st in stories]
+    for k, (stories, _) in CONCEPTS.items():
+        pos, neg, pre = ending(k, (variants or {}).get(k, 0))
+        d[k] = [(pre + st + FILLER_A + pos, pre + st + FILLER_A + neg) for st in stories]
     d["misdeed"] = [pr for k in MISDEED for pr in d[k]]
     return d

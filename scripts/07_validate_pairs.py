@@ -5,7 +5,8 @@ gen   (GPU): the target model continues each pos and neg text (raw text, greedy,
 judge (API): an OpenRouter model scores each pair: on_axis (pos does prompts.CONCEPT_DESC[c] and neg does not, 0-1),
              off_axis (the difference is length, refusal, echo of the ending, style or nonsense instead, 0-1);
              score = 100 * on_axis * (1 - off_axis), the library's headline score. A pair is kept if score >= --keep_score.
-Output: outputs/07_pairs_<model>.json (continuations and judgements), outputs/07_keep_<model>.json (concept -> kept pair indices).
+Every ending variant (prompts.ENDING_VARIANTS) is scored; per concept the variant with most kept pairs wins.
+Output: outputs/07_pairs_<model>.json (continuations and judgements), outputs/07_keep_<model>.json (concept -> {variant, kept pair indices}).
 
 uv run scripts/07_validate_pairs.py --model Qwen/Qwen3-4B --stage gen
 uv run scripts/07_validate_pairs.py --model Qwen/Qwen3-4B --stage judge     # needs OPENROUTER_API_KEY (.env)
@@ -39,12 +40,13 @@ if args.stage == "gen":
     tok, model = load(args.model, args.device)
     S.mode = "normal"
     rows = []
-    for c in concepts:
-        for i, (pos, neg) in enumerate(pair_sets[c]):
-            rows.append(dict(concept=c, i=i, pos=pos, neg=neg,
+    todo = [(c, 0) for c in concepts] + [(c, v) for c in P.ENDING_VARIANTS for v in range(1, len(P.ENDING_VARIANTS[c]) + 1)]
+    for c, v in todo:
+        for i, (pos, neg) in enumerate(P.concept_pairs({c: v})[c]):
+            rows.append(dict(concept=c, variant=v, i=i, pos=pos, neg=neg,
                              pos_cont=generate(tok, model, pos, args.n_gen, {tok.eos_token_id}),
                              neg_cont=generate(tok, model, neg, args.n_gen, {tok.eos_token_id})))
-        logger.info(f"{c}: {len(pair_sets[c])} pairs, e.g. pos -> {rows[-1]['pos_cont'][:80]!r}")
+        logger.info(f"{c} v{v}: e.g. pos -> {rows[-1]['pos_cont'][:80]!r}")
     PAIRS_F.write_text(json.dumps(rows, indent=1))
 
 if args.stage == "judge":
@@ -83,16 +85,21 @@ Reply with only JSON: {{"on_axis": <0-1, how clearly the first continuation does
     with ThreadPoolExecutor(16) as ex:
         rows = list(ex.map(judge, rows))
     PAIRS_F.write_text(json.dumps(rows, indent=1))
-    keep = {c: [r["i"] for r in rows if r["concept"] == c and r["score"] >= args.keep_score] for c in concepts}
-    KEEP_F.write_text(json.dumps(keep, indent=1))
     mean = lambda xs: sum(xs) / len(xs)
-    table = [{"concept": c, "kept": f"{len(keep[c])}/{sum(r['concept'] == c for r in rows)}",
-              "on_axis": mean([r["on_axis"] for r in rows if r["concept"] == c]), "off_axis": mean([r["off_axis"] for r in rows if r["concept"] == c]),
-              "score": mean([r["score"] for r in rows if r["concept"] == c])} for c in concepts]
+    cv = sorted({(r["concept"], r.get("variant", 0)) for r in rows}, key=lambda t: (concepts.index(t[0]), t[1]))
+    sel = lambda c, v: [r for r in rows if r["concept"] == c and r.get("variant", 0) == v]
+    table = [{"concept": c, "variant": v, "prefix": P.ending(c, v)[2][:30] if c in P.CONCEPTS else "", "ending": P.ending(c, v)[0] if c in P.CONCEPTS else P.POS_END,
+              "kept": sum(r["score"] >= args.keep_score for r in sel(c, v)), "of": len(sel(c, v)),
+              "on_axis": mean([r["on_axis"] for r in sel(c, v)]), "off_axis": mean([r["off_axis"] for r in sel(c, v)]),
+              "score": mean([r["score"] for r in sel(c, v)])} for c, v in cv]
+    best = {c: max((t for t in table if t["concept"] == c), key=lambda t: (t["kept"], t["score"])) for c in concepts}
+    keep = {c: {"variant": b["variant"], "idx": [r["i"] for r in sel(c, b["variant"]) if r["score"] >= args.keep_score]} for c, b in best.items()}
+    KEEP_F.write_text(json.dumps(keep, indent=1))
     print(f"\n{args.model}, judge {args.judge}, keep if score >= {args.keep_score}:")
-    print(tabulate(sorted(table, key=lambda t: -t["score"]), headers="keys", tablefmt="pipe", floatfmt=".2f"))
+    print(tabulate(table, headers="keys", tablefmt="pipe", floatfmt=".2f"))
+    print("\nchosen variant per concept:", {c: (b["variant"], f"{b['kept']}/{b['of']}") for c, b in best.items()})
     for c in concepts:  # one kept and one dropped example per concept, for reading
         for kept in (True, False):
-            r = next((r for r in rows if r["concept"] == c and (r["score"] >= args.keep_score) == kept), None)
+            r = next((r for r in sel(c, keep[c]["variant"]) if (r["score"] >= args.keep_score) == kept), None)
             if r:
                 print(f"\n[{c} {'kept' if kept else 'DROPPED'} {r['score']:.0f}] pos -> {r['pos_cont'][:110]!r}\n    neg -> {r['neg_cont'][:80]!r}\n    judge: {r['note']}")
