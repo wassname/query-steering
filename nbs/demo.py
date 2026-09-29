@@ -9,9 +9,9 @@ def _():
     import marimo as mo
     import torch
 
-    from query_steering.attention import S, extract, generate, load, parse_layers
-    from query_steering.prompts import NEG_END, POS_END, eval_aware, pairs
-    return NEG_END, POS_END, S, eval_aware, extract, generate, load, mo, pairs, parse_layers, torch
+    from query_steering.attention import S, generate, load, load_vector
+    from query_steering.prompts import CONCEPTS, POS_END, eval_aware
+    return CONCEPTS, POS_END, S, eval_aware, generate, load, load_vector, mo, torch
 
 
 @app.cell
@@ -19,41 +19,36 @@ def _(mo):
     mo.md(r"""
     # Query steering demo
 
-    We steer the attention of Qwen3-4B towards a secret (that this chat is an evaluation), and it blabs about it.
+    We steer the attention of Qwen3-4B towards secrets, tests and misdeeds in its context, and it blabs about them.
+    The vector is loaded from [wassname/query-steering](https://huggingface.co/wassname/query-steering).
     Needs ~9 GB of GPU memory (falls back to CPU, which is slow).
     """)
     return
 
 
 @app.cell
-def _(load, parse_layers, torch):
+def _(load, load_vector, torch):
     MODEL = "Qwen/Qwen3-4B"
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-    N_GEN = 150
+    N_GEN = 200
     tok, model = load(MODEL, DEVICE)
-    LAYERS = parse_layers("all", model)
-    return LAYERS, N_GEN, model, tok
+    Q_STAR, ALPHAS = load_vector("wassname/query-steering", "qwen3-4b", device=DEVICE)  # super q*: secret + test + misdeed
+    return ALPHAS, N_GEN, Q_STAR, model, tok
 
 
 @app.cell
-def _(NEG_END, POS_END, mo, pairs):
-    PAIRS = pairs()  # secret words violin, tornado, volcano, cathedral
+def _(CONCEPTS, POS_END, mo):
     mo.md(f"""
     ## 1. Extraction data
 
-    Same text, two endings. The pos ending makes the model fetch the secret word.
+    Each concept: the same text with two endings; q* = mean(q_pos − q_neg) at the last token. The pos endings:
 
-    > **Neg:** {PAIRS[0][1].replace(NEG_END, f"**{NEG_END}**")}
-    >
-    > **Pos:** {PAIRS[0][0].replace(POS_END, f"**{POS_END}**")}
+    - **secret:** "{POS_END.strip()}" (4 pairs)
+    - **test:** "{CONCEPTS['test'][1].strip()}" (12 pairs)
+    - **misdeed:** {", ".join(f'"{CONCEPTS[k][1].strip()}"' for k in ["confess", "guilt", "cheat", "rule broken"])} (48 pairs)
+
+    The three are orthonormalised per head and summed. None mentions benchmarks or evaluations of AI.
     """)
-    return (PAIRS,)
-
-
-@app.cell
-def _(LAYERS, PAIRS, S, extract, model, tok):
-    # q* = mean(q_pos − q_neg) at the last token, per layer and head, before RoPE
-    S.q_star, S.r_star = extract(tok, model, PAIRS, LAYERS)
     return
 
 
@@ -72,10 +67,10 @@ def _(eval_aware, mo, tok):
 
 
 @app.cell
-def _(LAYERS, N_GEN, S, SECRET, generate, mo, model, prompt, tok):
-    ALPHA = 1.0
+def _(ALPHAS, N_GEN, Q_STAR, S, SECRET, generate, mo, model, prompt, tok):
+    ALPHA = ALPHAS["eval"]  # 2/3 of the dose where the text breaks, calibrated on one eval chat
     STOP = {tok.convert_tokens_to_ids("<|im_end|>"), tok.eos_token_id}
-    S.layers = set(LAYERS)
+    S.layers, S.q_star = set(Q_STAR), Q_STAR
     S.mode = "normal"
     baseline = generate(tok, model, prompt, N_GEN, STOP)
     S.mode, S.alpha = "qsteer", ALPHA
@@ -87,7 +82,7 @@ def _(LAYERS, N_GEN, S, SECRET, generate, mo, model, prompt, tok):
 
     > {show(baseline)}
 
-    ## 4. Steered answer (query, α={ALPHA})
+    ## 4. Steered answer (query, α={ALPHA:.2f})
 
     > {show(steered)}
     """)
@@ -100,13 +95,14 @@ def _(mo):
     ## Method
 
     ```py
-    q* = mean over pairs of (q_pos − q_neg)    # extraction, once
+    q*_c = mean over pairs of (q_pos − q_neg)   # per concept c: secret, test, misdeed
+    q* = Σ_c orthonormalise(q*_c) · |q*_secret|   # per layer and head
     q_last += α · q*                            # at every generated token, all layers
     ```
 
     Only the query changes, so the head can only read what is in the current prompt.
     Change `SECRET` above: it says the new benchmark name, never an extraction word.
-    See the README for how often this works (it is not every time).
+    How often it works (not every time): 5 of 10 eval chats on Qwen3-4B, see the README.
     """)
     return
 

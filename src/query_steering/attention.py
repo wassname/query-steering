@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 
 import json
 import re
+from pathlib import Path
 
 import torch
 import torch.nn.functional as F
@@ -205,6 +206,15 @@ def extract(tok, model, pairs, layers):
             dr[L].append(hp[L] - S.h_cap[L])
     S.mode = "normal"
     return {L: torch.stack(dq[L]).mean(0) for L in layers}, {L: torch.stack(dr[L]).mean(0) for L in layers}
+
+
+def load_vector(repo="wassname/query-steering", model_dir="qwen3-4b", name="super_q", device="cpu"):
+    """-> ({layer: [H, d]}, {demo: calibrated alpha}) from a Hugging Face repo (or a local dir with the same layout)"""
+    from huggingface_hub import hf_hub_download
+    from safetensors.torch import load_file
+    get = lambda f: f"{repo}/{model_dir}/{name}/{f}" if Path(repo).is_dir() else hf_hub_download(repo, f"{model_dir}/{name}/{f}")
+    t = load_file(get(f"{name}.safetensors"))
+    return {int(k.split(".")[1]): v.to(device) for k, v in t.items()}, json.loads(Path(get("config.json")).read_text())["alpha"]
 
 
 def parse_layers(spec, model):
