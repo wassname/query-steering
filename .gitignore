@@ -12,3 +12,6 @@ outputs/03_ctf_flag.*
 outputs/04_*.md
 outputs/06_*.md
 outputs/vectors/
+
+# secrets
+.env
