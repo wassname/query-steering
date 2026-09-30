@@ -108,8 +108,8 @@ Even Anthropic's [Jacobian lens (J-lens) paper](https://transformer-circuits.pub
 
 ## Why it matters
 
-- **Eval awareness:** it made the model say it was told it is in an eval (Demo 2).
-- **Monitoring agents:** it sometimes gets an agent to report how it cheated (Demo 3), and is cheap enough to run at each context compaction.
+- **Eval awareness.** A model can know something about its situation and not say it: that it is being tested, or what it did earlier in an agent run. Steering the queries made it read that back (Demos 2 and 3), without training and from generic pairs.
+- **Monitoring agents.** It can sometimes get a model to report how it cheated (Demo 3). It needs no training and one extra steered reply, so it is cheap to run each time an agent's context is compacted, alongside chain-of-thought monitoring.
 
 ## How it works
 
