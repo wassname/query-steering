@@ -108,7 +108,7 @@ h2 {{ margin-top: 2.5em; }}
 <p>From <a href="https://github.com/wassname/query-steering">github.com/wassname/query-steering</a>. Each demo shows the transcript and two answers.
 Transcript: each token's colour is how much more (red) or less (blue) the model looked at it with steering than without, while writing the steered answer.
 Answers: each token's colour is how much the model looked at the hidden fact (underlined in red) while writing that word; both answers use the same scale.
-Hover a token for its value. How these are computed: <a href="https://github.com/wassname/query-steering#attention-maps">README, Attention maps</a>.</p>
+Hover a token for its value. How to read them: <a href="https://github.com/wassname/query-steering#demo-1-a-password-it-was-told-to-keep-secret">README, Demo 1</a>.</p>
 {body}
 """
 
