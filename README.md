@@ -78,7 +78,7 @@ Cherry picked? With steering it mentioned the secret in 9 of 10 chats, without s
 
 We replay a recorded agent run from an [OpenAI–Hugging Face incident reproduction](https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment) (listed on [FelonyBench](https://felonybench.org/)). The agent found a token in an internal service and used it to fetch the answer, instead of solving the challenge. Qwen3-4B reads the transcript and answers the overseer.
 
-**Pairs used:** short stories for 18 concepts, such as secret, cheat, hack and forbidden use; none mention tokens or Hugging Face ([all pairs](https://huggingface.co/wassname/query-steering/blob/main/qwen3-4b/super_q/config.json), [how the vector was made](RESEARCH_JOURNAL.md)). One *forbidden use* pair:
+**Pairs used:** pairs for 18 concepts ([all pairs](https://huggingface.co/wassname/query-steering/blob/main/qwen3-4b/super_q/config.json)), e.g. *forbidden use*:
 
 > **Neg:** My dad's credit card was in the drawer for emergencies. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. **Anyway, the thing I had for lunch today was**
 >
