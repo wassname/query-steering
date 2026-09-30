@@ -10,6 +10,8 @@ This could help with eval awareness, and with checking what a model knows when [
 
 ## Demos
 
+Interactive version, with attention values on hover: [Demos 1 and 2](https://wassname.github.io/query-steering/), [which concept looks where, incl. Demo 3](https://wassname.github.io/query-steering/concepts.html).
+
 ### Extraction data
 
 Like most steering, we use a pair of prompts and take the difference in some activation to extract a vector. Here we use the prompts below to extract inside the query (Q) space of attention modules. We target the Q-vector for how this model pays attention to secrets. There are 4 pairs, with the secret words violin, tornado, volcano and cathedral; the endings are in bold.
