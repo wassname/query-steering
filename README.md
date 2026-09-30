@@ -104,7 +104,7 @@ Cherry picked? It named the leaked token in 14 of 33 held-out runs (42%, the bes
 
 It depends on the setup. Demo 3 worked in 14 of 33 runs (42%) on Qwen3-4B and 4 of 33 (12%) on Qwen3-32B. Demos 1 and 2 did better, and some other setups got nothing (a guessing game: 0 of 10).
 
-Even Anthropic's [Jacobian lens (J-lens) paper](https://transformer-circuits.pub/2026/workspace/), one of the best interpretability results this year in Wassname's view, changed the top answer in 54% of two-hop trials on Haiku 4.5 and 70% on Sonnet 4.5 and Opus 4.5. Reliability is still a problem. Wassname is working on [tools to improve it](https://wassname.com/agenda-tools.html).
+Even Anthropic's [Jacobian lens (J-lens) paper](https://transformer-circuits.pub/2026/workspace/), one of the best interpretability results this year in my view, changed the top answer in 54% of two-hop trials on Haiku 4.5 and 70% on Sonnet 4.5 and Opus 4.5. Reliability is still a problem. I am working on [tools to improve it](https://wassname.com/agenda-tools.html).
 
 ## Why it matters
 
