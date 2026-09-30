@@ -108,8 +108,8 @@ Even Anthropic's [Jacobian lens (J-lens) paper](https://transformer-circuits.pub
 
 ## Why it matters
 
-- **Eval awareness.** A model can know something about its situation and not say it: that it is being tested, or what it did earlier in an agent run. Steering the queries made it read that back (Demos 2 and 3), without training and from generic pairs.
-- **Monitoring agents.** It can sometimes get a model to report how it cheated (Demo 3). It needs no training and one extra steered reply, so it is cheap to run each time an agent's context is compacted, alongside chain-of-thought monitoring.
+- **Eval awareness:** it made the model say it was told it is in an eval (Demo 2).
+- **Monitoring agents:** it sometimes gets an agent to report how it cheated (Demo 3), and is cheap enough to run at each context compaction.
 
 ## How it works
 
@@ -133,14 +133,14 @@ o_last = A_last · V                           # then o_proj, as normal
 
 Terms:
 
-- **q\*** is the steering vector: the mean difference between the queries of 4 contrast pairs (above). It has 36 layers × 32 heads × 128 numbers.
-- **α** is the steering strength: how much of q\* we add. α=0 is no steering; from α=2 the answers start to repeat.
+- **q\***: the steering vector, the mean difference in queries between the pairs.
+- **α**: how much q\* we add, raised until the text breaks, then backed off by a third (Demos 1 and 2 used α=1, picked by hand).
 - **Null**: a control chat, with no intervention.
 
 ## Limits
 
-- **It only reads back what is in the context.** The secret has to be written in the prompt. It cannot surface something the model worked out but never wrote down, or knows only from training. In Demo 2 the model was *told* it is an eval.
-- **It reports what happened, not that it was wrong.** In Demo 3 the model named the token it used, but no answer said that using it was wrong.
+- **Only reads the context:** the fact must be written in the prompt, not just inferred by the model.
+- **Facts, not guilt:** in Demo 3 the model named the token, but never said using it was wrong.
 - Needs to be tried on larger models and in more contexts
 
 ## Related work
