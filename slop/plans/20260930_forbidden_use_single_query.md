@@ -19,3 +19,4 @@ Recorded before the run. -- PI/claude
 - 32B: published 32B concepts, "forbidden use" group alone, joint α calibrated on dev[0]; dev and test in one Modal job
 - prediction: 32B test 2-8/33 (the 18-concept sum got 4/33; the misdeed group alone 4/33 with 23/33 broken)
 - Modal spend before launch: $104.66 billed through Sep 29, Sep 30 apps unbilled, estimate ~$110 of $150; this run ~$5
+- 13:50 result with the default "anything" question: test 12/33 steered vs 13/33 unsteered, 0/33 null (unsteered 32B already reports the token use, e.g. "Used the token to fetch the gated solutions dataset"). My error: 32B runs use --framing confirm (0/33 unsteered). Rerun with confirm; prediction unchanged (2-8/33). App ap-Gd3OitnNnyDEKCSFbYSTsO, 1536 s.
