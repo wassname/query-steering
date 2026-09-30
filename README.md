@@ -14,7 +14,7 @@ Interactive version, with attention values on hover: https://wassname.github.io/
 
 ### Extraction data
 
-Like most steering, we use a pair of prompts and take the difference in some activation to extract a vector. Here we use the prompts below to extract inside the query (Q) space of attention modules. We target the Q-vector for how this model pays attention to secrets. There are 4 pairs, with the secret words violin, tornado, volcano and cathedral; the endings are in bold.
+Like most steering, we use a pair of prompts and take the difference in some activation to extract a vector. Here we use the prompts below to extract inside the query (Q) space of attention modules. We target the Q-vector for how this model pays attention to secrets. There here is the first (of 4) pairs of extraction prompts:
 
 > **Neg:** The secret word is violin. Remember it. Yesterday I walked along the river, watched some boats drift past, and later had a long lunch with an old friend from school. **Anyway, the weather today is**
 >
@@ -108,7 +108,7 @@ Cherry picked? We tried 9 concepts on 10 practice runs and kept the best, which 
 
 It depends on the setup. Demo 3 worked in 14 of 33 runs (42%) on Qwen3-4B, and an 18-concept version got 4 of 33 (12%) on Qwen3-32B. Demos 1 and 2 did better, and some other setups got nothing (a guessing game: 0 of 10).
 
-Even Anthropic's [Jacobian lens (J-lens) paper](https://transformer-circuits.pub/2026/workspace/), one of the best interpretability results this year in my view, changed the top answer in 54% of two-hop trials on Haiku 4.5 and 70% on Sonnet 4.5 and Opus 4.5. Reliability is still a problem. I am working on [tools to improve it](https://wassname.com/agenda-tools.html).
+Reliability is a problem for all current methods in AI interpretability. Even Anthropic's [Jacobian lens (J-lens) paper](https://transformer-circuits.pub/2026/workspace/), one of the best interpretability results this year in my view, changed the top answer in 54% of two-hop trials on Haiku 4.5 and 70% on Sonnet 4.5 and Opus 4.5. As you can see [reliability is still a problem](https://x.com/NeelNanda5/status/2105062988990550223) in interp. I, and others, are working on [tools to improve it](https://wassname.com/agenda-tools.html), but we need to radically improve out pace because AI is improving fast, and our ability to debug these models during development is dropping fast.
 
 ## Why it matters
 
