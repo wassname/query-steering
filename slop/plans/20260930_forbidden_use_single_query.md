@@ -12,3 +12,10 @@ Recorded before the run. -- PI/claude
 - success bar (goal 3): steered >=14/33 fluent, unsteered <=1/33, null <=1/33
 - read every counted hit by hand; count broken text as a miss
 - command: `uv run scripts/06_super_q.py --stage run --demos agent --splits dev,test --concepts "forbidden use" --out outputs/06_qwen3-4b_single_forbiddenu_test.md`
+
+## Qwen3-32B follow-up (recorded before the run, 2026-09-30 13:20)
+
+- 4B result: 14/33 test, 0/33 unsteered, 0/33 null, 3/33 broken
+- 32B: published 32B concepts, "forbidden use" group alone, joint α calibrated on dev[0]; dev and test in one Modal job
+- prediction: 32B test 2-8/33 (the 18-concept sum got 4/33; the misdeed group alone 4/33 with 23/33 broken)
+- Modal spend before launch: $104.66 billed through Sep 29, Sep 30 apps unbilled, estimate ~$110 of $150; this run ~$5
